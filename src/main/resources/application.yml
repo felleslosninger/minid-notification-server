@@ -1,0 +1,106 @@
+# ===================================================================
+# Standard Spring Boot properties
+# ===================================================================
+project:
+  version: @project.version@
+
+server:
+  port: 8080
+  tomcat:
+    accesslog:
+      directory: /var/log/minid-notification-server/
+      enabled: true
+      rotate: false
+      pattern: "%h\u0009%l\u0009%u\u0009%t\u0009\u0022%r\u0022\u0009%s\u0009%b\u0009%D\u0009%{no.difi.correlationId}i"
+    remote-ip-header: X-Forwarded-For
+  servlet:
+    session:
+      cookie:
+        secure: false
+        http-only: true
+    encoding:
+      force: true
+    context-path: /
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+
+# Spring boot actuator endpoint
+management:
+  endpoint:
+    flyway:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "version, info, flyway"
+      #        include: "health, info, version"
+    jmx:
+      exposure:
+        exclude: "*"
+#  endpoint:
+#    health:
+#      show-details: always
+#      enabled: true
+  info:
+    git:
+      mode: full
+#  health:
+#    mail:
+#      enabled: false
+#    diskspace:
+#      enabled: false
+#    metrics:
+#      enabled: false
+
+
+spring:
+  jpa:
+    open-in-view: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+  # Spring Security - OAuth 2 provider
+  security:
+    oauth2:
+      client:
+
+        provider:
+          idporten:
+            issuer-uri: https://eid-systest-web01.dmz.local/idporten-oidc-provider/
+            user-name-attribute: pid
+
+        registration:
+          idporten:
+#            client-id:
+#            client-secret:
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid, profile
+            provider: idporten
+            client-authentication-method: post
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/minidnotification?useMysqlMetadata=true
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: minidnotification
+    password: password
+
+  flyway:
+    validate-on-migrate: true
+    locations: classpath:db/migration
+    enabled: true
+    baseline-on-migrate: true
+    url: jdbc:mysql://localhost:3306/minidnotification?useMysqlMetadata=true
+    user: minidnotification
+    password: password
+
+# ===================================================================
+# Application specific properties
+# ===================================================================
+digdir:
+#  mf-gateway:
+#    url: http://eid-systest-admin01.dmz.local:10015
+#    client-id-header: minid-notification-server
