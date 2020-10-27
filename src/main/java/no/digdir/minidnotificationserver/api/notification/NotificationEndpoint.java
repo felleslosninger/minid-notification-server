@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api;
+package no.digdir.minidnotificationserver.api.notification;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,13 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class RegistrationEndpoint {
+public class NotificationEndpoint {
 
-    @GetMapping("/register")
-    @PreAuthorize("isAuthenticated()") // requires a valid access_token
-    public ResponseEntity<String> register() {
-        // call /tokeninfo and extract person_identifier
-        // save person_identifier and message_token in db
+    @GetMapping("/send")
+    @PreAuthorize("isAuthenticated()") // must require admin auth
+    public ResponseEntity<String> send() {
+        // call service layer and send message to given person_identifier
         return ResponseEntity.ok("{\"status\": \"Great success!\"}");
     }
 
