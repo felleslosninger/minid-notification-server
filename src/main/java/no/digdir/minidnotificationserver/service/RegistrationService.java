@@ -12,16 +12,16 @@ public class RegistrationService {
 
     private final RegistrationRepository registrationRepository;
 
-    public void registerDevice(RegistrationRequest registrationRequest) {
+    public void registerDevice(RegistrationRequest request) {
 
-        RegistrationDevice device = RegistrationDevice.builder()
-                .personIdentifier(registrationRequest.getPerson_identifier())
-                .description(registrationRequest.getDescription())
-                .token(registrationRequest.getToken())
-                .os(registrationRequest.getOs())
-                .osVersion(registrationRequest.getOs_version())
-                .build();
+        RegistrationDevice device = registrationRepository.findByToken(request.getToken()).orElse(new RegistrationDevice());
 
-        registrationRepository.saveAndFlush(device);
+        device.setPersonIdentifier(request.getPerson_identifier());
+        device.setToken(request.getToken());
+        device.setDescription(request.getDescription());
+        device.setOs(request.getOs());
+        device.setOsVersion(request.getOs_version());
+
+        registrationRepository.save(device);
     }
 }
