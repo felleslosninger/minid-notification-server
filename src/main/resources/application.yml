@@ -12,7 +12,8 @@ server:
       enabled: true
       rotate: false
       pattern: "%h\u0009%l\u0009%u\u0009%t\u0009\u0022%r\u0022\u0009%s\u0009%b\u0009%D\u0009%{no.difi.correlationId}i"
-    remote-ip-header: X-Forwarded-For
+    remoteip:
+      remote-ip-header: X-Forwarded-For
   servlet:
     session:
       cookie:
@@ -70,8 +71,8 @@ spring:
           issuer-uri: https://eid-systest-web01.dmz.local/idporten-oidc-provider/
         opaque-token:
           introspection-uri: https://eid-systest-web01.dmz.local/idporten-oidc-provider/tokeninfo
-          client-id: ""
-          client-secret: ""
+          client-id: test_rp_systest
+          client-secret: password
 
   datasource:
     url: jdbc:mysql://eid-systest-db01.dmz.local:3306/minid_notification?useMysqlMetadata=true

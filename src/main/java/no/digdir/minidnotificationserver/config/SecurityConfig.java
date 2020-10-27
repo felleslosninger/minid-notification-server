@@ -1,18 +1,30 @@
 package no.digdir.minidnotificationserver.config;
 
+import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.exceptions.ExceptionHandlerFilter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
+import org.springframework.security.oauth2.server.resource.authentication.OpaqueTokenAuthenticationProvider;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Import(SecurityProblemSupport.class)
@@ -20,17 +32,11 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final SecurityProblemSupport problemSupport;
-
     private final ExceptionHandlerFilter exceptionHandlerFilter;
+    private final OpaqueTokenIntrospector opaqueTokenIntrospector;
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuerUri;
 
-    public static final String REGISTRATION_SCOPE = "idporten:dcr.read";
-
-    public SecurityConfig(ExceptionHandlerFilter exceptionHandlerFilter,
-                          SecurityProblemSupport problemSupport
-    ) {
-        this.exceptionHandlerFilter = exceptionHandlerFilter;
-        this.problemSupport = problemSupport;
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -54,14 +60,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(problemSupport)
                 .accessDeniedHandler(problemSupport)
             .and()
-                .authorizeRequests(authorize -> authorize
-                    .mvcMatchers("/api/registration").hasAuthority("SCOPE_" + REGISTRATION_SCOPE)
-                    .mvcMatchers("/api/notification").hasAuthority("SCOPE_difi:notification_or_something")
-                    .anyRequest().authenticated()
-                )
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2.authenticationManagerResolver(this.tokenAuthenticationManagerResolver()))
         ;
 
+    }
+
+
+    @Bean
+    AuthenticationManagerResolver<HttpServletRequest> tokenAuthenticationManagerResolver() {
+        OpaqueTokenAuthenticationProvider opaqueTokenAuthenticationProvider = new OpaqueTokenAuthenticationProvider(opaqueTokenIntrospector);
+        JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(JwtDecoders.fromIssuerLocation(this.issuerUri));
+
+        List<String> pathsThatUseOpaqueTokens = Arrays.asList("/api/register");
+
+        return request -> {
+            if (pathsThatUseOpaqueTokens.contains(request.getRequestURI())) {
+                return opaqueTokenAuthenticationProvider::authenticate;
+            } else {
+                return jwtAuthenticationProvider::authenticate;
+            }
+        };
     }
 
 

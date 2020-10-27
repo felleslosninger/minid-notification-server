@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotificationEndpoint {
 
     @GetMapping("/send")
-    @PreAuthorize("isAuthenticated()") // must require admin auth
+    @PreAuthorize("hasAuthority('SCOPE_minid:app.send_or_something')")
     public ResponseEntity<String> send() {
         // call service layer and send message to given person_identifier
         return ResponseEntity.ok("{\"status\": \"Great success!\"}");
