@@ -1,33 +1,16 @@
 package no.digdir.minidnotificationserver.config;
 
-import no.digdir.minidnotificationserver.config.developer.DeveloperAuthenticationSuccessHandler;
 import no.digdir.minidnotificationserver.exceptions.ExceptionHandlerFilter;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
-import org.springframework.lang.Nullable;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
-import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -37,16 +20,14 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final SecurityProblemSupport problemSupport;
-    private final ClientRegistrationRepository clientRegistrationRepository;
-    private final DeveloperAuthenticationSuccessHandler devAuthenticationSuccessHandler;
+
     private final ExceptionHandlerFilter exceptionHandlerFilter;
 
-    public SecurityConfig(ClientRegistrationRepository clientRegistrationRepository,
-                          @Nullable DeveloperAuthenticationSuccessHandler devAuthenticationSuccessHandler,
-                          ExceptionHandlerFilter exceptionHandlerFilter,
-                          SecurityProblemSupport problemSupport) {
-        this.clientRegistrationRepository = clientRegistrationRepository;
-        this.devAuthenticationSuccessHandler = devAuthenticationSuccessHandler;
+    public static final String REGISTRATION_SCOPE = "idporten:dcr.read";
+
+    public SecurityConfig(ExceptionHandlerFilter exceptionHandlerFilter,
+                          SecurityProblemSupport problemSupport
+    ) {
         this.exceptionHandlerFilter = exceptionHandlerFilter;
         this.problemSupport = problemSupport;
     }
@@ -54,18 +35,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .sessionManagement().sessionFixation().migrateSession()
-            .and()
-                .cors(withDefaults())
-                .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            .and()
-                .logout()
-                .logoutSuccessHandler(new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository))
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // needed to allow GET if CSRF is configured
-            .and()
+//                .cors(withDefaults())
+                .csrf().disable()
+//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//            .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // translate unauthenticated exception to a http status 401 response
+//                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // translate unauthenticated exception to a http status 401 response
             .and()
                 .headers()
                 // check with online CSP evaluator at https://csp-evaluator.withgoogle.com/
@@ -79,33 +54,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(problemSupport)
                 .accessDeniedHandler(problemSupport)
             .and()
-                .authorizeRequests()
-                .antMatchers("/health", "/info", "/version").permitAll()
-                .antMatchers("/api/**").authenticated()
-            .and()
-                .oauth2Login()
-                .successHandler(devAuthenticationSuccessHandler != null ? devAuthenticationSuccessHandler : new SimpleUrlAuthenticationSuccessHandler("/") ) // only enabled in 'dev'-profile
+                .authorizeRequests(authorize -> authorize
+                    .mvcMatchers("/api/registration").hasAuthority("SCOPE_" + REGISTRATION_SCOPE)
+                    .mvcMatchers("/api/notification").hasAuthority("SCOPE_difi:notification_or_something")
+                    .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
         ;
 
     }
 
-    @Bean
-    public OAuth2AuthorizedClientManager authorizedClientManager(
-            ClientRegistrationRepository clientRegistrationRepository,
-            OAuth2AuthorizedClientRepository authorizedClientRepository) {
-
-        OAuth2AuthorizedClientProvider authorizedClientProvider =
-                OAuth2AuthorizedClientProviderBuilder.builder()
-                        .authorizationCode()
-                        .refreshToken()
-                        .build();
-
-        DefaultOAuth2AuthorizedClientManager authorizedClientManager =
-                new DefaultOAuth2AuthorizedClientManager(
-                        clientRegistrationRepository, authorizedClientRepository);
-        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
-
-        return authorizedClientManager;
-    }
 
 }

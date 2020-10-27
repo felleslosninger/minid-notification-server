@@ -65,27 +65,18 @@ spring:
   # Spring Security - OAuth 2 provider
   security:
     oauth2:
-      client:
-
-        provider:
-          idporten:
-            issuer-uri: https://eid-systest-web01.dmz.local/idporten-oidc-provider/
-            user-name-attribute: pid
-
-        registration:
-          idporten:
-#            client-id:
-#            client-secret:
-            authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope: openid, profile
-            provider: idporten
-            client-authentication-method: post
+      resourceserver:
+        jwt:
+          issuer-uri: https://eid-systest-web01.dmz.local/idporten-oidc-provider/
+        opaque-token:
+          introspection-uri: https://eid-systest-web01.dmz.local/idporten-oidc-provider/tokeninfo
+          client-id: ""
+          client-secret: ""
 
   datasource:
-    url: jdbc:mysql://localhost:3306/minidnotification?useMysqlMetadata=true
+    url: jdbc:mysql://eid-systest-db01.dmz.local:3306/minid_notification?useMysqlMetadata=true
     driver-class-name: org.mariadb.jdbc.Driver
-    username: minidnotification
+    username: minid_notif
     password: password
 
   flyway:
@@ -93,8 +84,8 @@ spring:
     locations: classpath:db/migration
     enabled: true
     baseline-on-migrate: true
-    url: jdbc:mysql://localhost:3306/minidnotification?useMysqlMetadata=true
-    user: minidnotification
+    url: jdbc:mysql://eid-systest-db01.dmz.local:3306/minid_notification?useMysqlMetadata=true
+    user: minid_notif
     password: password
 
 # ===================================================================
