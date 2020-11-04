@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,4 +17,11 @@ public interface RegistrationRepository extends JpaRepository<RegistrationDevice
     Optional<Long> findIdByToken(@Param("token") String token);
 
     Optional<RegistrationDevice> findByToken(String token);
+
+    Long deleteByPersonIdentifierAndToken(String personIdentifier, String token);
+
+    Long deleteByPersonIdentifier(String personIdentifier);
+
+    List<RegistrationDevice> findByPersonIdentifier(String personIdentifier);
+
 }
