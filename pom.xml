@@ -27,6 +27,7 @@
     <flyway.version>5.2.4</flyway.version>
 
 
+    <firebase-admin.version>7.0.1</firebase-admin.version>
 </properties>
 
 <dependencyManagement>
@@ -94,7 +95,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
-
 
     <!-- ****************************** -->
     <!-- * Digdir dependencies        * -->
@@ -182,6 +182,12 @@
     <dependency>
         <groupId>org.mariadb.jdbc</groupId>
         <artifactId>mariadb-java-client</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.firebase</groupId>
+        <artifactId>firebase-admin</artifactId>
+        <version>${firebase-admin.version}</version>
     </dependency>
 
     <!-- *********************** -->

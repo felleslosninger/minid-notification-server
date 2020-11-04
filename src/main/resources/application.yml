@@ -93,6 +93,5 @@ spring:
 # Application specific properties
 # ===================================================================
 digdir:
-#  mf-gateway:
-#    url: http://eid-systest-admin01.dmz.local:10015
-#    client-id-header: minid-notification-server
+  firebase:
+    credentials-json: classpath:firebase-credentials.json

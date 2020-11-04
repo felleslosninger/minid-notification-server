@@ -60,8 +60,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(problemSupport)
                 .accessDeniedHandler(problemSupport)
             .and()
-                .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
-                .oauth2ResourceServer(oauth2 -> oauth2.authenticationManagerResolver(this.tokenAuthenticationManagerResolver()))
+                .authorizeRequests()
+                .antMatchers("/api/**", "/info", "/version").permitAll()
+
+//                .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
+//                .oauth2ResourceServer(oauth2 -> oauth2.authenticationManagerResolver(this.tokenAuthenticationManagerResolver()))
         ;
 
     }
@@ -72,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         OpaqueTokenAuthenticationProvider opaqueTokenAuthenticationProvider = new OpaqueTokenAuthenticationProvider(opaqueTokenIntrospector);
         JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(JwtDecoders.fromIssuerLocation(this.issuerUri));
 
-        List<String> pathsThatUseOpaqueTokens = Arrays.asList("/api/register");
+        List<String> pathsThatUseOpaqueTokens = Arrays.asList("/api/register/device");
 
         return request -> {
             if (pathsThatUseOpaqueTokens.contains(request.getRequestURI())) {
