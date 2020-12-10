@@ -1,14 +1,13 @@
-package no.digdir.minidnotificationserver.config;
+package no.digdir.minidnotificationserver.integration.firebase;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import lombok.RequiredArgsConstructor;
+import com.google.firebase.messaging.FirebaseMessaging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
@@ -16,16 +15,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Component
-@RequiredArgsConstructor
-public class StartupApplicationListener implements ApplicationListener<ApplicationStartedEvent> {
+public class FirebaseBeans {
 
-    private final static Logger log = LoggerFactory.getLogger(StartupApplicationListener.class);
+    private final static Logger log = LoggerFactory.getLogger(FirebaseBeans.class);
+
 
     @Value("${digdir.firebase.credentials-json}")
     private Resource credentialsResource;
 
-    @Override
-    public void onApplicationEvent(ApplicationStartedEvent event) {
+    @Bean
+    FirebaseMessaging firebaseMessaging() {
 
         try {
             InputStream credentialsStream = credentialsResource.getInputStream();
@@ -39,5 +38,6 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
             log.error("Could not initialize Firebase: ", ex);
         }
 
+        return FirebaseMessaging.getInstance();
     }
 }

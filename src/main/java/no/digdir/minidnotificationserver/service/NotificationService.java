@@ -8,9 +8,6 @@ import no.digdir.minidnotificationserver.repository.RegistrationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -20,9 +17,7 @@ public class NotificationService {
     private final RegistrationRepository registrationRepository;
 
     public void send(NotificationRequest request) {
-        List<RegistrationDevice> deviceList = registrationRepository.findByPersonIdentifier(request.getPerson_identifier());
-        List<String> tokenList = deviceList.stream().map(RegistrationDevice::getToken).collect(Collectors.toList());
-
-        firebaseClient.send(request, tokenList);
+        RegistrationDevice device = registrationRepository.findByPersonIdentifier(request.getPerson_identifier());
+        firebaseClient.send(request, device.getToken());
     }
 }

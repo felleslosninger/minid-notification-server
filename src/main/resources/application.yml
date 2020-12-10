@@ -17,7 +17,7 @@ server:
   servlet:
     session:
       cookie:
-        secure: false
+        secure: true
         http-only: true
     encoding:
       force: true
@@ -36,11 +36,11 @@ management:
     web:
       base-path: /
       exposure:
-        include: "version, info, flyway"
+        include: "health, version, info, flyway"
       #        include: "health, info, version"
-    jmx:
-      exposure:
-        exclude: "*"
+#    jmx:
+#      exposure:
+#        exclude: "*"
 #  endpoint:
 #    health:
 #      show-details: always
@@ -57,11 +57,19 @@ management:
 #      enabled: false
 
 
+
+
 spring:
-  jpa:
-    open-in-view: false
+  resources:
+    add-mappings: false
   mvc:
     throw-exception-if-no-handler-found: true
+  http:
+    encoding:
+      force: true
+  jpa:
+    open-in-view: false
+
 
   # Spring Security - OAuth 2 provider
   security:
@@ -69,7 +77,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: https://eid-systest-web01.dmz.local/idporten-oidc-provider/
-        opaque-token:
+        opaquetoken:
           introspection-uri: https://eid-systest-web01.dmz.local/idporten-oidc-provider/tokeninfo
           client-id: test_rp_systest
           client-secret: password
@@ -81,7 +89,7 @@ spring:
     password: password
 
   flyway:
-    validate-on-migrate: true
+    validate-on-migrate: false
     locations: classpath:db/migration
     enabled: true
     baseline-on-migrate: true

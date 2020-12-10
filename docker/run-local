@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+version=DEV-SNAPSHOT
+registry=local
+localConfig=$1
+stackName=minid-notification
+
+rm -rf docker/minid-notification-db/puppet_hiera/*  docker/minid-notification-db/puppet_modules/*
+rm -rf docker/minid-notification-server/puppet_hiera/*  docker/minid-notification-server/puppet_modules/* docker/minid-notification-server/jar/*|| exit 1
+mvn package -DskipTests || exit 1
+docker/build-images ${registry} ${version} ${localConfig}|| exit 1
+echo "LOG_ENV=$(whoami)" > docker/log_config
+VERSION=${version} REGISTRY=${registry} docker stack deploy -c docker/stack.yml --resolve-image=never ${stackName} || exit 1
+docker service update --publish-rm 443 ${stackName}_web
+docker service update --publish-add 443:443 ${stackName}_web
+rm docker/log_config
+

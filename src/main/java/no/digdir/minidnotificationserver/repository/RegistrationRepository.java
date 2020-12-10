@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,6 +21,6 @@ public interface RegistrationRepository extends JpaRepository<RegistrationDevice
 
     Long deleteByPersonIdentifier(String personIdentifier);
 
-    List<RegistrationDevice> findByPersonIdentifier(String personIdentifier);
+    RegistrationDevice findByPersonIdentifier(String personIdentifier);
 
 }

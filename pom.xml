@@ -25,7 +25,11 @@
     <idporten.version>2020-04-06-1204-f4ec194</idporten.version>
     <resilience.version>2019-06-27-1212-079df00</resilience.version>
     <flyway.version>5.2.4</flyway.version>
+    <artifactory.url>http://eid-artifactory.dmz.local:8080/artifactory</artifactory.url>
+    <logstash.version>6.3</logstash.version>
+    <h2.version>1.4.200</h2.version>
 
+    <wiremock-standalone.version>2.26.1</wiremock-standalone.version>
 
     <firebase-admin.version>7.0.1</firebase-admin.version>
 </properties>
@@ -96,6 +100,12 @@
         <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-activemq</artifactId>
+    </dependency>
+
+
     <!-- ****************************** -->
     <!-- * Digdir dependencies        * -->
     <!-- ****************************** -->
@@ -164,6 +174,24 @@
         <artifactId>jackson-datatype-problem</artifactId>
         <version>${problem.version}</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>2.11.2</version>
+    </dependency>
+
+
+    <!-- ActivMQ -->
+<!--    <dependency>-->
+<!--        <groupId>org.apache.activemq</groupId>-->
+<!--        <artifactId>activemq-client</artifactId>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--        <groupId>org.apache.activemq</groupId>-->
+<!--        <artifactId>activemq-openwire-legacy</artifactId>-->
+<!--    </dependency>-->
+
     <dependency>
         <groupId>org.zalando</groupId>
         <artifactId>problem-spring-web</artifactId>
@@ -178,6 +206,7 @@
     <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.48</version>
     </dependency>
     <dependency>
         <groupId>org.mariadb.jdbc</groupId>
@@ -190,10 +219,26 @@
         <version>${firebase-admin.version}</version>
     </dependency>
 
+
     <!-- *********************** -->
     <!-- * Test dependencies   * -->
     <!-- *********************** -->
-
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-test-autoconfigure</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${h2.version}</version>
+        <scope>test</scope>
+    </dependency>
 
 </dependencies>
 

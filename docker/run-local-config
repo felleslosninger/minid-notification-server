@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+cd ../puppet_hiera;targetDir=docker/eid-hiera-config/hiera;rm -rf ${targetDir};mkdir ${targetDir};cp -r *.yaml evry nodes ${targetDir};cd docker/eid-hiera-config/;docker build . -t eid-jenkins02.dmz.local:8081/eid-hiera-config:latest;cd ../..
+cd ../puppet_modules;targetDir=docker/eid-puppet-modules/puppet_modules;  rm -rf ${targetDir};mkdir ${targetDir};find . -maxdepth 1 -type d ! -name docker ! -name ".*" -exec cp -r {} ${targetDir} \;;cd docker/eid-puppet-modules/;docker build . -t eid-jenkins02.dmz.local:8081/eid-puppet-modules:latest;cd ../..
+
+cd ../idporten
+docker/run-local localConfig

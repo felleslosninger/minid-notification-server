@@ -1,7 +1,26 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/../../../../:\dev\minid-notification-server\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+
+.idea
+*.iml
+target
+
+/docker/minid-notification-db/puppet_hiera
+/docker/minid-notification-db/puppet_modules
+/docker/minid-notification-server/puppet_hiera/*/
+/docker/minid-notification-server/puppet_modules/*/
+/docker/minid-notification-server/war/*.war
+/docker/minid-notification-server/jar/*.jar
+
 target/*
 target*
 .idea/*
 .idea*
-*.iml
 /src/main/resources/application-dev.yml
 /src/main/resources/firebase-credentials.json

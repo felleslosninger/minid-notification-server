@@ -1,0 +1,28 @@
+project:
+  version: 1.0
+
+spring:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  flyway:
+    enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://eid-atest-web01.dmz.local/idporten-oidc-provider/
+        opaque-token:
+          introspection-uri: https://eid-atest-web01.dmz.local/idporten-oidc-provider/tokeninfo
+          client-id: test_rp_systest
+          client-secret: password
+digdir:
+  firebase:
+    credentials-json: classpath:firebase-credentials.json

@@ -1,0 +1,7 @@
+#FROM mariadb:5
+FROM mysql:5.7.24
+
+ENV MYSQL_RANDOM_ROOT_PASSWORD=yes
+ENV MYSQL_DATABASE=minid_notification
+ENV MYSQL_USER=minid_notif
+ENV MYSQL_PASSWORD=password
