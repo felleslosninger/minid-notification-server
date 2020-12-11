@@ -1,7 +1,7 @@
 package no.digdir.minidnotificationserver.actuator;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.catalina.util.ServerInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.web.annotation.EndpointWebExtension;
 import org.springframework.boot.actuate.info.InfoEndpoint;
@@ -12,10 +12,10 @@ import java.util.Map;
 
 @Component
 @EndpointWebExtension(endpoint = InfoEndpoint.class)
+@RequiredArgsConstructor
 public class InfoEndpointExtension {
 
-    @Autowired
-    private InfoEndpoint delegate;
+    private final InfoEndpoint delegate;
 
     @ReadOperation
     public  Map<String, Object> info() {

@@ -24,6 +24,17 @@ server:
     mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
     min-response-size: 1024
 
+# Spring boot actuator endpoint
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "health, version, info"
+  info:
+    git:
+      mode: full
+
 spring:
   resources:
     add-mappings: false

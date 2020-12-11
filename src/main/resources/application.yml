@@ -29,34 +29,14 @@ server:
 
 # Spring boot actuator endpoint
 management:
-  endpoint:
-    flyway:
-      enabled: true
   endpoints:
     web:
       base-path: /
       exposure:
-        include: "health, version, info, flyway"
-      #        include: "health, info, version"
-#    jmx:
-#      exposure:
-#        exclude: "*"
-#  endpoint:
-#    health:
-#      show-details: always
-#      enabled: true
+        include: "health, version, info"
   info:
     git:
       mode: full
-#  health:
-#    mail:
-#      enabled: false
-#    diskspace:
-#      enabled: false
-#    metrics:
-#      enabled: false
-
-
 
 
 spring:
