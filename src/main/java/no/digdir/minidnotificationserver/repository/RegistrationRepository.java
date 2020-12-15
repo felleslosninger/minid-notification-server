@@ -17,7 +17,7 @@ public interface RegistrationRepository extends JpaRepository<RegistrationDevice
 
     Optional<RegistrationDevice> findByToken(String token);
 
-    Long deleteByPersonIdentifierAndToken(String personIdentifier, String token);
+    Long deleteByToken(String token);
 
     Long deleteByPersonIdentifier(String personIdentifier);
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.digdir.minidnotificationserver.api.registration.RegistrationRequest;
 
 import javax.persistence.*;
 import java.time.Clock;
@@ -13,7 +14,7 @@ import java.time.Clock;
 @Table(name = "device")
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class RegistrationDevice {
 
     @Id
@@ -24,11 +25,14 @@ public class RegistrationDevice {
     @Column(name = "person_identifier")
     private String personIdentifier;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "app_identifier")
+    private String appIdentifier;
 
     @Column(name = "token")
     private String token;
+
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "os")
     private String os;
@@ -66,5 +70,26 @@ public class RegistrationDevice {
     @Override
     public int hashCode() {
         return token.hashCode();
+    }
+
+    public RegistrationDevice from(RegistrationRequest request) {
+        return this.toBuilder()
+                .appIdentifier(request.getApp_identifier())
+                .token(request.getToken())
+                .description(request.getDescription())
+                .os(request.getOs())
+                .osVersion(request.getOs_version())
+                .build();
+    }
+
+    public static RegistrationDevice from(String personIdentifier, RegistrationRequest request) {
+        return RegistrationDevice.builder()
+                .personIdentifier(personIdentifier)
+                .appIdentifier(request.getApp_identifier())
+                .token(request.getToken())
+                .os(request.getOs())
+                .osVersion(request.getOs_version())
+                .description(request.getDescription())
+                .build();
     }
 }

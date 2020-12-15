@@ -14,24 +14,16 @@ public class RegistrationService {
 
     private final RegistrationRepository registrationRepository;
 
-    public RegistrationDevice registerDevice(RegistrationRequest request) {
-
-        RegistrationDevice device = registrationRepository.findByToken(request.getToken()).orElse(new RegistrationDevice());
-
-        device.setPersonIdentifier(request.getPerson_identifier());
-        device.setToken(request.getToken());
-        device.setDescription(request.getDescription());
-        device.setOs(request.getOs());
-        device.setOsVersion(request.getOs_version());
-
-        return registrationRepository.save(device);
+    public RegistrationDevice registerDevice(String personIdentifier, RegistrationRequest request) {
+        return registrationRepository.save(RegistrationDevice.from(personIdentifier, request));
     }
 
-    public Long deleteDevice(String personIdentifier, String token) {
-        return registrationRepository.deleteByPersonIdentifierAndToken(personIdentifier, token);
+    public Long deleteDevice(String token) {
+        return registrationRepository.deleteByToken(token);
     }
 
-    public Long deleteAllDevices(String personIdentifier) {
-        return registrationRepository.deleteByPersonIdentifier(personIdentifier);
+
+    public void updateDevice(String token, RegistrationRequest request) {
+        registrationRepository.findByToken(token).ifPresent(device -> registrationRepository.save(device.from(request)));
     }
 }

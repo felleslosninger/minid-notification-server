@@ -19,19 +19,20 @@ public class RegistrationEndpoint {
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
     @PostMapping("/register/device")
     public ResponseEntity<String> registerDevice(@RequestBody RegistrationRequest registrationRequest, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        registrationRequest.setPerson_identifier(principal.getAttribute("pid"));
-        registrationService.registerDevice(registrationRequest);
-
+        registrationService.registerDevice(principal.getAttribute("pid"), registrationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
-    @DeleteMapping("/register/device/{token}")
-    public ResponseEntity<String> deleteDevice(@PathVariable("token") String token, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        String personIdentifier = principal.getAttribute("pid");
-        registrationService.deleteDevice(personIdentifier, token);
+    @PutMapping("/register/device/{token}")
+    public ResponseEntity<String> updateDevice(@PathVariable("token") String token, @RequestBody RegistrationRequest registrationRequest) {
+        registrationService.updateDevice(token, registrationRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @DeleteMapping("/register/device/{token}")
+    public ResponseEntity<String> deleteDevice(@PathVariable("token") String token) {
+        registrationService.deleteDevice(token);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
