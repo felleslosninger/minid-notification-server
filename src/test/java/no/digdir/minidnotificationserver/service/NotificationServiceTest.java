@@ -24,6 +24,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -58,7 +60,7 @@ public class NotificationServiceTest {
                 .token("snazzytoken1234")
                 .personIdentifier("01030099326")
                 .build();
-        Mockito.when(registrationRepository.findByPersonIdentifier(anyString())).thenReturn(registrationDevice);
+        Mockito.when(registrationRepository.findByPersonIdentifier(anyString())).thenReturn(java.util.Optional.ofNullable(registrationDevice));
 
         Mockito.when(firebaseMessaging.send(any())).thenReturn("msgId-1234");
     }
@@ -66,10 +68,14 @@ public class NotificationServiceTest {
     @Test
     public void sendMessageTest() throws FirebaseMessagingException, NoSuchFieldException, IllegalAccessException {
 
+        Map<String, String> dataMap = new HashMap<>();
+        dataMap.put("key1", "value1");
+        dataMap.put("key2", "value2");
         NotificationRequest notificationRequest = NotificationRequest.builder()
                 .title("My snazzy title")
-                .message("My even snazzier expectedMessage")
+                .body("My even snazzier expectedMessage")
                 .person_identifier("01030099326")
+                .data(dataMap)
                 .build();
         notificationService.send(notificationRequest);
 
@@ -80,6 +86,7 @@ public class NotificationServiceTest {
                         .setImage("https://idporten.difi.no/error/images/svg/eid.svg")
                         .build())
                 .setToken("snazzytoken1234")
+                .putAllData(dataMap)
                 .build();
         Mockito.verify(firebaseMessaging).send(messageCaptor.capture());
 

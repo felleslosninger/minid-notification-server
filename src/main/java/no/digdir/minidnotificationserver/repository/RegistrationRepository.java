@@ -12,15 +12,10 @@ import java.util.Optional;
 @Repository
 public interface RegistrationRepository extends JpaRepository<RegistrationDevice, Long>, JpaSpecificationExecutor<RegistrationDevice> {
 
-    @Query("select d.id from RegistrationDevice d where d.token = :token")
-    Optional<Long> findIdByToken(@Param("token") String token);
-
     Optional<RegistrationDevice> findByToken(String token);
 
     Long deleteByToken(String token);
 
-    Long deleteByPersonIdentifier(String personIdentifier);
-
-    RegistrationDevice findByPersonIdentifier(String personIdentifier);
+    Optional<RegistrationDevice> findByPersonIdentifier(String personIdentifier);
 
 }

@@ -22,8 +22,8 @@ public class RegistrationService {
         return registrationRepository.deleteByToken(token);
     }
 
-
     public void updateDevice(String token, RegistrationRequest request) {
-        registrationRepository.findByToken(token).ifPresent(device -> registrationRepository.save(device.from(request)));
+        registrationRepository.findByToken(token)
+                .ifPresent(device -> registrationRepository.save(device.from(request)));
     }
 }

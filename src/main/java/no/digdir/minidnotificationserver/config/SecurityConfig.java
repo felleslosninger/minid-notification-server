@@ -34,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final SecurityProblemSupport problemSupport;
     private final ExceptionHandlerFilter exceptionHandlerFilter;
     private final OpaqueTokenIntrospector opaqueTokenIntrospector;
+
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuerUri;
 

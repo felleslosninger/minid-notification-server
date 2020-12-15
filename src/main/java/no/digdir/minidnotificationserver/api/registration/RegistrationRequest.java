@@ -1,11 +1,13 @@
 package no.digdir.minidnotificationserver.api.registration;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RegistrationRequest {
 

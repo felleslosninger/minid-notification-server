@@ -23,13 +23,15 @@ public class FirebaseClient {
         try {
             Notification notification = Notification.builder()
                     .setTitle(request.getTitle())
-                    .setBody(request.getMessage())
-                    .setImage("https://idporten.difi.no/error/images/svg/eid.svg")
+                    .setBody(request.getBody())
+                    /* Contains the URL of an image that is going to be downloaded on the device and displayed in a notification. JPEG, PNG, BMP have full support across platforms. Animated GIF and video only work on iOS. WebP and HEIF have varying levels of support across platforms and platform versions. */
+                    .setImage("https://idporten.difi.no/error/images/svg/eid.svg") // TODO: externalize url
                     .build();
 
             // See documentation on defining a message payload.
             Message message = Message.builder()
                     .setNotification(notification)
+                    .putAllData(request.getData())
                     .setToken(token)
                     .build();
 
@@ -39,7 +41,7 @@ public class FirebaseClient {
 
             // Response is a message ID string.
             System.out.println("*** Successfully sent message: " + response);
-        } catch (FirebaseMessagingException e) {
+        } catch (FirebaseMessagingException e) { // TODO: propagate errors instead
             e.printStackTrace();
         }
 
