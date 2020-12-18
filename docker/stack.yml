@@ -33,7 +33,7 @@ services:
         constraints:
           - node.labels.atest == true
   idporten-oidc-provider:
-    image: eid-jenkins02.dmz.local:8081/idporten-oidc-provider:latest
+    image: eid-jenkins02.dmz.local:8082/idporten-oidc-provider:latest
     extra_hosts:
       - "eid-elk-app01.dmz.local:10.243.220.21"
     configs:
@@ -80,7 +80,7 @@ services:
         constraints:
           - node.labels.atest == true
   eventlog-db:
-    image: eid-jenkins02.dmz.local:8081/eventlog-db:latest
+    image: eid-jenkins02.dmz.local:8082/eventlog-db:latest
     ports:
       - 3306
     extra_hosts:
@@ -94,7 +94,7 @@ services:
         constraints:
           - node.labels.atest == true
   opendj:
-    image: eid-jenkins02.dmz.local:8081/opendj:latest
+    image: eid-jenkins02.dmz.local:8082/opendj:latest
     extra_hosts:
       - "eid-logstash-app01.dmz.local:10.243.220.151"
     configs:
@@ -107,7 +107,7 @@ services:
         constraints:
           - node.labels.atest == true
   web:
-    image: eid-jenkins02.dmz.local:8081/web:latest
+    image: eid-jenkins02.dmz.local:8082/web:latest
     extra_hosts:
       - "eid-logstash-app01.dmz.local:10.243.220.151"
     configs:
@@ -125,7 +125,7 @@ services:
         constraints:
           - node.labels.atest == true
   idporten-openam:
-    image: eid-jenkins02.dmz.local:8081/idporten-openam:latest
+    image: eid-jenkins02.dmz.local:8082/idporten-openam:latest
     extra_hosts:
       - "eid-logstash-app01.dmz.local:10.243.220.151"
     configs:
@@ -140,7 +140,7 @@ services:
         constraints:
           - node.labels.atest == true
   idporten-oidc-client:
-    image: eid-jenkins02.dmz.local:8081/idporten-oidc-client:latest
+    image: eid-jenkins02.dmz.local:8082/idporten-oidc-client:latest
     extra_hosts:
       - "eid-logstash-app01.dmz.local:10.243.220.151"
     configs:
@@ -185,7 +185,7 @@ services:
         constraints:
           - node.labels.atest == true
   kontaktinfo-backend:
-    image: eid-jenkins02.dmz.local:8081/kontaktinfo-backend:latest
+    image: eid-jenkins02.dmz.local:8082/kontaktinfo-backend:latest
     extra_hosts:
       - "eid-logstash-app01.dmz.local:10.243.220.151"
     configs:
@@ -200,7 +200,7 @@ services:
         constraints:
           - node.labels.atest == true
   kontaktregister-db:
-    image: eid-jenkins02.dmz.local:8081/kontaktregister-db:latest
+    image: eid-jenkins02.dmz.local:8082/kontaktregister-db:latest
     networks:
       atest:
     dns: 8.8.8.8
@@ -209,7 +209,7 @@ services:
         constraints:
           - node.labels.atest == true
   idporten-admin:
-    image: eid-jenkins02.dmz.local:8081/idporten-admin:latest
+    image: eid-jenkins02.dmz.local:8082/idporten-admin:latest
     configs:
       - log_config
     extra_hosts:
@@ -240,7 +240,7 @@ services:
         constraints:
           - node.labels.atest == true
   logwriter:
-    image:  eid-jenkins02.dmz.local:8081/logwriter:latest
+    image:  eid-jenkins02.dmz.local:8082/logwriter:latest
     extra_hosts:
       - "eid-logstash-app01.dmz.local:10.243.220.151"
     configs:

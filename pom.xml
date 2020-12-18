@@ -32,6 +32,8 @@
     <wiremock-standalone.version>2.26.1</wiremock-standalone.version>
 
     <firebase-admin.version>7.0.1</firebase-admin.version>
+    <springdoc-openapi-ui.version>1.5.1</springdoc-openapi-ui.version>
+    <swagger-ui.version>3.38.0</swagger-ui.version>
 </properties>
 
 <dependencyManagement>
@@ -103,6 +105,25 @@
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-activemq</artifactId>
+    </dependency>
+
+    <!-- ****************************** -->
+    <!-- * OpenAPI 3                  * -->
+    <!-- ****************************** -->
+    <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-ui</artifactId>
+        <version>${springdoc-openapi-ui.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-security</artifactId>
+        <version>${springdoc-openapi-ui.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>swagger-ui</artifactId>
+        <version>${swagger-ui.version}</version>
     </dependency>
 
 

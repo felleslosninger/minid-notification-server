@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public interface RegistrationRepository extends JpaRepository<RegistrationDevice, Long>, JpaSpecificationExecutor<RegistrationDevice> {
 
+    Optional<RegistrationDevice> findByPersonIdentifierAndAppIdentifier(String personIdentifier, String appIdentifier);
+
     Optional<RegistrationDevice> findByToken(String token);
 
     Long deleteByToken(String token);

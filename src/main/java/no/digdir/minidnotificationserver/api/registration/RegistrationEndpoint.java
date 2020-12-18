@@ -1,5 +1,9 @@
 package no.digdir.minidnotificationserver.api.registration;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.service.RegistrationService;
 import org.springframework.http.HttpStatus;
@@ -12,10 +16,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "registration_auth")
 public class RegistrationEndpoint {
 
     private final RegistrationService registrationService;
 
+    @Operation(summary = "Register a device")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Device registered."),
+            @ApiResponse(responseCode = "400", description = "Invalid input.")
+    })
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
     @PostMapping("/register/device")
     public ResponseEntity<String> registerDevice(@RequestBody RegistrationRequest registrationRequest, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
@@ -23,16 +33,30 @@ public class RegistrationEndpoint {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/register/device/{token}")
-    public ResponseEntity<String> updateDevice(@PathVariable("token") String token, @RequestBody RegistrationRequest registrationRequest) {
-        registrationService.updateDevice(token, registrationRequest);
+    @Operation(summary = "Modify existing device")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Device modified."),
+            @ApiResponse(responseCode = "400", description = "Invalid input.")
+    })
+    @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
+    @PutMapping("/register/device")
+    public ResponseEntity<String> updateDevice(@RequestBody RegistrationRequest registrationRequest, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+        registrationService.updateDevice(principal.getAttribute("pid"), registrationRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("/register/device/{token}")
-    public ResponseEntity<String> deleteDevice(@PathVariable("token") String token) {
-        registrationService.deleteDevice(token);
+    @Operation(summary = "Delete existing device")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Device deleted."),
+            @ApiResponse(responseCode = "400", description = "Invalid input.")
+    })
+    @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
+    @DeleteMapping("/register/device")
+    public ResponseEntity<String> deleteDevice(@RequestBody RegistrationRequest registrationRequest, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+        registrationService.deleteDevice(registrationRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    // TODO: list all devices for user?
 
 }

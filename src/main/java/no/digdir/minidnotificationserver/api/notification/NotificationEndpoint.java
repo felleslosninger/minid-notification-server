@@ -1,5 +1,9 @@
 package no.digdir.minidnotificationserver.api.notification;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.service.NotificationService;
 import org.springframework.http.HttpStatus;
@@ -15,10 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "notification_auth")
 public class NotificationEndpoint {
 
     private final NotificationService notificationService;
 
+    @Operation(summary = "Send a notification")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful operation, no content returned."),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
     @PostMapping("/notification/send")
     @PreAuthorize("hasAuthority('SCOPE_minid:notification.send')")
     public ResponseEntity<String> send(@RequestBody NotificationRequest notificationRequest, @AuthenticationPrincipal Jwt accessToken) {

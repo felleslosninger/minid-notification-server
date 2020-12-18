@@ -51,8 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .headers()
                 // check with online CSP evaluator at https://csp-evaluator.withgoogle.com/
-                .contentSecurityPolicy("base-uri 'self'; object-src 'none'; default-src 'self'; connect-src 'self' localhost; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' ; font-src  'self' ; img-src 'self' data: ;  frame-ancestors 'none'; child-src 'self'; frame-src 'self'; require-trusted-types-for 'script")
-            .and()
+//                .contentSecurityPolicy("base-uri 'self'; object-src 'none'; default-src 'self'; connect-src 'self' localhost; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' ; font-src  'self' ; img-src 'self' data: ;  frame-ancestors 'none'; child-src 'self'; frame-src 'self'; require-trusted-types-for 'script")
+                //TODO: check csp and swagger
+//            .and()
                 .referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.SAME_ORIGIN)
             .and()
                 .and()
@@ -62,10 +63,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(problemSupport)
             .and()
                 .authorizeRequests()
-                .antMatchers("/api/**", "/info", "/version").permitAll()
-
-//                .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
-//                .oauth2ResourceServer(oauth2 -> oauth2.authenticationManagerResolver(this.tokenAuthenticationManagerResolver()))
+                .antMatchers("/api/**", "/info", "/version", "/health", "/v3/api-docs", "/v3/api-docs/swagger-config", "/swagger-ui/**", "/swagger-ui/index.html").permitAll()
+            .and()
+                .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2.authenticationManagerResolver(this.tokenAuthenticationManagerResolver()))
         ;
 
     }

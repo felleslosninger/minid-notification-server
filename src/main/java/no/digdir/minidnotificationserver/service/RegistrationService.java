@@ -18,12 +18,12 @@ public class RegistrationService {
         return registrationRepository.save(RegistrationDevice.from(personIdentifier, request));
     }
 
-    public Long deleteDevice(String token) {
-        return registrationRepository.deleteByToken(token);
+    public Long deleteDevice(RegistrationRequest request) {
+        return registrationRepository.deleteByToken(request.getToken());
     }
 
-    public void updateDevice(String token, RegistrationRequest request) {
-        registrationRepository.findByToken(token)
+    public void updateDevice(String personIdentifier, RegistrationRequest request) {
+        registrationRepository.findByPersonIdentifierAndAppIdentifier(personIdentifier, request.getApp_identifier())
                 .ifPresent(device -> registrationRepository.save(device.from(request)));
     }
 }

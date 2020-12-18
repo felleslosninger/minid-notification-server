@@ -35,6 +35,19 @@ management:
     git:
       mode: full
 
+
+springdoc:
+  oAuthFlow:
+    authorizationUrl: <%= @idporten_oidc_issuer_uri %><% if (!@idporten_oidc_issuer_uri.empty? && !@idporten_oidc_issuer_uri.end_with?("/")) %>/<% end %>authorize
+    tokenUrl: <%= @idporten_oidc_issuer_uri %><% if (!@idporten_oidc_issuer_uri.empty? && !@idporten_oidc_issuer_uri.end_with?("/")) %>/<% end %>token
+  cache:
+    disabled: true
+  swagger-ui:
+    oauth: # todo: add client id and client secret for ondemand
+      client-id:
+      client-secret:
+      scopes: openid profile
+
 spring:
   resources:
     add-mappings: false
@@ -54,7 +67,7 @@ spring:
           issuer-uri: <%= @idporten_oidc_issuer_uri %><% if (!@idporten_oidc_issuer_uri.empty? && !@idporten_oidc_issuer_uri.end_with?("/")) %>/<% end %>
         opaquetoken:
           introspection-uri: <%= @idporten_oidc_issuer_uri %><% if (!@idporten_oidc_issuer_uri.empty? && !@idporten_oidc_issuer_uri.end_with?("/")) %>/<% end %>tokeninfo
-          client-id: test_rp_systest
+          client-id: test_rp_atest
           client-secret: password
 
   datasource:

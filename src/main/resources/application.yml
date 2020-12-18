@@ -39,6 +39,18 @@ management:
       mode: full
 
 
+springdoc:
+  oAuthFlow:
+    authorizationUrl: https://eid-systest-web01.dmz.local/idporten-oidc-provider/authorize
+    tokenUrl: https://eid-systest-web01.dmz.local/idporten-oidc-provider/token
+  cache:
+    disabled: true
+  swagger-ui:
+    oauth:
+      client-id:
+      client-secret:
+      scopes: openid profile
+
 spring:
   resources:
     add-mappings: false
