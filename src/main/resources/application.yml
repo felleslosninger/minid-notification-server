@@ -95,3 +95,4 @@ spring:
 digdir:
   firebase:
     credentials-json: classpath:firebase-credentials.json
+    notification-image-url: https://idporten.difi.no/error/images/svg/eid.svg

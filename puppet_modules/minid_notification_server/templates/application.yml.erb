@@ -43,9 +43,9 @@ springdoc:
   cache:
     disabled: true
   swagger-ui:
-    oauth: # todo: add client id and client secret for ondemand
-      client-id:
-      client-secret:
+    oauth:
+      client-id: <%= @minid_notification_swagger_client_id %>
+      client-secret:  <%= @minid_notification_swagger_client_secret %>
       scopes: openid profile
 
 spring:

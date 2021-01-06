@@ -4,11 +4,10 @@ create table if not exists device (
    token              VARCHAR(4096) NOT NULL,
    app_identifier     VARCHAR(64) NOT NULL,
    app_version        VARCHAR(8) NOT NULL,
-   description        VARCHAR(128) NOT NULL,
    os                 VARCHAR(64) NOT NULL,
    os_version         VARCHAR(64) NOT NULL,
-   created            TIMESTAMP NOT NULL,
-   last_updated       TIMESTAMP NOT NULL
+   created            BIGINT(20) NOT NULL,
+   last_updated       BIGINT(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX IDX_1 ON device (person_identifier);

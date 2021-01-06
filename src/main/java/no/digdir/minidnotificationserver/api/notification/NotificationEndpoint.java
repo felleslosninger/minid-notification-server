@@ -27,12 +27,13 @@ public class NotificationEndpoint {
     @Operation(summary = "Send a notification")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successful operation, no content returned."),
+            @ApiResponse(responseCode = "403", description = "Access denied due to incorrect scope or missing access token."),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping("/notification/send")
     @PreAuthorize("hasAuthority('SCOPE_minid:notification.send')")
-    public ResponseEntity<String> send(@RequestBody NotificationRequest notificationRequest, @AuthenticationPrincipal Jwt accessToken) {
-        notificationService.send(notificationRequest);
+    public ResponseEntity<String> send(@RequestBody NotificationEntity notificationEntity, @AuthenticationPrincipal Jwt accessToken) {
+        notificationService.send(notificationEntity);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

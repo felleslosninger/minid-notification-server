@@ -1,48 +1,70 @@
 package no.digdir.minidnotificationserver.integration.firebase;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
+import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
-import no.digdir.minidnotificationserver.api.notification.NotificationRequest;
+import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
+import no.digdir.minidnotificationserver.config.ConfigProvider;
+import org.omg.SendingContext.RunTime;
 import org.springframework.stereotype.Component;
+
+import static com.google.firebase.messaging.AndroidConfig.Priority;
 
 @Component
 @RequiredArgsConstructor
 public class FirebaseClient {
 
-    //TODO:  MUST use exponential backoff: https://googleapis.github.io/google-http-java-client/exponential-backoff.html
+    // Guide: https://firebase.google.com/docs/cloud-messaging
+    // API: https://firebase.google.com/docs/reference/admin/java/reference/com/google/firebase/messaging/package-summary
 
-
+    private final ConfigProvider configProvider;
     private final FirebaseMessaging firebaseMessaging;
 
 
-    public void send(NotificationRequest request, String token) {
+    public void send(NotificationEntity notificationEntity, String token) {
+
+        boolean highPriority ="HIGH".equalsIgnoreCase(notificationEntity.getPriority());
+        long ttl = (notificationEntity.getTtl() != null) ? notificationEntity.getTtl() : 2419200L;
+        String notificationImage = configProvider.getFirebase().getNotificationImageUrl();
+
+        /* Notification */
+        Notification.Builder notificationBuilder = Notification.builder();
+        notificationBuilder.setTitle(notificationEntity.getTitle());
+        notificationBuilder.setBody(notificationEntity.getBody());
+        if (notificationImage != null && !notificationImage.isEmpty()) {
+            notificationBuilder.setImage(notificationImage);
+        }
+
+        /* Android Config */
+        AndroidConfig.Builder androidConfigBuilder = AndroidConfig.builder();
+        androidConfigBuilder.setPriority(highPriority ? Priority.HIGH : Priority.NORMAL);
+        androidConfigBuilder.setTtl(ttl * 1000);
+        if (notificationEntity.getClick_action() != null && !notificationEntity.getClick_action().isEmpty()) {
+            androidConfigBuilder.setNotification(AndroidNotification.builder().setClickAction(notificationEntity.getClick_action()).build());
+        }
+
+        /* iOS config */
+        ApnsConfig.Builder apnsConfigBuilder = ApnsConfig.builder();
+        apnsConfigBuilder.putHeader("apns-priority", highPriority ? "10" : "5"); // 10 == high, 5 == normal
+        apnsConfigBuilder.putHeader("apns-expiration", Long.toString(ttl));
+        if (notificationEntity.getAps_category() != null && !notificationEntity.getAps_category().isEmpty()) {
+            apnsConfigBuilder.setAps(Aps.builder().setCategory(notificationEntity.getAps_category()).build());
+        } else {
+            apnsConfigBuilder.setAps(Aps.builder().build());
+        }
+
+        /* Message */
+        Message message = Message.builder()
+                .setNotification(notificationBuilder.build())
+                .putAllData(notificationEntity.getData())
+                .setAndroidConfig(androidConfigBuilder.build())
+                .setApnsConfig(apnsConfigBuilder.build())
+                .setToken(token)
+                .build();
 
         try {
-            Notification notification = Notification.builder()
-                    .setTitle(request.getTitle())
-                    .setBody(request.getBody())
-                    /* Contains the URL of an image that is going to be downloaded on the device and displayed in a notification. JPEG, PNG, BMP have full support across platforms. Animated GIF and video only work on iOS. WebP and HEIF have varying levels of support across platforms and platform versions. */
-                    .setImage("https://idporten.difi.no/error/images/svg/eid.svg") // TODO: externalize url
-                    .build();
-
-            // See documentation on defining a message payload.
-            Message message = Message.builder()
-                    .setNotification(notification)
-                    .putAllData(request.getData())
-                    .setToken(token)
-                    .build();
-
-            // Send a message to the device corresponding to the provided
-            // registration token.
-            String response = firebaseMessaging.send(message);
-
-            // Response is a message ID string.
-            System.out.println("*** Successfully sent message: " + response);
-        } catch (FirebaseMessagingException e) { // TODO: propagate errors instead
-            e.printStackTrace();
+            String mesgId = firebaseMessaging.send(message);
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
         }
 
     }

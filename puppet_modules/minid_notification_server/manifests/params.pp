@@ -25,5 +25,7 @@ class minid_notification_server::params {
   $database_url                     = hiera('minid_notification_server::minid_notification_db_url')
   $database_username                = hiera('minid_notification_server::minid_notification_db_username')
   $database_password                = hiera('minid_notification_server::minid_notification_db_password')
+  $swagger_client_id                = hiera('minid_notification_server::minid_notification_swagger_client_id')
+  $swagger_client_secret            = hiera('minid_notification_server::minid_notification_swagger_client_secret')
 
 }

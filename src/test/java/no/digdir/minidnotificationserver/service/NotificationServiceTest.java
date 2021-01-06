@@ -1,10 +1,7 @@
 package no.digdir.minidnotificationserver.service;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
-import no.digdir.minidnotificationserver.api.notification.NotificationRequest;
+import com.google.firebase.messaging.*;
+import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 import no.digdir.minidnotificationserver.repository.RegistrationRepository;
 import org.junit.Assert;
@@ -71,13 +68,16 @@ public class NotificationServiceTest {
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put("key1", "value1");
         dataMap.put("key2", "value2");
-        NotificationRequest notificationRequest = NotificationRequest.builder()
+        NotificationEntity notificationEntity = NotificationEntity.builder()
                 .title("My snazzy title")
                 .body("My even snazzier expectedMessage")
                 .person_identifier("01030099326")
+                .app_identifier("no.minid.app")
+                .aps_category("MINID_AUTH_CATEGORY")
+                .click_action("minid_auth_intent")
                 .data(dataMap)
                 .build();
-        notificationService.send(notificationRequest);
+        notificationService.send(notificationEntity);
 
         Message expectedMessage = Message.builder()
                 .setNotification(Notification.builder()
@@ -86,18 +86,44 @@ public class NotificationServiceTest {
                         .setImage("https://idporten.difi.no/error/images/svg/eid.svg")
                         .build())
                 .setToken("snazzytoken1234")
+                .setApnsConfig(ApnsConfig.builder()
+                        .setAps(Aps.builder()
+                                .setCategory("MINID_AUTH_CATEGORY")
+                                .build())
+                        .putHeader("apns-priority", "5")
+                        .putHeader("apns-expiration", "2419200")
+                        .build())
+                .setAndroidConfig(AndroidConfig.builder()
+                        .setNotification(AndroidNotification.builder()
+                                .setClickAction("minid_auth_intent")
+                                .build())
+                        .setTtl(2419200L * 1000)
+                        .setPriority(AndroidConfig.Priority.NORMAL)
+                        .build())
                 .putAllData(dataMap)
                 .build();
         Mockito.verify(firebaseMessaging).send(messageCaptor.capture());
 
-        Assert.assertTrue(new ReflectionEquals(expectedMessage, "notification").matches(messageCaptor.getValue()));
+        Assert.assertTrue(new ReflectionEquals(expectedMessage, "notification", "apnsConfig", "androidConfig").matches(messageCaptor.getValue()));
 
-        // notification field is non-public...
-        Field notificationField = Message.class.getDeclaredField("notification");
-        notificationField.setAccessible(true); // hehe...
-        Notification expectedNotification = (Notification) notificationField.get(expectedMessage);
-        Notification actualNotification = (Notification) notificationField.get(messageCaptor.getValue());
+        // notification, apnsConfig & androidConfig fields is non-public...
+        Field field = Message.class.getDeclaredField("notification");
+        field.setAccessible(true); // hehe...
+        Notification expectedNotification = (Notification) field.get(expectedMessage);
+        Notification actualNotification = (Notification) field.get(messageCaptor.getValue());
         Assert.assertTrue(new ReflectionEquals(expectedNotification).matches(actualNotification));
+
+        field = Message.class.getDeclaredField("apnsConfig");
+        field.setAccessible(true);
+        ApnsConfig expectedApnsConfig = (ApnsConfig) field.get(expectedMessage);
+        ApnsConfig actualApnsConfig = (ApnsConfig) field.get(messageCaptor.getValue());
+        Assert.assertTrue(new ReflectionEquals(expectedApnsConfig).matches(actualApnsConfig));
+
+        field = Message.class.getDeclaredField("androidConfig");
+        field.setAccessible(true);
+        AndroidConfig expectedAndroidConfig = (AndroidConfig) field.get(expectedMessage);
+        AndroidConfig actualAndroidConfig = (AndroidConfig) field.get(messageCaptor.getValue());
+        Assert.assertTrue(new ReflectionEquals(expectedAndroidConfig, "notification").matches(actualAndroidConfig));
 
     }
 }

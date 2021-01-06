@@ -1,6 +1,6 @@
 package no.digdir.minidnotificationserver.domain;
 
-import no.digdir.minidnotificationserver.api.registration.RegistrationRequest;
+import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,19 +18,17 @@ public class RegistrationDeviceTest {
                 .personIdentifier(PERSON_IDENTIFIER)
                 .appIdentifier("no.digdir.minid")
                 .token("asdfqwer1234")
-                .description("Some description")
                 .os("Android")
                 .osVersion("10")
                 .build();
 
-        RegistrationRequest registrationRequest = RegistrationRequest.builder()
+        RegistrationEntity registrationEntity = RegistrationEntity.builder()
                 .app_identifier("no.digdir.minid")
                 .token("asdfqwer1234")
-                .description("Some description")
                 .os("Android")
                 .os_version("10")
                 .build();
-        RegistrationDevice actualDevice = RegistrationDevice.from(PERSON_IDENTIFIER, registrationRequest);
+        RegistrationDevice actualDevice = RegistrationDevice.from(PERSON_IDENTIFIER, registrationEntity);
 
         Assert.assertEquals(expectedDevice, actualDevice);
     }
