@@ -24,7 +24,7 @@ public class RegistrationEndpoint {
     @Operation(summary = "Register a device")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Device registered."),
-            @ApiResponse(responseCode = "403", description = "Access denied due to incorrect scope or missing access token."),
+            @ApiResponse(responseCode = "401", description = "Access denied due to incorrect scope or missing access token."),
             @ApiResponse(responseCode = "400", description = "Invalid input.")
     })
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
@@ -37,7 +37,7 @@ public class RegistrationEndpoint {
     @Operation(summary = "Modify existing device")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Device modified."),
-            @ApiResponse(responseCode = "403", description = "Access denied due to incorrect scope or missing access token."),
+            @ApiResponse(responseCode = "401", description = "Access denied due to incorrect scope or missing access token."),
             @ApiResponse(responseCode = "400", description = "Invalid input.")
     })
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
@@ -50,7 +50,7 @@ public class RegistrationEndpoint {
     @Operation(summary = "Delete existing device")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Device deleted."),
-            @ApiResponse(responseCode = "403", description = "Access denied due to incorrect scope or missing access token."),
+            @ApiResponse(responseCode = "401", description = "Access denied due to incorrect scope or missing access token."),
             @ApiResponse(responseCode = "400", description = "Invalid input.")
     })
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")

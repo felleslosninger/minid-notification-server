@@ -18,5 +18,6 @@ public class NotificationService {
     public void send(NotificationEntity request) {
         registrationRepository.findByPersonIdentifier(request.getPerson_identifier())
                 .ifPresent( device -> firebaseClient.send(request, device.getToken()));
+        // TODO: throw 404 if not found?
     }
 }

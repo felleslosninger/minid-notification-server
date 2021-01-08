@@ -24,7 +24,9 @@ class minid_notification_server (
   String $database_username                = $minid_notification_server::params::database_username,
   String $database_password                = $minid_notification_server::params::database_password,
   String $swagger_client_id                = $minid_notification_server::params::swagger_client_id,
-  String $swagger_client_secret            = $minid_notification_server::params::swagger_client_secret
+  String $swagger_client_secret            = $minid_notification_server::params::swagger_client_secret,
+  String $tokeninfo_client_id              = $minid_notification_server::params::tokeninfo_client_id,
+  String $tokeninfo_client_secret          = $minid_notification_server::params::tokeninfo_client_secret
 
 ) inherits minid_notification_server::params {
 

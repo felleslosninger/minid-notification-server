@@ -27,5 +27,7 @@ class minid_notification_server::params {
   $database_password                = hiera('minid_notification_server::minid_notification_db_password')
   $swagger_client_id                = hiera('minid_notification_server::minid_notification_swagger_client_id')
   $swagger_client_secret            = hiera('minid_notification_server::minid_notification_swagger_client_secret')
+  $tokeninfo_client_id              = hiera('minid_notification_server::minid_notification_tokeninfo_client_id')
+  $tokeninfo_client_secret          = hiera('minid_notification_server::minid_notification_tokeninfo_client_secret')
 
 }

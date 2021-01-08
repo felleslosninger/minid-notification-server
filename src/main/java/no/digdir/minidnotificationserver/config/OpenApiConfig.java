@@ -34,8 +34,6 @@ import org.springframework.context.annotation.Configuration;
                         authorizationUrl = "${springdoc.oAuthFlow.authorizationUrl}",
                         tokenUrl = "${springdoc.oAuthFlow.tokenUrl}",
                         scopes = {
-                                @OAuthScope(name = "openid"),
-                                @OAuthScope(name = "profile"),
                                 @OAuthScope(name = "minid:app.register", description = "Required for registering a device.")
                         }
                 ))

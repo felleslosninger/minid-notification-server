@@ -27,7 +27,7 @@ public class NotificationEndpoint {
     @Operation(summary = "Send a notification")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successful operation, no content returned."),
-            @ApiResponse(responseCode = "403", description = "Access denied due to incorrect scope or missing access token."),
+            @ApiResponse(responseCode = "401", description = "Access denied due to incorrect scope or missing access token."),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping("/notification/send")
