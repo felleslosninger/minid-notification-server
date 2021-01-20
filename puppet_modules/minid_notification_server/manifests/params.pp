@@ -13,7 +13,7 @@ class minid_notification_server::params {
   $server_tomcat_max_threads        = 200
   $server_tomcat_min_spare_threads  = 10
   $health_show_details              = 'always'
-  $auditlog_dir                     = '/var/log/minid-notification-server/audit/'
+  $auditlog_dir                     = '/var/log/minid-notification-server/audit'
   $auditlog_file                    = 'audit.log'
   $tomcat_tmp_dir                   = '/opt/minid-notification-server/tmp'
   $token_lifetime_seconds           = 600

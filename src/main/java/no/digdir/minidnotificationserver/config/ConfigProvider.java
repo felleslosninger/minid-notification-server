@@ -6,8 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Data
 @Validated
@@ -15,16 +13,7 @@ import java.util.List;
 public class ConfigProvider implements InitializingBean {
 
     private Firebase firebase = new Firebase();
-
-    @Data
-    public static class Cors {
-        private String allowedOrigin;
-        private List<String> allowedHeaders;
-        private List<String> allowedMethods;
-        private List<String> exposedHeaders;
-        private Boolean allowCredentials;
-        private Long maxAge;
-    }
+    private Audit audit = new Audit();
 
     @Data
     public static class Firebase {
@@ -38,6 +27,15 @@ public class ConfigProvider implements InitializingBean {
          */
         @NotBlank
         private String notificationImageUrl;
+    }
+
+    @Data
+    public static class Audit {
+        @NotBlank
+        private String logDir;
+
+        @NotBlank
+        private String logFile;
     }
 
     @Override

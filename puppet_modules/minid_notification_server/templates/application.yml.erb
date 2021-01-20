@@ -85,7 +85,9 @@ spring:
     user: <%= @database_username %>
     password: <%= @database_password %>
 
-
 digdir:
   firebase:
     credentials-json: file:/etc/opt/minid-notification-server/firebase-credentials.json
+  audit:
+    log-dir: <%= @auditlog_dir %>
+    log-file: <%= @auditlog_file %>

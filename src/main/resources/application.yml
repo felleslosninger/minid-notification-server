@@ -96,3 +96,10 @@ digdir:
   firebase:
     credentials-json: classpath:firebase-credentials.json
     notification-image-url: https://idporten.difi.no/error/images/svg/eid.svg
+  audit:
+    log-dir: logs/audit
+    log-file: audit.log
+#  # Event config
+#  event:
+#    jms-url: tcp://localhost:40002
+#    jms-queue: logqueue

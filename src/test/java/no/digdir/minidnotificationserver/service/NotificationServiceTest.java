@@ -3,6 +3,7 @@ package no.digdir.minidnotificationserver.service;
 import com.google.firebase.messaging.*;
 import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
+import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import no.digdir.minidnotificationserver.repository.RegistrationRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,7 +16,9 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -46,6 +49,8 @@ public class NotificationServiceTest {
     @MockBean
     private JwtDecoder jwtDecoderByIssuerUri;
 
+    @MockBean
+    private AuditService auditService;
 
     @Captor
     private ArgumentCaptor<Message> messageCaptor;
@@ -56,10 +61,12 @@ public class NotificationServiceTest {
         RegistrationDevice registrationDevice = RegistrationDevice.builder()
                 .token("snazzytoken1234")
                 .personIdentifier("01030099326")
+                .appIdentifier("no.digdir.minid.authenticator")
                 .build();
-        Mockito.when(registrationRepository.findByPersonIdentifier(anyString())).thenReturn(java.util.Optional.ofNullable(registrationDevice));
+        Mockito.when(registrationRepository.findByPersonIdentifierAndAppIdentifier(anyString(), anyString())).thenReturn(java.util.Optional.ofNullable(registrationDevice));
 
         Mockito.when(firebaseMessaging.send(any())).thenReturn("msgId-1234");
+        Mockito.doNothing().when(auditService).auditNotificationSend(any(), any());
     }
 
     @Test
@@ -72,12 +79,12 @@ public class NotificationServiceTest {
                 .title("My snazzy title")
                 .body("My even snazzier expectedMessage")
                 .person_identifier("01030099326")
-                .app_identifier("no.minid.app")
+                .app_identifier("no.digdir.minid.authenticator")
                 .aps_category("MINID_AUTH_CATEGORY")
                 .click_action("minid_auth_intent")
                 .data(dataMap)
                 .build();
-        notificationService.send(notificationEntity);
+        notificationService.send(notificationEntity, adminContext("testUserId", "01030099326"));
 
         Message expectedMessage = Message.builder()
                 .setNotification(Notification.builder()
@@ -126,4 +133,13 @@ public class NotificationServiceTest {
         Assert.assertTrue(new ReflectionEquals(expectedAndroidConfig, "notification").matches(actualAndroidConfig));
 
     }
+
+
+    private AdminContext adminContext(String adminUserId, String personIdentifier) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(AdminContext.ADMIN_USER_ID_HEADER, adminUserId);
+        Jwt accessToken = Jwt.withTokenValue("foo").header("alg", "RS256").claim("pid", "12345").build();
+        return AdminContext.of(httpHeaders, accessToken);
+    }
+
 }

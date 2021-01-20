@@ -18,13 +18,15 @@ import java.util.Map;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NotificationEntity {
+    // max payload is 4KB
+
     @NotBlank
     @Size(min = 11, max = 11)
     @Schema(description = "Person identifier - 11 digits.", example = "01030099326")
     String person_identifier;
 
     @NotBlank (message = "app-id e.g 'no.digdir.minid.appname'")
-    @Schema(description = "Application identifier", example = "no.digdir.minid.app")
+    @Schema(description = "Application identifier", example = "no.digdir.minid.authenticator")
     String app_identifier;
 
     @NotBlank
@@ -52,12 +54,6 @@ public class NotificationEntity {
             implementation = Map.class
     )
     Map<String, String> data;
-
-//    @JsonAnySetter
-//    public void setData(Map<String, String> data) {
-//        // TODO: add validation
-//        this.data = data;
-//    }
 }
 
-// max payload is 4KB
+

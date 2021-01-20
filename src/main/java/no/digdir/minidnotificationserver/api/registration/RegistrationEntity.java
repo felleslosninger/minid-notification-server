@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 
 import javax.validation.constraints.NotBlank;
 
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotBlank;
 public class RegistrationEntity {
 
     @NotBlank (message = "app-id e.g 'no.digdir.minid.appname'")
-    @Schema(description = "An application identifier.", example = "no.digdir.minid.app")
+    @Schema(description = "An application identifier.", example = "no.digdir.minid.authenticator")
     String app_identifier;
 
     @NotBlank
@@ -35,4 +36,14 @@ public class RegistrationEntity {
     @NotBlank
     @Schema(description = "The version of the operating system.", example = "11")
     String os_version;
+
+    public static RegistrationEntity from(RegistrationDevice device) {
+        return RegistrationEntity.builder()
+                .app_identifier(device.getAppIdentifier())
+                .app_version(device.getAppVersion())
+                .token(device.getToken())
+                .os(device.getOs())
+                .os_version(device.getOsVersion())
+                .build();
+    }
 }

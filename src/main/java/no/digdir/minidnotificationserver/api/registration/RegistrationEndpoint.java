@@ -21,7 +21,7 @@ public class RegistrationEndpoint {
 
     private final RegistrationService registrationService;
 
-    @Operation(summary = "Register a device")
+    @Operation(summary = "Register or update a device")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Device registered."),
             @ApiResponse(responseCode = "401", description = "Access denied due to incorrect scope or missing access token."),
@@ -29,23 +29,12 @@ public class RegistrationEndpoint {
     })
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
     @PostMapping("/register/device")
-    public ResponseEntity<String> registerDevice(@RequestBody RegistrationEntity registrationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        registrationService.registerDevice(principal.getAttribute("pid"), registrationEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<RegistrationEntity> registerDevice(@RequestBody RegistrationEntity registrationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+        RegistrationEntity device = registrationService.upsertDevice(principal.getAttribute("pid"), registrationEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(device);
     }
 
-    @Operation(summary = "Modify existing device")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Device modified."),
-            @ApiResponse(responseCode = "401", description = "Access denied due to incorrect scope or missing access token."),
-            @ApiResponse(responseCode = "400", description = "Invalid input.")
-    })
-    @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
-    @PutMapping("/register/device")
-    public ResponseEntity<String> updateDevice(@RequestBody RegistrationEntity registrationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        registrationService.updateDevice(principal.getAttribute("pid"), registrationEntity);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+
 
     @Operation(summary = "Delete existing device")
     @ApiResponses(value = {
@@ -55,11 +44,10 @@ public class RegistrationEndpoint {
     })
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
     @DeleteMapping("/register/device")
-    public ResponseEntity<String> deleteDevice(@RequestBody RegistrationEntity registrationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+    public ResponseEntity<RegistrationEntity> deleteDevice(@RequestBody RegistrationEntity registrationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
         registrationService.deleteDevice(principal.getAttribute("pid"), registrationEntity);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // TODO: list all devices for user?
 
 }

@@ -5,16 +5,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import no.digdir.minidnotificationserver.service.AdminContext;
 import no.digdir.minidnotificationserver.service.NotificationService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api")
@@ -24,6 +24,7 @@ public class NotificationEndpoint {
 
     private final NotificationService notificationService;
 
+
     @Operation(summary = "Send a notification")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successful operation, no content returned."),
@@ -32,9 +33,8 @@ public class NotificationEndpoint {
     })
     @PostMapping("/notification/send")
     @PreAuthorize("hasAuthority('SCOPE_minid:notification.send')")
-    public ResponseEntity<String> send(@RequestBody NotificationEntity notificationEntity, @AuthenticationPrincipal Jwt accessToken) {
-        notificationService.send(notificationEntity);
+    public ResponseEntity<String> send(@RequestHeader HttpHeaders headers, @RequestBody NotificationEntity notificationEntity, @AuthenticationPrincipal Jwt accessToken) {
+        notificationService.send(notificationEntity, AdminContext.of(headers, accessToken));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }
