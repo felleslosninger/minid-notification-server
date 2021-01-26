@@ -14,6 +14,7 @@ public class ConfigProvider implements InitializingBean {
 
     private Firebase firebase = new Firebase();
     private Audit audit = new Audit();
+    private Proxy proxy = new Proxy();
 
     @Data
     public static class Firebase {
@@ -36,6 +37,13 @@ public class ConfigProvider implements InitializingBean {
 
         @NotBlank
         private String logFile;
+    }
+
+    @Data
+    public static class Proxy {
+        private boolean enabled = false;
+        private String host;
+        private String port;
     }
 
     @Override

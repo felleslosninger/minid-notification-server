@@ -88,6 +88,10 @@ spring:
 digdir:
   firebase:
     credentials-json: file:/etc/opt/minid-notification-server/firebase-credentials.json
+  proxy:
+    enabled: <%= @proxy_enabled %>
+    host: <%= @proxy_host %>
+    port: <%= @proxy_port %>
   audit:
     log-dir: <%= @auditlog_dir %>
     log-file: <%= @auditlog_file %>

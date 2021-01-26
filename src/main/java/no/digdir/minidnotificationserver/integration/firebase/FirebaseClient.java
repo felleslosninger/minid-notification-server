@@ -4,7 +4,6 @@ import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
-import org.omg.SendingContext.RunTime;
 import org.springframework.stereotype.Component;
 
 import static com.google.firebase.messaging.AndroidConfig.Priority;

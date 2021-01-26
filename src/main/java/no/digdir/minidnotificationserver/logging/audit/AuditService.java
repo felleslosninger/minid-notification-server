@@ -24,6 +24,7 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 public class AuditService {
 
     private final Logger auditLogger = LoggerFactory.getLogger("no.digdir.logging.AuditLog");
+    private final Logger logger = LoggerFactory.getLogger(AuditService.class);
 
     public AuditService(@Autowired ConfigProvider configProvider) {
 
@@ -37,8 +38,10 @@ public class AuditService {
             configurator.setContext(context);
             InputStream auditXml = new ClassPathResource("logback-audit.xml").getInputStream();
             configurator.doConfigure(auditXml);
+            logger.info("Audit logging configured.");
         } catch (JoranException | IOException je) {
-            // StatusPrinter will handle this
+            logger.info("Issues occurred during configuration of audit logging.");
+            // StatusPrinter will print more information
         }
         StatusPrinter.printInCaseOfErrorsOrWarnings(context);
     }
