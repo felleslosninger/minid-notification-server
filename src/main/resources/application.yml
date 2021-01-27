@@ -97,13 +97,17 @@ digdir:
   firebase:
     credentials-json: classpath:firebase-credentials.json
     notification-image-url: https://idporten.difi.no/error/images/svg/eid.svg
+  google-api:
+    sandbox: true
+    bundle-id: no.digdir.minid.authenticator
+    auth-key: YOUR_API_KEY
   proxy:
     enabled: false
     host: localhost
     port: 3128
   audit:
     log-dir: logs/minid-notification-server/audit
-    log-file: audit.log
+    log-file: audit-log.json
 #  # Event config
 #  event:
 #    jms-url: tcp://localhost:40002

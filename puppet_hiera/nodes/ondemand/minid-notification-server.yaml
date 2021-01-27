@@ -28,3 +28,5 @@ minid_notification_server::tokeninfo_client_secret:  ''
 minid_notification_server::proxy_enabled:            false
 minid_notification_server::proxy_host:               localhost
 minid_notification_server::proxy_port:               8081
+minid_notification_server::apns_sandbox:             true
+minid_notification_server::google_api_key:           ''

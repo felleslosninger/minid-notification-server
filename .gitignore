@@ -25,3 +25,4 @@ target*
 /src/main/resources/application-dev.yml
 /src/main/resources/firebase-credentials.json
 /logs
+/out

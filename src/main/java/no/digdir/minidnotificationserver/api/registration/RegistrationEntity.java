@@ -26,7 +26,7 @@ public class RegistrationEntity {
     String app_version;
 
     @NotBlank
-    @Schema(description = "The FCM registration token.", example = "asdf1234")
+    @Schema(description = "The FCM or APNs registration token (APNs format is assumed if 'os=ios').", example = "asdf1234")
     String token;
 
     @NotBlank

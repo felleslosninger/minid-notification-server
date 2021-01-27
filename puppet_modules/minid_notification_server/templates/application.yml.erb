@@ -88,6 +88,10 @@ spring:
 digdir:
   firebase:
     credentials-json: file:/etc/opt/minid-notification-server/firebase-credentials.json
+  google-api:
+    sandbox: <%= @apns_sandbox %>
+    bundle-id: <%= @bundle_id %>
+    auth-key: <%= @google_api_key %>
   proxy:
     enabled: <%= @proxy_enabled %>
     host: <%= @proxy_host %>

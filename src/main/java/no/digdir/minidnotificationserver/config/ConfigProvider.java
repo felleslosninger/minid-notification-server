@@ -15,6 +15,7 @@ public class ConfigProvider implements InitializingBean {
     private Firebase firebase = new Firebase();
     private Audit audit = new Audit();
     private Proxy proxy = new Proxy();
+    private GoogleApi googleApi = new GoogleApi();
 
     @Data
     public static class Firebase {
@@ -44,6 +45,13 @@ public class ConfigProvider implements InitializingBean {
         private boolean enabled = false;
         private String host;
         private String port;
+    }
+
+    @Data
+    public static class GoogleApi {
+        private boolean sandbox = true;
+        private String bundleId;
+        private String authKey;
     }
 
     @Override

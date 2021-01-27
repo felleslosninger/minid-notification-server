@@ -20,6 +20,8 @@ public class ProxyConfigBean {
                 System.setProperty("https.proxyHost", proxy.getHost());
                 System.setProperty("https.proxyPort", proxy.getPort());
                 System.setProperty("com.google.api.client.should_use_proxy", "true");
+                System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
+                System.setProperty("jdk.http.auth.proxying.disabledSchemes", "");
                 logger.info("Using proxy at {}", proxy.getHost() + ":" + proxy.getPort() + ".");
             } else {
                 logger.info("No proxy configured.");

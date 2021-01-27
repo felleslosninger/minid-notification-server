@@ -14,7 +14,7 @@ class minid_notification_server::params {
   $server_tomcat_min_spare_threads  = 10
   $health_show_details              = 'always'
   $auditlog_dir                     = '/var/log/minid-notification-server/audit'
-  $auditlog_file                    = 'audit.log'
+  $auditlog_file                    = 'audit-log.json'
   $proxy_enabled                    = false
   $proxy_host                       = localhost
   $proxy_port                       = 8081
@@ -29,5 +29,8 @@ class minid_notification_server::params {
   $swagger_client_secret            = ''
   $tokeninfo_client_id              = ''
   $tokeninfo_client_secret          = ''
+  $apns_sandbox                     = true
+  $google_api_key                   = ''
+  $bundle_id                        = 'no.digdir.minid.authenticator'
 
 }

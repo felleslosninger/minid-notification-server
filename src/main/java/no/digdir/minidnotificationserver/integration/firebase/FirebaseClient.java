@@ -48,17 +48,24 @@ public class FirebaseClient {
         if (notificationEntity.getAps_category() != null && !notificationEntity.getAps_category().isEmpty()) {
             apnsConfigBuilder.setAps(Aps.builder().setCategory(notificationEntity.getAps_category()).build());
         } else {
-            apnsConfigBuilder.setAps(Aps.builder().build());
+            apnsConfigBuilder.setAps(Aps.builder()
+                    .setMutableContent(true)
+                    .build());
         }
 
         /* Message */
-        Message message = Message.builder()
+        Message.Builder messageBuilder = Message.builder();
+         messageBuilder
                 .setNotification(notificationBuilder.build())
-                .putAllData(notificationEntity.getData())
                 .setAndroidConfig(androidConfigBuilder.build())
                 .setApnsConfig(apnsConfigBuilder.build())
-                .setToken(token)
-                .build();
+                .setToken(token);
+
+         if(notificationEntity.getData() != null) {
+             messageBuilder.putAllData(notificationEntity.getData());
+         }
+
+        Message message = messageBuilder.build();
 
         try {
             String mesgId = firebaseMessaging.send(message);

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
+import no.digdir.minidnotificationserver.integration.google.GoogleClient;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import no.digdir.minidnotificationserver.repository.RegistrationRepository;
 import org.springframework.stereotype.Service;
@@ -20,17 +21,24 @@ public class RegistrationService {
 
     private final RegistrationRepository registrationRepository;
     private final AuditService auditService;
+    private final GoogleClient googleClient;
 
     public RegistrationEntity upsertDevice(String personIdentifier, RegistrationEntity entity) {
 
         RegistrationDevice savedOrUpdatedDevice;
         Optional<RegistrationDevice> optDevice = registrationRepository.findByPersonIdentifierAndAppIdentifier(personIdentifier, entity.getApp_identifier());
 
-        if(optDevice.isPresent()) {
+        if("ios".equalsIgnoreCase(entity.getOs())) {
+            String fcmToken = googleClient.importAPNsToken(entity.getToken());
+            auditService.auditRegistrationServiceImportApnsToken(entity, personIdentifier, fcmToken);
+            entity.setToken(fcmToken);
+        }
+
+        if(optDevice.isPresent()) { // update existing
             RegistrationDevice existingDevice = deepCopy(optDevice.get());
             savedOrUpdatedDevice = registrationRepository.save(existingDevice.from(entity));
             auditService.auditRegistrationServiceUpdateDevice(existingDevice, savedOrUpdatedDevice);
-        } else {
+        } else { // create new
             RegistrationDevice device = RegistrationDevice.from(personIdentifier, entity);
             savedOrUpdatedDevice = registrationRepository.save(device);
             auditService.auditRegistrationServiceRegisterDevice(savedOrUpdatedDevice);

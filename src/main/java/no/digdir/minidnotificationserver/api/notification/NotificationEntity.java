@@ -43,7 +43,7 @@ public class NotificationEntity {
     @Schema(description = "Time-to-live of notification in seconds. A value of 0 gives a best-effort of 'now or never', and is discarded if immediate delivery fails.", example = "180", defaultValue = "2419200")
     Long ttl;
 
-    @Schema(description = "iOS category", example = "MINID_AUTH_CATEGORY")
+    @Schema(description = "iOS category", example = "authCategory")
     String aps_category;
 
     @Schema(description = "Android intent", example = "minid_auth_intent")

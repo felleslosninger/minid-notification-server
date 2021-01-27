@@ -6,6 +6,7 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
+import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 import no.digdir.minidnotificationserver.service.AdminContext;
@@ -74,6 +75,16 @@ public class AuditService {
         );
     }
 
+    public void auditRegistrationServiceImportApnsToken(RegistrationEntity entity, String personIdentifier, String fcmToken) {
+        auditLogger.info(
+                "APNs token imported.",
+                kv("audit_id", AuditID.APNS_TOKEN_IMPORT.auditId()),
+                kv("person_identifier", personIdentifier),
+                kv("apns_token", entity.getToken()),
+                kv("fcm_token", fcmToken)
+        );
+    }
+
 
     public void auditNotificationSend(NotificationEntity notification, AdminContext adminContext) {
         auditLogger.info(
@@ -84,4 +95,6 @@ public class AuditService {
                 kv("notification", notification)
         );
     }
+
+
 }

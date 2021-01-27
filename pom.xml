@@ -36,6 +36,7 @@
     <swagger-ui.version>3.38.0</swagger-ui.version>
     <junit-jupiter-engine.version>5.7.0</junit-jupiter-engine.version>
     <logstash-logback-encoder.version>5.3</logstash-logback-encoder.version>
+    <json.version>20180813</json.version>
 </properties>
 
 <dependencyManagement>
@@ -235,6 +236,12 @@
         <groupId>net.logstash.logback</groupId>
         <artifactId>logstash-logback-encoder</artifactId>
         <version>${logstash-logback-encoder.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>${json.version}</version>
     </dependency>
 
     <!-- *********************** -->
