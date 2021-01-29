@@ -6,6 +6,6 @@ class minid_notification_server::deploy inherits minid_notification_server {
     artifact     => $minid_notification_server::artifact_id,
     service_name => $minid_notification_server::service_name,
     install_dir  => "${minid_notification_server::install_dir}${minid_notification_server::application}",
-    artifact_type => "war",
+    artifact_type => "jar",
   }
 }
