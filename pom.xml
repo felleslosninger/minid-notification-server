@@ -26,16 +26,15 @@
     <resilience.version>2019-06-27-1212-079df00</resilience.version>
     <flyway.version>5.2.4</flyway.version>
     <artifactory.url>http://eid-artifactory.dmz.local:8080/artifactory</artifactory.url>
-    <logstash.version>6.3</logstash.version>
     <h2.version>1.4.200</h2.version>
 
     <wiremock-standalone.version>2.26.1</wiremock-standalone.version>
 
     <firebase-admin.version>7.0.1</firebase-admin.version>
-    <springdoc-openapi-ui.version>1.5.1</springdoc-openapi-ui.version>
-    <swagger-ui.version>3.38.0</swagger-ui.version>
+    <springdoc-openapi-ui.version>1.5.3</springdoc-openapi-ui.version>
+    <swagger-ui.version>3.40.0</swagger-ui.version>
     <junit-jupiter-engine.version>5.7.0</junit-jupiter-engine.version>
-    <logstash-logback-encoder.version>5.3</logstash-logback-encoder.version>
+    <logstash-logback-encoder.version>6.3</logstash-logback-encoder.version>
     <json.version>20180813</json.version>
 </properties>
 
@@ -173,13 +172,6 @@
         <artifactId>lombok</artifactId>
         <version>${lombok.version}</version>
         <scope>provided</scope>
-    </dependency>
-
-
-    <dependency>
-        <groupId>net.logstash.logback</groupId>
-        <artifactId>logstash-logback-encoder</artifactId>
-        <version>6.3</version>
     </dependency>
 
     <dependency>
