@@ -30,3 +30,4 @@ minid_notification_server::proxy_host:               localhost
 minid_notification_server::proxy_port:               8081
 minid_notification_server::apns_sandbox:             true
 minid_notification_server::google_api_key:           ''
+minid_notification_server::db_pool_manager:          'com.zaxxer.hikari.HikariDataSource'  # org.apache.tomcat.jdbc.pool.DataSource for Tomcat pool manager

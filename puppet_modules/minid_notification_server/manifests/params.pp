@@ -25,6 +25,10 @@ class minid_notification_server::params {
   $database_url                     = ''
   $database_username                = ''
   $database_password                = ''
+  $db_leakDetectionThresholdSeconds = 30
+  $db_maxLifetimeMilliSeconds       = 540000
+  $db_max_active                    = 10
+  $db_pool_manager                  = 'com.zaxxer.hikari.HikariDataSource'  # org.apache.tomcat.jdbc.pool.DataSource for Tomcat pool manager
   $swagger_client_id                = ''
   $swagger_client_secret            = ''
   $tokeninfo_client_id              = ''

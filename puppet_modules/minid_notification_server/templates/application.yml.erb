@@ -75,15 +75,23 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: <%= @database_username %>
     password: <%= @database_password %>
+    type:  <%= @db_pool_manager %>
+    hikari:
+      maximum-pool-size: <%= @db_max_active %>
+      auto-commit: false
+      register-mbeans: true
+      max-lifetime: <%= @db_maxLifetimeMilliSeconds %>
+      leak-detection-threshold:  <%= 1000 * Integer(@db_leakDetectionThresholdSeconds) %>
+    tomcat:
+      max-active: <%= @db_max_active %>
+      min-idle: <%= @db_max_active %>
+      default-auto-commit: false
 
   flyway:
     validate-on-migrate: false
     locations: classpath:db/migration
     enabled: true
     baseline-on-migrate: true
-    url: <%= @database_url %>
-    user: <%= @database_username %>
-    password: <%= @database_password %>
 
 digdir:
   firebase:

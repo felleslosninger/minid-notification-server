@@ -80,15 +80,24 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: minid_notif
     password: password
+#    type: org.apache.tomcat.jdbc.pool.DataSource
+    type: com.zaxxer.hikari.HikariDataSource # for tomcat use: org.apache.tomcat.jdbc.pool.DataSource
+    hikari:
+      maximum-pool-size: 5
+      auto-commit: false
+      register-mbeans: true
+      max-lifetime: 540000
+      leak-detection-threshold: 30
+    tomcat:
+      max-active: 5
+      min-idle: 5
+      default-auto-commit: false
 
   flyway:
     validate-on-migrate: false
     locations: classpath:db/migration
     enabled: true
     baseline-on-migrate: true
-    url: jdbc:mysql://eid-systest-db01.dmz.local:3306/minid_notification?useMysqlMetadata=true
-    user: minid_notif
-    password: password
 
 # ===================================================================
 # Application specific properties

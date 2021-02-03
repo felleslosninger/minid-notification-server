@@ -236,6 +236,12 @@
         <version>${json.version}</version>
     </dependency>
 
+    <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jdbc</artifactId>
+        <scope>compile</scope>
+    </dependency>
+
     <!-- *********************** -->
     <!-- * Test dependencies   * -->
     <!-- *********************** -->
