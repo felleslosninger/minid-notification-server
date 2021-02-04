@@ -31,6 +31,7 @@ public class RegistrationService {
         if("ios".equalsIgnoreCase(entity.getOs())) {
             String fcmToken = googleClient.importAPNsToken(entity.getToken());
             auditService.auditRegistrationServiceImportApnsToken(entity, personIdentifier, fcmToken);
+            entity.setApns_token(entity.getToken());
             entity.setToken(fcmToken);
         }
 

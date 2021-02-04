@@ -59,7 +59,7 @@ public class NotificationServiceTest {
     @Before
     public void setUp() throws FirebaseMessagingException {
         RegistrationDevice registrationDevice = RegistrationDevice.builder()
-                .token("snazzytoken1234")
+                .fcmToken("snazzytoken1234")
                 .personIdentifier("01030099326")
                 .appIdentifier("no.digdir.minid.authenticator")
                 .build();
@@ -138,7 +138,7 @@ public class NotificationServiceTest {
     private AdminContext adminContext(String adminUserId, String personIdentifier) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(AdminContext.ADMIN_USER_ID_HEADER, adminUserId);
-        Jwt accessToken = Jwt.withTokenValue("foo").header("alg", "RS256").claim("pid", "12345").build();
+        Jwt accessToken = Jwt.withTokenValue("foo").header("alg", "RS256").claim("pid", personIdentifier).build();
         return AdminContext.of(httpHeaders, accessToken);
     }
 

@@ -7,6 +7,7 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
+import no.digdir.minidnotificationserver.api.validate.ValidateEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 import no.digdir.minidnotificationserver.service.AdminContext;
@@ -93,6 +94,17 @@ public class AuditService {
                 kv("admin_user_id", adminContext.getFullAdminUserId()),
                 kv("person_identifier", adminContext.getPersonIdentifier()),
                 kv("notification", notification)
+        );
+    }
+
+    public void auditValidatePidToken(ValidateEntity validate, boolean result, AdminContext adminContext) {
+        auditLogger.info(
+                "Validated pid/token",
+                kv("audit_id", AuditID.VALIDATE_PID_TOKEN.auditId()),
+                kv("admin_user_id", adminContext.getFullAdminUserId()),
+                kv("person_identifier", adminContext.getPersonIdentifier()),
+                kv("result", result),
+                kv("validate", validate)
         );
     }
 

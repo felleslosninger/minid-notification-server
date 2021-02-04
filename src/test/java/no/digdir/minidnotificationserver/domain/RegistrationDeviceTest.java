@@ -17,7 +17,7 @@ public class RegistrationDeviceTest {
         RegistrationDevice expectedDevice = RegistrationDevice.builder()
                 .personIdentifier(PERSON_IDENTIFIER)
                 .appIdentifier("no.digdir.minid")
-                .token("asdfqwer1234")
+                .fcmToken("asdfqwer1234")
                 .os("Android")
                 .osVersion("10")
                 .build();

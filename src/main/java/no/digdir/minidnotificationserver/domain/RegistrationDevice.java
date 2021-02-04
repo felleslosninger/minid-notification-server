@@ -32,8 +32,11 @@ public class RegistrationDevice {
     @Column(name = "app_version")
     private String appVersion;
 
-    @Column(name = "token")
-    private String token;
+    @Column(name = "fcm_token")
+    private String fcmToken;
+
+    @Column(name = "apns_token")
+    private String apnsToken;
 
     @Column(name = "os")
     private String os;
@@ -65,12 +68,12 @@ public class RegistrationDevice {
 
         RegistrationDevice that = (RegistrationDevice) o;
 
-        return token.equals(that.token);
+        return fcmToken.equals(that.fcmToken);
     }
 
     @Override
     public int hashCode() {
-        return token.hashCode();
+        return fcmToken.hashCode();
     }
 
     public RegistrationDevice from(RegistrationEntity entity) {
@@ -85,7 +88,11 @@ public class RegistrationDevice {
         }
 
         if(Strings.isNotBlank(entity.getToken())) {
-            builder.token(entity.getToken());
+            builder.fcmToken(entity.getToken());
+        }
+
+        if(Strings.isNotBlank(entity.getApns_token())) {
+            builder.apnsToken(entity.getApns_token());
         }
 
         if(Strings.isNotBlank(entity.getOs())) {
@@ -104,7 +111,8 @@ public class RegistrationDevice {
                 .personIdentifier(personIdentifier)
                 .appIdentifier(entity.getApp_identifier())
                 .appVersion(entity.getApp_version())
-                .token(entity.getToken())
+                .fcmToken(entity.getToken())
+                .apnsToken(entity.getApns_token())
                 .os(entity.getOs())
                 .osVersion(entity.getOs_version())
                 .build();

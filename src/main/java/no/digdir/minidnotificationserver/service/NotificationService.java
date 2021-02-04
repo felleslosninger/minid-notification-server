@@ -20,7 +20,7 @@ public class NotificationService {
     public void send(NotificationEntity notification, AdminContext adminContext) {
         registrationRepository.findByPersonIdentifierAndAppIdentifier(notification.getPerson_identifier(), notification.getApp_identifier())
                 .ifPresent( device -> {
-                    firebaseClient.send(notification, device.getToken());
+                    firebaseClient.send(notification, device.getFcmToken());
                     auditService.auditNotificationSend(notification, adminContext);
                 });
 

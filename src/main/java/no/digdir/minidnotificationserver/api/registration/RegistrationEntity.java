@@ -1,5 +1,6 @@
 package no.digdir.minidnotificationserver.api.registration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,9 @@ public class RegistrationEntity {
     @Schema(description = "The FCM or APNs registration token (APNs format is assumed if 'os=ios').", example = "asdf1234")
     String token;
 
+    @JsonIgnore
+    String apns_token;
+
     @NotBlank
     @Schema(description = "The operating system of the unit.", example = "Android")
     String os;
@@ -41,7 +45,7 @@ public class RegistrationEntity {
         return RegistrationEntity.builder()
                 .app_identifier(device.getAppIdentifier())
                 .app_version(device.getAppVersion())
-                .token(device.getToken())
+                .token(device.getFcmToken())
                 .os(device.getOs())
                 .os_version(device.getOsVersion())
                 .build();
