@@ -36,6 +36,6 @@ COPY --from=config /opt/${APPLICATION}/${ARTIFACT_ID}.conf /usr/local/webapps/ap
 COPY entrypoint.sh /entrypoint.sh
 
 HEALTHCHECK --interval=10s --start-period=10s --retries=15 \
-   CMD { curl -f --max-time 10 http://localhost:8080/health; } || exit 1
+   CMD { curl -f --max-time 10 http://localhost:8080/minid-notification-server/health; } || exit 1
 
 ENTRYPOINT ["sh", "/entrypoint.sh"]

@@ -25,7 +25,7 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 @Service
 public class AuditService {
 
-    private final Logger auditLogger = LoggerFactory.getLogger("no.digdir.logging.AuditLog");
+    private final Logger auditLogger = LoggerFactory.getLogger("no.idporten.logging.AuditLog");
     private final Logger logger = LoggerFactory.getLogger(AuditService.class);
 
     public AuditService(@Autowired ConfigProvider configProvider) {

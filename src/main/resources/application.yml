@@ -43,6 +43,7 @@ management:
 
 
 springdoc:
+  show-actuator: true
   oAuthFlow:
     authorizationUrl: https://eid-systest-web01.dmz.local/idporten-oidc-provider/authorize
     tokenUrl: https://eid-systest-web01.dmz.local/idporten-oidc-provider/token

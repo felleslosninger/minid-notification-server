@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(problemSupport)
             .and()
                 .authorizeRequests()
-                .antMatchers("/info", "/version", "/health", "/prometheus", "/v3/api-docs", "/v3/api-docs/swagger-config", "/swagger-ui/**", "/swagger-ui/index.html")
+                .antMatchers("/info", "/version", "/health", "/prometheus", "/v3/api-docs", "/v3/api-docs/swagger-config", "/swagger-ui/**", "/swagger-ui/index.html", "/swagger-ui.html")
                 .permitAll()
             .and()
                 .authorizeRequests(authorize -> authorize.anyRequest().authenticated())

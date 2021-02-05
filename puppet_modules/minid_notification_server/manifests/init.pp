@@ -33,7 +33,8 @@ class minid_notification_server (
   String $tokeninfo_client_secret          = $minid_notification_server::params::tokeninfo_client_secret,
   Boolean $apns_sandbox                    = $minid_notification_server::params::apns_sandbox,
   String $google_api_key                   = $minid_notification_server::params::google_api_key,
-  String $bundle_id                        = $minid_notification_server::params::bundle_id
+  String $bundle_id                        = $minid_notification_server::params::bundle_id,
+  String $context_path                     = $minid_notification_server::params::context_path
 
 ) inherits minid_notification_server::params {
 

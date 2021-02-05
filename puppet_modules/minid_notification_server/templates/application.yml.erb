@@ -18,7 +18,7 @@ server:
         http-only: true
     encoding:
       force: true
-    context-path: /
+    context-path: <%= @context_path %>
   compression:
     enabled: true
     mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
@@ -40,13 +40,10 @@ springdoc:
   oAuthFlow:
     authorizationUrl: <%= @idporten_oidc_issuer_uri %><% if (!@idporten_oidc_issuer_uri.empty? && !@idporten_oidc_issuer_uri.end_with?("/")) %>/<% end %>authorize
     tokenUrl: <%= @idporten_oidc_issuer_uri %><% if (!@idporten_oidc_issuer_uri.empty? && !@idporten_oidc_issuer_uri.end_with?("/")) %>/<% end %>token
-  cache:
-    disabled: true
   swagger-ui:
     oauth:
       client-id: <%= @swagger_client_id %>
-      client-secret:  <%= @mswagger_client_secret %>
-      scopes: openid profile
+      client-secret:  <%= @swagger_client_secret %>
 
 spring:
   resources:

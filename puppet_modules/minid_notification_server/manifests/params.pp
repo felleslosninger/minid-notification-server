@@ -36,5 +36,6 @@ class minid_notification_server::params {
   $apns_sandbox                     = true
   $google_api_key                   = ''
   $bundle_id                        = 'no.digdir.minid.authenticator'
+  $context_path                     = '/minid-notification-server'
 
 }

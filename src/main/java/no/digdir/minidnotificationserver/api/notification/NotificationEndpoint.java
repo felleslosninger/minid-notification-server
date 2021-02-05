@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/internal")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "notification_auth")
 public class NotificationEndpoint {
