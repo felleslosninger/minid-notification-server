@@ -77,10 +77,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         OpaqueMinIdTokenAuthenticationProvider opaqueTokenAuthenticationProvider = new OpaqueMinIdTokenAuthenticationProvider(opaqueTokenIntrospector);
         JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(JwtDecoders.fromIssuerLocation(this.issuerUri));
 
-        List<String> pathsThatUseOpaqueTokens = Arrays.asList("/api/register/device");
+        String pathsThatUseOpaqueTokens = "/api/register/device";
 
         return request -> {
-            if (pathsThatUseOpaqueTokens.contains(request.getRequestURI())) {
+            if (request.getRequestURI().contains(pathsThatUseOpaqueTokens)) {
                 return opaqueTokenAuthenticationProvider::authenticate;
             } else {
                 return jwtAuthenticationProvider::authenticate;

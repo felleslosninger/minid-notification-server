@@ -30,7 +30,7 @@
 
     </appender>
 
-    <logger name="no.digdir.logging.AuditLog" level="INFO" additivity="false">
+    <logger name="no.idporten.logging.AuditLog" level="INFO" additivity="false">
         <appender-ref ref="jsonAuditFileAppender"/>
     </logger>
 
