@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -33,8 +33,8 @@ public class NotificationEndpoint {
     })
     @PostMapping("/notification/send")
     @PreAuthorize("hasAuthority('SCOPE_minid:notification.send')")
-    public ResponseEntity<String> send(@RequestHeader HttpHeaders headers, @RequestBody NotificationEntity notificationEntity, @AuthenticationPrincipal Jwt accessToken) {
-        notificationService.send(notificationEntity, AdminContext.of(headers, accessToken));
+    public ResponseEntity<String> send(@RequestHeader HttpHeaders headers, @RequestBody NotificationEntity notificationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+        notificationService.send(notificationEntity, AdminContext.of(headers, principal));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

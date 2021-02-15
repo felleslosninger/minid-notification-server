@@ -45,6 +45,7 @@ public class ConfigProvider implements InitializingBean {
         private boolean enabled = false;
         private String host;
         private String port;
+        private String skipHosts;
     }
 
     @Data

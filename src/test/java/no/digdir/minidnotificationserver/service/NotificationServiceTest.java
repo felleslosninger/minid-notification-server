@@ -18,7 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.core.DefaultOAuth2AuthenticatedPrincipal;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -138,8 +139,10 @@ public class NotificationServiceTest {
     private AdminContext adminContext(String adminUserId, String personIdentifier) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(AdminContext.ADMIN_USER_ID_HEADER, adminUserId);
-        Jwt accessToken = Jwt.withTokenValue("foo").header("alg", "RS256").claim("pid", personIdentifier).build();
-        return AdminContext.of(httpHeaders, accessToken);
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("pid", personIdentifier);
+        OAuth2AuthenticatedPrincipal principal =  new DefaultOAuth2AuthenticatedPrincipal(attributes, null);
+        return AdminContext.of(httpHeaders, principal);
     }
 
 }

@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,8 +32,8 @@ public class ValidateEndpoint {
     })
     @PreAuthorize("hasAuthority('SCOPE_minid:notification.send')")
     @PostMapping("/validate")
-    public ResponseEntity<String> registerDevice(@RequestHeader HttpHeaders headers, @RequestBody ValidateEntity validateEntity, @AuthenticationPrincipal Jwt accessToken) {
-        boolean result = validationService.validate(validateEntity, AdminContext.of(headers, accessToken));
+    public ResponseEntity<String> registerDevice(@RequestHeader HttpHeaders headers, @RequestBody ValidateEntity validateEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+        boolean result = validationService.validate(validateEntity, AdminContext.of(headers, principal));
         return ResponseEntity.status(HttpStatus.OK).body(new JSONObject().put("result", result).toString());
     }
 

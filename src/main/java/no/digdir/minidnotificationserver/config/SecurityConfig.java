@@ -2,25 +2,15 @@ package no.digdir.minidnotificationserver.config;
 
 import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.exceptions.ExceptionHandlerFilter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
-import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -32,11 +22,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final SecurityProblemSupport problemSupport;
     private final ExceptionHandlerFilter exceptionHandlerFilter;
-    private final OpaqueTokenIntrospector opaqueTokenIntrospector;
-
-    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-    private String issuerUri;
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -66,27 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
             .and()
                 .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
-                .oauth2ResourceServer(oauth2 -> oauth2.authenticationManagerResolver(this.tokenAuthenticationManagerResolver()))
+                .oauth2ResourceServer().opaqueToken()
         ;
 
     }
-
-
-    @Bean
-    AuthenticationManagerResolver<HttpServletRequest> tokenAuthenticationManagerResolver() {
-        OpaqueMinIdTokenAuthenticationProvider opaqueTokenAuthenticationProvider = new OpaqueMinIdTokenAuthenticationProvider(opaqueTokenIntrospector);
-        JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(JwtDecoders.fromIssuerLocation(this.issuerUri));
-
-        String pathsThatUseOpaqueTokens = "/api/register/device";
-
-        return request -> {
-            if (request.getRequestURI().contains(pathsThatUseOpaqueTokens)) {
-                return opaqueTokenAuthenticationProvider::authenticate;
-            } else {
-                return jwtAuthenticationProvider::authenticate;
-            }
-        };
-    }
-
 
 }

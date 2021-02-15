@@ -18,6 +18,7 @@ class minid_notification_server::params {
   $proxy_enabled                    = false
   $proxy_host                       = localhost
   $proxy_port                       = 8081
+  $proxy_skip_hosts                 = 'oidc-test1.difi.eon.no|localhost'
   $tomcat_tmp_dir                   = '/opt/minid-notification-server/tmp'
   $eventlog_jms_queuename           = hiera('idporten_logwriter::jms_queueName')
   $eventlog_jms_url                 = hiera('platform::jms_url')

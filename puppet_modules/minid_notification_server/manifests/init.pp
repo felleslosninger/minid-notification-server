@@ -16,6 +16,7 @@ class minid_notification_server (
   Boolean $proxy_enabled                   = $minid_notification_server::params::proxy_enabled,
   String $proxy_host                       = $minid_notification_server::params::proxy_host,
   Integer $proxy_port                      = $minid_notification_server::params::proxy_port,
+  String $proxy_skip_hosts                 = $minid_notification_server::params::proxy_skip_hosts,
   String $tomcat_tmp_dir                   = $minid_notification_server::params::tomcat_tmp_dir,
   String $eventlog_jms_queuename           = $minid_notification_server::params::eventlog_jms_queuename,
   String $eventlog_jms_url                 = $minid_notification_server::params::eventlog_jms_url,
