@@ -1,111 +1,92 @@
 package no.digdir.minidnotificationserver.logging.audit;
 
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.core.joran.spi.JoranException;
-import ch.qos.logback.core.util.StatusPrinter;
+
 import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
 import no.digdir.minidnotificationserver.api.validate.ValidateEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 import no.digdir.minidnotificationserver.service.AdminContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import no.idporten.logging.audit.AuditConfig;
+import no.idporten.logging.audit.AuditEntry;
+import no.idporten.logging.audit.AuditLogger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import static net.logstash.logback.argument.StructuredArguments.kv;
 
 @Service
 public class AuditService {
 
-    private final Logger auditLogger = LoggerFactory.getLogger("no.idporten.logging.AuditLog");
-    private final Logger logger = LoggerFactory.getLogger(AuditService.class);
+    AuditLogger auditLogger;
 
     public AuditService(@Autowired ConfigProvider configProvider) {
-
-        System.getProperties().setProperty("AUDIT_LOGDIR", configProvider.getAudit().getLogDir());
-        System.getProperties().setProperty("AUDIT_LOGFILE", configProvider.getAudit().getLogFile());
-
-        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-        try {
-            JoranConfigurator configurator = new JoranConfigurator();
-            configurator.setContext(context);
-            InputStream auditXml = new ClassPathResource("logback-audit.xml").getInputStream();
-            configurator.doConfigure(auditXml);
-            logger.info("Audit logging configured.");
-        } catch (JoranException | IOException je) {
-            logger.info("Issues occurred during configuration of audit logging.");
-            // StatusPrinter will print more information
-        }
-        StatusPrinter.printInCaseOfErrorsOrWarnings(context);
+        auditLogger = new AuditLogger(AuditConfig.builder()
+                .applicationName("no.digdir:minid-notification-server")
+                .logfileDir(configProvider.getAudit().getLogDir())
+                .logfileName(configProvider.getAudit().getLogFile())
+                .build());
     }
 
     public void auditRegistrationServiceRegisterDevice(RegistrationDevice device) {
-        auditLogger.info(
-                "Device registered.",
-                kv("audit_id", AuditID.DEVICE_REGISTER.auditId()),
-                kv("person_identifier", device.getPersonIdentifier()),
-                kv("device", device)
-        );
+        auditLogger.log(AuditEntry.builder()
+                .auditId(AuditID.DEVICE_REGISTER)
+                .message("")
+                .attribute("person_identifier", device.getPersonIdentifier())
+                .attribute("device", device)
+                .build());
     }
 
     public void auditRegistrationServiceUpdateDevice(RegistrationDevice existingDevice, RegistrationDevice updatedDevice) {
-        auditLogger.info(
-                "Device updated.",
-                kv("audit_id", AuditID.DEVICE_UPDATE.auditId()),
-                kv("person_identifier", existingDevice.getPersonIdentifier()),
-                kv("old_device", existingDevice),
-                kv("new_device", updatedDevice)
-        );
+
+        auditLogger.log(AuditEntry.builder()
+                .auditId(AuditID.DEVICE_UPDATE)
+                .message("")
+                .attribute("person_identifier", existingDevice.getPersonIdentifier())
+                .attribute("old_device", existingDevice)
+                .attribute("new_device", updatedDevice)
+                .build());
     }
 
     public void auditRegistrationServiceDeleteDevice(RegistrationDevice device) {
-        auditLogger.info(
-                "Device deleted.",
-                kv("audit_id", AuditID.DEVICE_DELETE.auditId()),
-                kv("person_identifier", device.getPersonIdentifier()),
-                kv("device", device)
-        );
+        auditLogger.log(AuditEntry.builder()
+                .auditId(AuditID.DEVICE_DELETE)
+                .message("")
+                .attribute("person_identifier", device.getPersonIdentifier())
+                .attribute("device", device)
+                .build());
     }
 
     public void auditRegistrationServiceImportApnsToken(RegistrationEntity entity, String personIdentifier, String fcmToken) {
-        auditLogger.info(
-                "APNs token imported.",
-                kv("audit_id", AuditID.APNS_TOKEN_IMPORT.auditId()),
-                kv("person_identifier", personIdentifier),
-                kv("apns_token", entity.getToken()),
-                kv("fcm_token", fcmToken)
-        );
+        auditLogger.log(AuditEntry.builder()
+                .auditId(AuditID.APNS_TOKEN_IMPORT)
+                .message("")
+                .attribute("person_identifier", personIdentifier)
+                .attribute("apns_token", entity.getToken())
+                .attribute("fcm_token", fcmToken)
+                .build());
     }
 
 
     public void auditNotificationSend(NotificationEntity notification, AdminContext adminContext) {
-        auditLogger.info(
-                "Notification sent.",
-                kv("audit_id", AuditID.NOTIFICATION_SEND.auditId()),
-                kv("admin_user_id", adminContext.getFullAdminUserId()),
-                kv("person_identifier", adminContext.getPersonIdentifier()),
-                kv("notification", notification)
-        );
+        auditLogger.log(AuditEntry.builder()
+                .auditId(AuditID.NOTIFICATION_SEND)
+                .message("")
+                .attribute("admin_user_id", adminContext.getFullAdminUserId())
+                .attribute("person_identifier", adminContext.getPersonIdentifier())
+                .attribute("notification", notification)
+                .build());
     }
 
     public void auditValidatePidToken(ValidateEntity validate, boolean result, AdminContext adminContext) {
-        auditLogger.info(
-                "Validated pid/token",
-                kv("audit_id", AuditID.VALIDATE_PID_TOKEN.auditId()),
-                kv("admin_user_id", adminContext.getFullAdminUserId()),
-                kv("person_identifier", adminContext.getPersonIdentifier()),
-                kv("result", result),
-                kv("validate", validate)
-        );
+        auditLogger.log(AuditEntry.builder()
+                .auditId(AuditID.VALIDATE_PID_TOKEN)
+                .message("")
+                .attribute("admin_user_id", adminContext.getFullAdminUserId())
+                .attribute("person_identifier", adminContext.getPersonIdentifier())
+                .attribute("result", result)
+                .attribute("validate", validate)
+                .build());
     }
 
 

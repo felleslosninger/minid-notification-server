@@ -17,6 +17,8 @@ public class ProxyConfigBean {
         public void onApplicationEvent(ContextRefreshedEvent event) {
             ConfigProvider.Proxy proxy = configProvider.getProxy();
             if(proxy.isEnabled()) {
+                System.setProperty("proxySet", "true");
+                System.setProperty("http.nonProxyHosts", "");
                 System.setProperty("https.proxyHost", proxy.getHost());
                 System.setProperty("https.proxyPort", proxy.getPort());
                 System.setProperty("com.google.api.client.should_use_proxy", "true");

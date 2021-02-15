@@ -53,7 +53,7 @@ springdoc:
     oauth:
       client-id:
       client-secret:
-      scopes: openid profile
+      scopes:
 
 spring:
   web:

@@ -26,3 +26,4 @@ target*
 /src/main/resources/firebase-credentials.json
 /logs
 /out
+/audit-log.json*

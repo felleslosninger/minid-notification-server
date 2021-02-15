@@ -1,6 +1,8 @@
 package no.digdir.minidnotificationserver.logging.audit;
 
-public enum AuditID {
+import no.idporten.logging.audit.AuditIdentifier;
+
+public enum AuditID implements AuditIdentifier {
 
     DEVICE_REGISTER(1, "DEVICE-REGISTER"),
     DEVICE_UPDATE(2, "DEVICE-UPDATE"),
