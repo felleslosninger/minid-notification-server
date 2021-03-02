@@ -31,8 +31,7 @@ public class AuditService {
     public void auditRegistrationServiceRegisterDevice(RegistrationDevice device) {
         auditLogger.log(AuditEntry.builder()
                 .auditId(AuditID.DEVICE_REGISTER)
-                .message("")
-                .attribute("person_identifier", device.getPersonIdentifier())
+                .personIdentifier(device.getPersonIdentifier())
                 .attribute("device", device)
                 .build());
     }
@@ -41,8 +40,7 @@ public class AuditService {
 
         auditLogger.log(AuditEntry.builder()
                 .auditId(AuditID.DEVICE_UPDATE)
-                .message("")
-                .attribute("person_identifier", existingDevice.getPersonIdentifier())
+                .personIdentifier(existingDevice.getPersonIdentifier())
                 .attribute("old_device", existingDevice)
                 .attribute("new_device", updatedDevice)
                 .build());
@@ -51,8 +49,7 @@ public class AuditService {
     public void auditRegistrationServiceDeleteDevice(RegistrationDevice device) {
         auditLogger.log(AuditEntry.builder()
                 .auditId(AuditID.DEVICE_DELETE)
-                .message("")
-                .attribute("person_identifier", device.getPersonIdentifier())
+                .personIdentifier(device.getPersonIdentifier())
                 .attribute("device", device)
                 .build());
     }
@@ -60,8 +57,7 @@ public class AuditService {
     public void auditRegistrationServiceImportApnsToken(RegistrationEntity entity, String personIdentifier, String fcmToken) {
         auditLogger.log(AuditEntry.builder()
                 .auditId(AuditID.APNS_TOKEN_IMPORT)
-                .message("")
-                .attribute("person_identifier", personIdentifier)
+                .personIdentifier(personIdentifier)
                 .attribute("apns_token", entity.getToken())
                 .attribute("fcm_token", fcmToken)
                 .build());
@@ -71,9 +67,8 @@ public class AuditService {
     public void auditNotificationSend(NotificationEntity notification, AdminContext adminContext) {
         auditLogger.log(AuditEntry.builder()
                 .auditId(AuditID.NOTIFICATION_SEND)
-                .message("")
+                .personIdentifier(adminContext.getPersonIdentifier())
                 .attribute("admin_user_id", adminContext.getFullAdminUserId())
-                .attribute("person_identifier", adminContext.getPersonIdentifier())
                 .attribute("notification", notification)
                 .build());
     }
@@ -81,9 +76,8 @@ public class AuditService {
     public void auditValidatePidToken(ValidateEntity validate, boolean result, AdminContext adminContext) {
         auditLogger.log(AuditEntry.builder()
                 .auditId(AuditID.VALIDATE_PID_TOKEN)
-                .message("")
+                .personIdentifier(adminContext.getPersonIdentifier())
                 .attribute("admin_user_id", adminContext.getFullAdminUserId())
-                .attribute("person_identifier", adminContext.getPersonIdentifier())
                 .attribute("result", result)
                 .attribute("validate", validate)
                 .build());

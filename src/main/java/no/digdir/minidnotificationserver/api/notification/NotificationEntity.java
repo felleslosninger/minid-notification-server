@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 @Data
@@ -22,12 +23,21 @@ public class NotificationEntity {
 
     @NotBlank
     @Size(min = 11, max = 11)
-    @Schema(description = "Person identifier - 11 digits.", example = "01030099326")
+    @Schema(description = "Person identifier - 11 digits.", example = "26079490775")
     String person_identifier;
 
-    @NotBlank (message = "app-id e.g 'no.digdir.minid.appname'")
+    @NotBlank (message = "app-id e.g 'no.digdir.minid.authenticator'")
     @Schema(description = "Application identifier", example = "no.digdir.minid.authenticator")
     String app_identifier;
+
+    @Schema(description = "The login attempt id", example = "[uuid-4]")
+    String login_attempt_id;
+
+    @Schema(description = "The login attempt counter", example = "1")
+    Integer login_attempt_counter;
+
+    @Schema(description = "The expiry time of the login attempt in ISO-8601 format.", example = "2021-02-18T10:15:30+01:00")
+    ZonedDateTime login_attempt_expiry;
 
     @NotBlank
     @Schema(description = "The title of the notification", example = "Test notification")

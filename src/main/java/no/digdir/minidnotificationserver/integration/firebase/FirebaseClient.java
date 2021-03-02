@@ -21,7 +21,7 @@ public class FirebaseClient {
 
     public void send(NotificationEntity notificationEntity, String token) {
 
-        boolean highPriority ="HIGH".equalsIgnoreCase(notificationEntity.getPriority());
+        boolean highPriority = "HIGH".equalsIgnoreCase(notificationEntity.getPriority());
         long ttl = (notificationEntity.getTtl() != null) ? notificationEntity.getTtl() : 2419200L;
         String notificationImage = configProvider.getFirebase().getNotificationImageUrl();
 
@@ -55,15 +55,20 @@ public class FirebaseClient {
 
         /* Message */
         Message.Builder messageBuilder = Message.builder();
-         messageBuilder
+        messageBuilder
                 .setNotification(notificationBuilder.build())
                 .setAndroidConfig(androidConfigBuilder.build())
                 .setApnsConfig(apnsConfigBuilder.build())
                 .setToken(token);
 
-         if(notificationEntity.getData() != null) {
-             messageBuilder.putAllData(notificationEntity.getData());
-         }
+        /* Data payload */
+        if(notificationEntity.getData() != null) {
+            messageBuilder.putAllData(notificationEntity.getData());
+        }
+
+        if(notificationEntity.getLogin_attempt_expiry() != null) {
+            messageBuilder.putData("expiry", notificationEntity.getLogin_attempt_expiry().toString());
+        }
 
         Message message = messageBuilder.build();
 

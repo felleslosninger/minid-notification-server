@@ -23,7 +23,7 @@
     <problem-spring.version>0.25.2</problem-spring.version>
     <git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
     <idporten.version>2020-04-06-1204-f4ec194</idporten.version>
-    <idporten-audit-log.version>0.0.3</idporten-audit-log.version>
+    <idporten-audit-log.version>0.0.4</idporten-audit-log.version>
     <resilience.version>2019-06-27-1212-079df00</resilience.version>
     <flyway.version>5.2.4</flyway.version>
     <artifactory.url>http://eid-artifactory.dmz.local:8080/artifactory</artifactory.url>

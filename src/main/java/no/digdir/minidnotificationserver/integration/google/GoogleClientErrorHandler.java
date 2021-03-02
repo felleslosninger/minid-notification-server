@@ -93,3 +93,53 @@ public class GoogleClientErrorHandler implements ResponseErrorHandler {
 
 
 }
+
+/*
+
+POST https://fcm.googleapis.com/v1/projects/minid-authenticator/messages:send
+{
+  "error": {
+    "code": 404,
+    "message": "Requested entity was not found.",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+
+Caused by: com.google.api.client.http.HttpResponseException: 400 Bad Request
+POST https://fcm.googleapis.com/v1/projects/minid-authenticator/messages:send
+{
+  "error": {
+    "code": 400,
+    "message": "Request contains an invalid argument.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "INVALID_ARGUMENT"
+      },
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.ApnsError",
+        "statusCode": 400,
+        "reason": "BadDeviceToken"
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.BadRequest",
+        "fieldViolations": [
+          {
+            "field": "message.token",
+            "description": "Invalid registration token"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+
+ */

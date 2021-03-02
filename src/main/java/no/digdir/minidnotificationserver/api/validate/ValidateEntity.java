@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank;
 public class ValidateEntity {
 
     @NotBlank
-    @Schema(description = "Person identifier - 11 digits.", example = "01030099326")
+    @Schema(description = "Person identifier - 11 digits.", example = "26079490775")
     String person_identifier;
 
     @NotBlank
