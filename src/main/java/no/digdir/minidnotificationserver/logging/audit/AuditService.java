@@ -3,6 +3,7 @@ package no.digdir.minidnotificationserver.logging.audit;
 
 
 import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
+import no.digdir.minidnotificationserver.api.onboarding.OnboardingStartRequestEntity;
 import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
 import no.digdir.minidnotificationserver.api.validate.ValidateEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
@@ -63,12 +64,44 @@ public class AuditService {
                 .build());
     }
 
+    public void auditRegistrationServiceImportApnsToken(OnboardingStartRequestEntity entity, String personIdentifier, String fcmToken) {
+        auditLogger.log(AuditEntry.builder()
+                .auditId(AuditID.APNS_TOKEN_IMPORT)
+                .personIdentifier(personIdentifier)
+                .attribute("apns_token", entity.getToken())
+                .attribute("fcm_token", fcmToken)
+                .build());
+    }
+    public void auditOnboardingServiceImportApnsToken(OnboardingStartRequestEntity entity, String personIdentifier, String fcmToken) {
+        auditLogger.log(AuditEntry.builder()
+                .auditId(AuditID.APNS_TOKEN_IMPORT)
+                .attribute("claimed_person_identifier", personIdentifier)
+                .attribute("apns_token", entity.getToken())
+                .attribute("fcm_token", fcmToken)
+                .build());
+    }
+
 
     public void auditNotificationSend(NotificationEntity notification, AdminContext adminContext) {
         auditLogger.log(AuditEntry.builder()
                 .auditId(AuditID.NOTIFICATION_SEND)
                 .personIdentifier(adminContext.getPersonIdentifier())
                 .attribute("admin_user_id", adminContext.getFullAdminUserId())
+                .attribute("notification", notification)
+                .build());
+    }
+
+    public void auditNotificationSend(NotificationEntity notification, String personIdentifier) {
+        auditLogger.log(AuditEntry.builder()
+                .auditId(AuditID.NOTIFICATION_SEND)
+                .personIdentifier(personIdentifier)
+                .attribute("notification", notification)
+                .build());
+    }
+    public void auditNotificationOnboardingSend(NotificationEntity notification, String personIdentifier) {
+        auditLogger.log(AuditEntry.builder()
+                .auditId(AuditID.NOTIFICATION_SEND)
+                .attribute("claimed_person_identifier", personIdentifier)
                 .attribute("notification", notification)
                 .build());
     }

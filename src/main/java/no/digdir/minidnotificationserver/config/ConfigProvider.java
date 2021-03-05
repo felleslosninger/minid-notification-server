@@ -16,6 +16,7 @@ public class ConfigProvider implements InitializingBean {
     private Audit audit = new Audit();
     private Proxy proxy = new Proxy();
     private GoogleApi googleApi = new GoogleApi();
+    private Onboarding onboarding = new Onboarding();
 
     @Data
     public static class Firebase {
@@ -53,6 +54,17 @@ public class ConfigProvider implements InitializingBean {
         private boolean sandbox = true;
         private String bundleId;
         private String authKey;
+    }
+
+    @Data
+    public static class Onboarding {
+        private long expiry; // expiry of onboarding auth process in seconds.
+        private String appIdentifier;
+        private String priority;
+        private long ttl;
+        private String apsCategory;
+        private String clickAction;
+
     }
 
     @Override
