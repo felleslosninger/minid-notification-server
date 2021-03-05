@@ -160,10 +160,7 @@
      <dependency>
         <groupId>no.idporten.logging</groupId>
         <artifactId>idporten-log-audit</artifactId>
-<!--        <version>${idporten-audit-log.version}</version>-->
-        <version>DEV-SNAPSHOT</version>
-<!--         <scope>system</scope>-->
-<!--     <systemPath>/Users/kimtaavo/.m2/repository/no/idporten/logging/idporten-log-audit/DEV-SNAPSHOT/idporten-log-audit-DEV-SNAPSHOT.jar</systemPath>-->
+        <version>${idporten-audit-log.version}</version>
      </dependency>
 
     <!-- due to resilience? -->
@@ -414,10 +411,6 @@
         <id>difi-artifactory</id>
         <name>libs-release</name>
         <url>http://eid-artifactory.dmz.local:8080/artifactory/libs-release</url>
-    </repository>
-    <repository>
-        <id>local-maven-repo</id>
-        <url>file:///Users/kimtaavo/.m2/repository</url>
     </repository>
 </repositories>
 
