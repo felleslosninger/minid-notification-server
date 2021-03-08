@@ -1,6 +1,16 @@
 project:
   version: 1.0
 
+cache:
+  local:
+    ttl-in-s: 120
+  cluster:
+    ttl-in-s: 300
+    transport:
+      file:
+        location: ./
+
+
 spring:
   h2:
     console:

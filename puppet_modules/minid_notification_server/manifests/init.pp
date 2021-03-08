@@ -35,7 +35,14 @@ class minid_notification_server (
   Boolean $apns_sandbox                    = $minid_notification_server::params::apns_sandbox,
   String $google_api_key                   = $minid_notification_server::params::google_api_key,
   String $bundle_id                        = $minid_notification_server::params::bundle_id,
-  String $context_path                     = $minid_notification_server::params::context_path
+  String $context_path                     = $minid_notification_server::params::context_path,
+  Integer $cache_local_ttl_in_s            = $minid_notification_server::params::cache_local_ttl_in_s,
+  Integer $cache_cluster_ttl_in_s          = $minid_notification_server::params::cache_cluster_ttl_in_s,
+  Integer $par_cache_ttl_in_s              = $minid_notification_server::params::par_cache_ttl_in_s,
+  String $cache_transport_file_location    = $minid_notification_server::params::cache_transport_file_location,
+  Integer $cache_groups_udp_mcast_port     = $minid_notification_server::params::cache_groups_udp_mcast_port,
+  String $cache_groups_udp_bind_addr       = $minid_notification_server::params::cache_groups_udp_bind_addr,
+
 
 ) inherits minid_notification_server::params {
 

@@ -64,6 +64,15 @@ spring:
   jpa:
     open-in-view: false
 
+cache:
+  local:
+    ttl-in-s: 120
+  cluster:
+    ttl-in-s: 300
+    transport:
+      file:
+        location: /notification-service/cache
+
 
   # Spring Security - OAuth 2 provider
   security:

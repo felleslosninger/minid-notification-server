@@ -35,6 +35,14 @@ management:
     git:
       mode: full
 
+cache:
+  local:
+    ttl-in-s: <%= @cache_local_ttl_in_s %>
+  cluster:
+    ttl-in-s: <%= @cache_cluster_ttl_in_s %>
+    transport:
+      file:
+        location: <%= @cache_transport_file_location %>
 
 springdoc:
   oAuthFlow:
