@@ -67,7 +67,7 @@ public class NotificationServiceTest {
         Mockito.when(registrationRepository.findByPersonIdentifierAndAppIdentifier(anyString(), anyString())).thenReturn(java.util.Optional.ofNullable(registrationDevice));
 
         Mockito.when(firebaseMessaging.send(any())).thenReturn("msgId-1234");
-        Mockito.doNothing().when(auditService).auditNotificationSend(any(), any());
+        Mockito.doNothing().when(auditService).auditNotificationSend(any(), any(AdminContext.class));
     }
 
     @Test

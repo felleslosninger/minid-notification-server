@@ -27,8 +27,14 @@ public class FirebaseClient {
 
         /* Notification */
         Notification.Builder notificationBuilder = Notification.builder();
-        notificationBuilder.setTitle(notificationEntity.getTitle());
-        notificationBuilder.setBody(notificationEntity.getBody());
+        if(notificationEntity.getTitle() != null && !notificationEntity.getTitle().isEmpty()) {
+            notificationBuilder.setTitle(notificationEntity.getTitle());
+        }
+
+        if(notificationEntity.getBody() != null && !notificationEntity.getBody().isEmpty()) {
+            notificationBuilder.setBody(notificationEntity.getBody());
+        }
+
         if (notificationImage != null && !notificationImage.isEmpty()) {
             notificationBuilder.setImage(notificationImage);
         }
