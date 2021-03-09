@@ -75,7 +75,7 @@ cache:
     ttl-in-s: 300
     transport:
       file:
-        location: /notification-service/cache
+        location: c:/etc/opt/notification-server/
 infinispan:
   embedded:
     enabled: true

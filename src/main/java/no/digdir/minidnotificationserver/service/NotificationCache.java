@@ -1,7 +1,6 @@
 package no.digdir.minidnotificationserver.service;
 
 import no.digdir.minidnotificationserver.config.CacheConfiguration;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;

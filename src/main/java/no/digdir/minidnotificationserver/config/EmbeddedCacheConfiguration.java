@@ -24,13 +24,19 @@ public class EmbeddedCacheConfiguration {
 
     @Value("${cache.cluster.ttl-in-s:300}")
     private int clusterTtl;
+
+    @Value("${cache.cluster.transport.file.location}")
+    private String location;
+
     @Autowired
     private CacheConfiguration cacheConfiguration;
 
     @Bean
     public InfinispanGlobalConfigurer infinispanGlobalConfigurer() {
         return new GlobalConfigurationBuilder()
-                .transport().clusterName("NOTIFICATION_CLUSTER")::build;
+                .transport().defaultTransport()
+                .addProperty("configurationFile", location + "cache-transport.xml")
+                .clusterName("NOTIFICATION_CLUSTER")::build;
     }
 
     @Bean
