@@ -35,6 +35,18 @@ management:
     git:
       mode: full
 
+cache:
+  internal-id: notification-service
+  local:
+    ttl-in-s: <%= @cache_local_ttl_in_s %>
+  cluster:
+    ttl-in-s: <%= @cache_cluster_ttl_in_s %>
+    transport:
+      file:
+        location: <%= @cache_transport_file_location %>
+infinispan:
+  embedded:
+    enabled: <%= @infinispan_enabled %>
 
 springdoc:
   oAuthFlow:

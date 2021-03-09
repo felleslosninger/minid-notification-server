@@ -1,6 +1,20 @@
 project:
   version: 1.0
 
+cache:
+  internal-id: notification-service
+  local:
+    ttl-in-s: 120
+  cluster:
+    ttl-in-s: 300
+    transport:
+      file:
+        location: ./
+infinispan:
+  embedded:
+    enabled: true
+
+
 spring:
   h2:
     console:
