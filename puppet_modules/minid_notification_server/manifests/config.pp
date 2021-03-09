@@ -15,7 +15,7 @@ class minid_notification_server::config inherits minid_notification_server {
     group   => $minid_notification_server::service_name,
     mode    => '0444',
   } ->
-  file { "${minid_notification_server::config_root}${minid_notification_server::application}/cache-transport.xml":
+  file { "${minid_notification_server::config_dir}${minid_notification_server::application}/cache-transport.xml":
           ensure  => 'file',
           content => template("${module_name}/cache-transport.xml.erb"),
           owner   => $minid_notification_server::service_name,
