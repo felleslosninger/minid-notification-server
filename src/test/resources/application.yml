@@ -2,6 +2,7 @@ project:
   version: 1.0
 
 cache:
+  internal-id: notification-service
   local:
     ttl-in-s: 120
   cluster:
@@ -9,6 +10,9 @@ cache:
     transport:
       file:
         location: ./
+infinispan:
+  embedded:
+    enabled: true
 
 
 spring:

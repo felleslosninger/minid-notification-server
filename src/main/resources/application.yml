@@ -65,6 +65,7 @@ spring:
     open-in-view: false
 
 cache:
+  internal-id: notification-service
   local:
     ttl-in-s: 120
   cluster:
@@ -72,6 +73,9 @@ cache:
     transport:
       file:
         location: /notification-service/cache
+infinispan:
+  embedded:
+    enabled: true
 
 
   # Spring Security - OAuth 2 provider
