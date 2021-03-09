@@ -30,7 +30,7 @@ public class EmbeddedCacheConfiguration {
     @Bean
     public InfinispanGlobalConfigurer infinispanGlobalConfigurer() {
         return new GlobalConfigurationBuilder()
-                .transport().clusterName("LOCAL_CLUSTER")::build;
+                .transport().clusterName("NOTIFICATION_CLUSTER")::build;
     }
 
     @Bean
@@ -38,7 +38,7 @@ public class EmbeddedCacheConfiguration {
         return manager -> {
             final org.infinispan.configuration.cache.Configuration ispnConfig = new ConfigurationBuilder()
                     .clustering()
-                    .cacheMode(CacheMode.LOCAL)
+                    .cacheMode(CacheMode.REPL_SYNC)
                     .build();
             manager.createCache(cacheConfiguration.getCachePrefix() + "-sessions", ispnConfig);
             manager.defineConfiguration(cacheConfiguration.getCacheNameLoginAttempts(),
