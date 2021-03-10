@@ -32,7 +32,7 @@ public class OnboardingService {
 
 
     public void startAuth(OnboardingStartRequestEntity entity) {
-        ConfigProvider.Onboarding cfg = configProvider.getOnboarding();
+        ConfigProvider.Authenticator cfg = configProvider.getAuthenticator();
 
         if("ios".equalsIgnoreCase(entity.getOs())) {
             String fcmToken = googleClient.importAPNsToken(entity.getToken());
@@ -52,8 +52,8 @@ public class OnboardingService {
         NotificationEntity notification = NotificationEntity.builder()
                 .app_identifier(cfg.getAppIdentifier())
                 .priority(cfg.getPriority())
-                .aps_category(cfg.getApsCategory())
-                .click_action(cfg.getClickAction())
+                .aps_category(cfg.getOnboardingApsCategory())
+                .click_action(cfg.getOnboardingClickAction())
                 .ttl(cfg.getTtl())
                 .data(data)
                 .build();

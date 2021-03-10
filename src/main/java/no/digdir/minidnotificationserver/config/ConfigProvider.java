@@ -16,7 +16,7 @@ public class ConfigProvider implements InitializingBean {
     private Audit audit = new Audit();
     private Proxy proxy = new Proxy();
     private GoogleApi googleApi = new GoogleApi();
-    private Onboarding onboarding = new Onboarding();
+    private Authenticator authenticator = new Authenticator();
 
     @Data
     public static class Firebase {
@@ -57,13 +57,15 @@ public class ConfigProvider implements InitializingBean {
     }
 
     @Data
-    public static class Onboarding {
+    public static class Authenticator {
         private long expiry; // expiry of onboarding auth process in seconds.
         private String appIdentifier;
         private String priority;
         private long ttl;
-        private String apsCategory;
-        private String clickAction;
+        private String onboardingApsCategory;
+        private String onboardingClickAction;
+        private String authenticationApsCategory;
+        private String authenticationClickAction;
 
     }
 

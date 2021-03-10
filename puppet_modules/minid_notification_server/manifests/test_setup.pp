@@ -5,7 +5,7 @@ class minid_notification_server::test_setup inherits minid_notification_server{
   if ($platform::test_setup) {
 
     wget::fetch { 'download_firebase-credentials':
-      source             => 'http://static.dmz.local/vagrant/eid/resources/firebase-credentials.json',
+      source             => 'http://static.dmz.local/vagrant/eid/resources/minid-app/firebase-credentials.json',
       destination        => "${minid_notification_server::config_dir}${minid_notification_server::application}/firebase-credentials.json",
       nocheckcertificate => true,
     }
