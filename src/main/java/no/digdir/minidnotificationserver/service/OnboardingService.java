@@ -52,8 +52,8 @@ public class OnboardingService {
         NotificationEntity notification = NotificationEntity.builder()
                 .app_identifier(cfg.getAppIdentifier())
                 .priority(cfg.getPriority())
-                .aps_category(cfg.getApsCategory())
-                .click_action(cfg.getClickAction())
+                .aps_category(cfg.getOnboardingApsCategory())
+                .click_action(cfg.getOnboardingClickAction())
                 .ttl(cfg.getTtl())
                 .data(data)
                 .build();
