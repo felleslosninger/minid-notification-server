@@ -145,9 +145,7 @@ digdir:
   audit:
     log-dir: logs/minid-notification-server/audit
     log-file: audit-log.json
-  approval:
-    app-identifier: no.digdir.minid.authenticator
-    priority: normal
+
 
 #  # Event config
 #  event:
