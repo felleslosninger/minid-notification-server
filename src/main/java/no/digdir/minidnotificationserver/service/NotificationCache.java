@@ -1,5 +1,6 @@
 package no.digdir.minidnotificationserver.service;
 
+import no.digdir.minidnotificationserver.api.notification.AuthenticationNotificationEntity;
 import no.digdir.minidnotificationserver.config.CacheConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -20,13 +21,13 @@ public class NotificationCache  {
 
     }
 
-    public void putLoginAttemptId(String loginAttemptId, String ssn) {
-        loginAttemptCache.put(loginAttemptId, ssn);
+    public void putLoginAttempt(String key, AuthenticationNotificationEntity notificationEntity) {
+        loginAttemptCache.put(key, notificationEntity);
     }
 
-    public String getSsnForLoginAttemptId(String loginAttemptId) {
-        Cache.ValueWrapper valueWrapper = loginAttemptCache.get(loginAttemptId);
-        return valueWrapper != null ? (String) valueWrapper.get() : null;
+    public AuthenticationNotificationEntity getApprovalNotificationForLoginAttempt(String key) {
+        Cache.ValueWrapper valueWrapper = loginAttemptCache.get(key);
+        return valueWrapper != null ? (AuthenticationNotificationEntity) valueWrapper.get() : null;
     }
 
     public void removeLoginAttemptId(String loginAttemptId) {

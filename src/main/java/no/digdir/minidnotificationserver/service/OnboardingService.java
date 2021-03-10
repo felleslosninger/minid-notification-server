@@ -32,7 +32,7 @@ public class OnboardingService {
 
 
     public void startAuth(OnboardingStartRequestEntity entity) {
-        ConfigProvider.Onboarding cfg = configProvider.getOnboarding();
+        ConfigProvider.Authenticator cfg = configProvider.getAuthenticator();
 
         if("ios".equalsIgnoreCase(entity.getOs())) {
             String fcmToken = googleClient.importAPNsToken(entity.getToken());
