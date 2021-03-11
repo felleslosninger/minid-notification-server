@@ -24,6 +24,9 @@ public class OnboardingFinalizeResponseEntity {
     @Schema(description = "Oauth2 refresh_token")
     String refresh_token;
 
+    @Schema(description = "Authentication expiry date in  ISO-8601 format.", example = "2021-02-18T10:15:30+01:00")
+    String expiry;
+
     @Schema(description = "The client application state.", example = "[any-unguessable-random-string]")
     String state;
 }

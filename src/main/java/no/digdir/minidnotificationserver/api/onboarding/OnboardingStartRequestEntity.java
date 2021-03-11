@@ -54,7 +54,7 @@ public class OnboardingStartRequestEntity implements Serializable {
 
 
     @JsonIgnore
-    String loginKey;
+    String login_key;
 
     @JsonIgnore
     ZonedDateTime expiry;

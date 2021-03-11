@@ -41,7 +41,7 @@ class minid_notification_server::params {
   $cache_local_ttl_in_s             = 5
   $cache_cluster_ttl_in_s           = 300
   $par_cache_ttl_in_s               = 120
-  $cache_transport_file_location    = '/etc/opt/minid-notification-server/'
+  $cache_transport_file_location    = '/etc/opt/minid-notification-server/cache-transport.xml'
   $cache_groups_udp_mcast_port      = 45590
   $cache_groups_udp_bind_addr       = 'match-interface:eth0' # only works if all nodes on same machine. See http://www.jgroups.org/manual/index.html#Transport.
   $infinispan_enabled               = true

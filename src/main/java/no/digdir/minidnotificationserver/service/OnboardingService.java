@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.MessageDigest;
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.HashMap;
@@ -41,38 +42,37 @@ public class OnboardingService {
             entity.setToken(fcmToken);
         }
 
-        entity.setLoginKey(UUID.randomUUID().toString());
+        entity.setLogin_key(UUID.randomUUID().toString());
         entity.setExpiry(ZonedDateTime.now().plusSeconds(cfg.getExpiry()));
 
         Map<String, String> data = new HashMap<>();
         data.put("expiry", entity.getExpiry().toString());
-        data.put("login_key", entity.getLoginKey());
+        data.put("login_key", entity.getLogin_key());
         data.put("state", entity.getState());
+        data.put("category", cfg.getOnboardingCategory());
 
         NotificationEntity notification = NotificationEntity.builder()
                 .app_identifier(cfg.getAppIdentifier())
                 .priority(cfg.getPriority())
-                .aps_category(cfg.getOnboardingApsCategory())
-                .click_action(cfg.getOnboardingClickAction())
                 .ttl(cfg.getTtl())
                 .data(data)
                 .build();
 
-        onboardingServiceCache.getOrSetStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken(), entity);
-        firebaseClient.send(notification, entity.getToken());
+        onboardingServiceCache.putStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken(), entity);
+        firebaseClient.send(notification, entity.getToken(), true);
         auditService.auditNotificationOnboardingSend(notification, entity.getPerson_identifier());
     }
 
     public OnboardingContinueResponseEntity continueAuth(OnboardingContinueRequestEntity entity) {
-        OnboardingStartRequestEntity startEntity;
-        try {
-             startEntity = onboardingServiceCache.getOrSetStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken(), null);
-        } catch (ClassCastException e) {
+
+        OnboardingStartRequestEntity startEntity = onboardingServiceCache.getStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken());
+
+        if(startEntity == null) {
             throw new RuntimeException("Token not found.");
         }
 
         // check that login_key matches
-        if(!entity.getLoginKey().equals(startEntity.getLoginKey())) {
+        if(!entity.getLogin_key().equals(startEntity.getLogin_key())) {
             throw new RuntimeException("Login key does not match");
         }
 
@@ -85,10 +85,8 @@ public class OnboardingService {
     }
 
     public OnboardingFinalizeResponseEntity finalizeAuth(OnboardingFinalizeRequestEntity entity) {
-        OnboardingStartRequestEntity startEntity;
-        try {
-            startEntity = onboardingServiceCache.getOrSetStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken(), null);
-        } catch (ClassCastException e) {
+        OnboardingStartRequestEntity startEntity = onboardingServiceCache.getStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken());
+        if (startEntity == null) {
             // TODO: delete later: onboardingServiceCache.deleteStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken());
             throw new RuntimeException("Token not found.");
         }
@@ -113,6 +111,7 @@ public class OnboardingService {
         return OnboardingFinalizeResponseEntity.builder()
                 .access_token("some_access_token_string")
                 .refresh_token("some_refresh_token_string")
+                .expiry(ZonedDateTime.now().plus(Duration.ofHours(1L)).toString())
                 .build();
     }
 

@@ -41,6 +41,18 @@ management:
     git:
       mode: full
 
+cache:
+  internal-id: notification-service
+  local:
+    ttl-in-s: 120
+  cluster:
+    ttl-in-s: 300
+    transport:
+      file-location: cache-transport.xml
+infinispan:
+  embedded:
+    enabled: true
+
 
 springdoc:
   show-actuator: true
@@ -56,9 +68,6 @@ springdoc:
       scopes:
 
 spring:
-  cache:
-    jcache:
-      config: classpath:ehcache.xml
   web:
     resources:
       add-mappings: false
@@ -66,20 +75,6 @@ spring:
     throw-exception-if-no-handler-found: true
   jpa:
     open-in-view: false
-
-cache:
-  internal-id: notification-service
-  local:
-    ttl-in-s: 120
-  cluster:
-    ttl-in-s: 300
-    transport:
-      file:
-        location: c:/etc/opt/notification-server/
-infinispan:
-  embedded:
-    enabled: true
-
 
   # Spring Security - OAuth 2 provider
   security:
@@ -133,12 +128,11 @@ digdir:
     port: 3128
     skip-hosts: oidc-test1.difi.eon.no|localhost
   authenticator:
-    expiry: 30
+    expiry: 180
     app-identifier: no.digdir.minid.authenticator
     priority: normal
-    ttl: 30
-    onboarding-aps-category: onboardingCategory
-    onboarding-click-action: onboardingIntent
+    ttl: 180
+    onboarding-category: onboardingCategory
     authentication-aps-category: auth_category
     authentication-click-action: minid_auth_intent
 

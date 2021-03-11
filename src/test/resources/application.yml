@@ -8,8 +8,7 @@ cache:
   cluster:
     ttl-in-s: 300
     transport:
-      file:
-        location: ./
+      file-location: cache-transport.xml
 infinispan:
   embedded:
     enabled: true

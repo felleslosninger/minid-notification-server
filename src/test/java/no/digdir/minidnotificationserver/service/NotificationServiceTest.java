@@ -97,6 +97,7 @@ public class NotificationServiceTest {
                 .setApnsConfig(ApnsConfig.builder()
                         .setAps(Aps.builder()
                                 .setCategory("MINID_AUTH_CATEGORY")
+                                .setMutableContent(true)
                                 .build())
                         .putHeader("apns-priority", "5")
                         .putHeader("apns-expiration", "2419200")

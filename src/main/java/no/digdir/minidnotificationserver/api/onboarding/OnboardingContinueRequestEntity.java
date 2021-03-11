@@ -34,6 +34,6 @@ public class OnboardingContinueRequestEntity {
 
     @NotBlank
     @Size(min=36, max = 36)
-    String loginKey; // uuid v4
+    String login_key; // uuid v4
 
 }

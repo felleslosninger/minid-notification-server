@@ -62,8 +62,7 @@ public class ConfigProvider implements InitializingBean {
         private String appIdentifier;
         private String priority;
         private long ttl;
-        private String onboardingApsCategory;
-        private String onboardingClickAction;
+        private String onboardingCategory;
         private String authenticationApsCategory;
         private String authenticationClickAction;
 
