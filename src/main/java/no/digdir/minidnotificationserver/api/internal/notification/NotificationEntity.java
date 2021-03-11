@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api.notification;
+package no.digdir.minidnotificationserver.api.internal.notification;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

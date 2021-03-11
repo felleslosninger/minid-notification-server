@@ -2,7 +2,7 @@ package no.digdir.minidnotificationserver.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
+import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.*;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseClient;
@@ -81,6 +81,7 @@ public class OnboardingService {
         // reply with (state, 2fa_method ("sms", "pin"), optional pin index (or reply with 401/429)
         return OnboardingContinueResponseEntity.builder()
                 .two_factor_method("sms")
+                .state(startEntity.getState())
                 .build();
     }
 
@@ -112,6 +113,7 @@ public class OnboardingService {
                 .access_token("some_access_token_string")
                 .refresh_token("some_refresh_token_string")
                 .expiry(ZonedDateTime.now().plus(Duration.ofHours(1L)).toString())
+                .state(entity.getState())
                 .build();
     }
 

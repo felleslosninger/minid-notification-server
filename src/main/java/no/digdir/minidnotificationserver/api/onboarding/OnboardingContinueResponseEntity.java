@@ -21,7 +21,7 @@ public class OnboardingContinueResponseEntity {
     @Schema(description = "The two-factor method currently in use.", example = "pin", allowableValues =  {"pin", "sms"})
     String two_factor_method;
 
-    @Schema(description = "The pin index to use. Only set if two_factor_method=\"sms\".", example = "17")
+    @Schema(description = "The pin index to use. Only set if two_factor_method=\"pin\".", example = "17")
     String pin_index;
 
     @Schema(description = "The client application state.", example = "[any-unguessable-random-string]")

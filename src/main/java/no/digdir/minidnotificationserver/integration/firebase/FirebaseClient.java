@@ -3,7 +3,7 @@ package no.digdir.minidnotificationserver.integration.firebase;
 import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
+import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -92,10 +92,6 @@ public class FirebaseClient {
         /* Data payload */
         if(notificationEntity.getData() != null) {
             messageBuilder.putAllData(notificationEntity.getData());
-        }
-
-        if(notificationEntity.getLogin_attempt_expiry() != null) {
-            messageBuilder.putData("expiry", notificationEntity.getLogin_attempt_expiry().toString());
         }
 
         Message message = messageBuilder.build();

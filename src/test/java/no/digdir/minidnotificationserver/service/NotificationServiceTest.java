@@ -1,7 +1,7 @@
 package no.digdir.minidnotificationserver.service;
 
 import com.google.firebase.messaging.*;
-import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
+import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import no.digdir.minidnotificationserver.repository.RegistrationRepository;
