@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api.notification;
+package no.digdir.minidnotificationserver.api.internal.notification;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

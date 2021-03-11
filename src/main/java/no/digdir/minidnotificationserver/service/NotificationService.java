@@ -2,7 +2,7 @@ package no.digdir.minidnotificationserver.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.digdir.minidnotificationserver.api.notification.NotificationEntity;
+import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseClient;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
