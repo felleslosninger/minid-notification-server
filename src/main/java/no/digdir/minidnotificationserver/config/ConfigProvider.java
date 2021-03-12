@@ -17,6 +17,7 @@ public class ConfigProvider implements InitializingBean {
     private Proxy proxy = new Proxy();
     private GoogleApi googleApi = new GoogleApi();
     private Authenticator authenticator = new Authenticator();
+    private MinidEid minIDEid = new MinidEid();
 
     @Data
     public static class Firebase {
@@ -65,6 +66,13 @@ public class ConfigProvider implements InitializingBean {
         private String onboardingCategory;
         private String authenticationApsCategory;
         private String authenticationClickAction;
+
+    }
+
+    @Data
+    public static class MinidEid {
+        private String url; // expiry of onboarding auth process in seconds.
+        private long ttl;
 
     }
 

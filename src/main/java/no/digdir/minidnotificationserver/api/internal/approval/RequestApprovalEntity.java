@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api.internal.aproval;
+package no.digdir.minidnotificationserver.api.internal.approval;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -48,7 +48,7 @@ public class RequestApprovalEntity {
     String service_provider;
 
     @JsonIgnore
-    String key = login_attempt_id + "-" + login_attempt_counter;
+    String key = login_attempt_id + "_" + login_attempt_counter;
 
 }
 
