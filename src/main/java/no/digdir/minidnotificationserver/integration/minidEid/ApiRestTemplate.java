@@ -3,7 +3,6 @@ package no.digdir.minidnotificationserver.integration.minidEid;
 import lombok.AllArgsConstructor;
 import no.digdir.minidnotificationserver.config.CorrelationIdInterceptor;
 import no.digdir.minidnotificationserver.config.developer.DeveloperLoggingRequestInterceptor;
-import no.digdir.minidnotificationserver.integration.google.GoogleClientErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;

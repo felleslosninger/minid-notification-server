@@ -8,12 +8,11 @@ import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.service.AdminContext;
-import no.digdir.minidnotificationserver.service.RequestApprovalCache;
 import no.digdir.minidnotificationserver.service.NotificationService;
+import no.digdir.minidnotificationserver.service.RequestApprovalCache;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,7 +53,7 @@ public class RequestApprovalEndpoint {
         Map<String, String> data = new HashMap<>();
         data.put("request_id", requestApprovalEntity.key);
         data.put("request_type", "LOGIN");
-        data.put("expir y", requestApprovalEntity.getLogin_attempt_expiry().toString());
+        data.put("expiry", requestApprovalEntity.getLogin_attempt_expiry().toString());
         data.put("service_name", requestApprovalEntity.getService_provider());
         data.put("requires_local_authentication", "true");
         return NotificationEntity.builder()
