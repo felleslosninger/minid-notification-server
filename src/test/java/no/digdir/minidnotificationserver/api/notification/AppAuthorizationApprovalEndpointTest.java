@@ -2,6 +2,7 @@ package no.digdir.minidnotificationserver.api.notification;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import no.digdir.minidnotificationserver.api.internal.approval.RequestApprovalEntity;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseBeans;
@@ -58,8 +59,11 @@ public class AppAuthorizationApprovalEndpointTest {
     @Autowired
     private WebApplicationContext wac;
 
-    @Autowired
+    @MockBean
     private FirebaseBeans firebaseBeans;
+
+    @MockBean
+    private FirebaseMessaging firebaseMessaging;
 
     @Test
     public void approvalTest() throws Exception {
