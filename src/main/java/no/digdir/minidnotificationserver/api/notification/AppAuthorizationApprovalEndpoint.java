@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.api.internal.approval.RequestApprovalEntity;
 import no.digdir.minidnotificationserver.api.validate.ValidateEntity;
-import no.digdir.minidnotificationserver.service.AdminContext;
 import no.digdir.minidnotificationserver.service.AuthenticationService;
 import no.digdir.minidnotificationserver.service.RequestApprovalCache;
 import no.digdir.minidnotificationserver.service.ValidationService;
@@ -40,12 +39,12 @@ public class AppAuthorizationApprovalEndpoint {
     @PostMapping("/approve")
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')") //TODO: Inntil videre. Skal byttes ut SNART
     public ResponseEntity<String> approve(@RequestHeader HttpHeaders headers, @RequestBody AppAuthorizationApprovalEntity approvalEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        RequestApprovalEntity notification = requestApprovalCache.getApprovalNotificationForLoginAttempt(approvalEntity.getRequestId());
+        RequestApprovalEntity notification = requestApprovalCache.getApprovalRequestForLoginAttempt(approvalEntity.getRequestId());
         if (notification == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found");
         }
         //TODO: Få grep om token for validering
-        validationService.validate(getValidateEntity(notification, "token"), AdminContext.of(headers, principal));
+//        validationService.validate(getValidateEntity(notification, "token"), AdminContext.of(headers, principal));
         if (false) {
             //TODO: Valider data fra token mot kobling mot requestId
         } else {
@@ -62,12 +61,12 @@ public class AppAuthorizationApprovalEndpoint {
     @PostMapping("/reject")
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')") //TODO: Inntil videre. Skal byttes ut SNART
     public ResponseEntity<String> reject(@RequestHeader HttpHeaders headers, @RequestBody AppAuthorizationApprovalEntity approvalEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        RequestApprovalEntity notification = requestApprovalCache.getApprovalNotificationForLoginAttempt(approvalEntity.getRequestId());
+        RequestApprovalEntity notification = requestApprovalCache.getApprovalRequestForLoginAttempt(approvalEntity.getRequestId());
         if (notification == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found");
         }
         //TODO: Få grep om token for validering
-        validationService.validate(getValidateEntity(notification, "token"), AdminContext.of(headers, principal));
+//        validationService.validate(getValidateEntity(notification, "token"), AdminContext.of(headers, principal));
         if (false) {
             //TODO: Valider data fra token mot kobling mot requestId
         } else {

@@ -25,7 +25,7 @@ public class RequestApprovalCache {
         loginAttemptCache.put(key, notificationEntity);
     }
 
-    public RequestApprovalEntity getApprovalNotificationForLoginAttempt(String key) {
+    public RequestApprovalEntity getApprovalRequestForLoginAttempt(String key) {
         Cache.ValueWrapper valueWrapper = loginAttemptCache.get(key);
         return valueWrapper != null ? (RequestApprovalEntity) valueWrapper.get() : null;
     }

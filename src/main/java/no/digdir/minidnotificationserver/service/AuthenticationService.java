@@ -3,7 +3,6 @@ package no.digdir.minidnotificationserver.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
-import no.digdir.minidnotificationserver.integration.google.GoogleResponseEntity;
 import no.digdir.minidnotificationserver.integration.minidEid.ApiRestTemplate;
 import no.digdir.minidnotificationserver.integration.minidEid.MinIDEidApprovalRequestEntity;
 import org.springframework.http.HttpEntity;
@@ -27,13 +26,13 @@ public class AuthenticationService {
     public ResponseEntity sendApproval(String ssn) {
         MinIDEidApprovalRequestEntity requestEntity = MinIDEidApprovalRequestEntity.builder().personal_identity(ssn).build();
         return restTemplate.postForEntity(configProvider.getMinIDEid().getUrl() + "/approve"
-                , httpEntity(requestEntity), GoogleResponseEntity.class);
+                , httpEntity(requestEntity), ResponseEntity.class);
     }
 
     public ResponseEntity sendRejection(String ssn) {
         MinIDEidApprovalRequestEntity requestEntity = MinIDEidApprovalRequestEntity.builder().personal_identity(ssn).build();
         return restTemplate.postForEntity(configProvider.getMinIDEid().getUrl() + "/reject"
-                , httpEntity(requestEntity), GoogleResponseEntity.class);
+                , httpEntity(requestEntity), ResponseEntity.class);
     }
 
     private <T> HttpEntity<T> httpEntity(T object) {
