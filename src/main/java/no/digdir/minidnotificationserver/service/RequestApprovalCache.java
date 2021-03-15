@@ -1,6 +1,6 @@
 package no.digdir.minidnotificationserver.service;
 
-import no.digdir.minidnotificationserver.api.internal.aproval.RequestApprovalEntity;
+import no.digdir.minidnotificationserver.api.internal.approval.RequestApprovalEntity;
 import no.digdir.minidnotificationserver.config.CacheConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -25,7 +25,7 @@ public class RequestApprovalCache {
         loginAttemptCache.put(key, notificationEntity);
     }
 
-    public RequestApprovalEntity getApprovalNotificationForLoginAttempt(String key) {
+    public RequestApprovalEntity getApprovalRequestForLoginAttempt(String key) {
         Cache.ValueWrapper valueWrapper = loginAttemptCache.get(key);
         return valueWrapper != null ? (RequestApprovalEntity) valueWrapper.get() : null;
     }

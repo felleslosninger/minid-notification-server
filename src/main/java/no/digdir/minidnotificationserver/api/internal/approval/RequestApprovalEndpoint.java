@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api.internal.aproval;
+package no.digdir.minidnotificationserver.api.internal.approval;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -8,12 +8,11 @@ import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.service.AdminContext;
-import no.digdir.minidnotificationserver.service.RequestApprovalCache;
 import no.digdir.minidnotificationserver.service.NotificationService;
+import no.digdir.minidnotificationserver.service.RequestApprovalCache;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +42,6 @@ public class RequestApprovalEndpoint {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping("/request_approval")
-    @PreAuthorize("hasAuthority('SCOPE_minid:notification.send')")
     public ResponseEntity<String> requestApproval(@RequestHeader HttpHeaders headers, @RequestBody RequestApprovalEntity authenticationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
         NotificationEntity notificationEntity = createNotificationEntity(authenticationEntity);
         requestApprovalCache.putLoginAttempt(authenticationEntity.key, authenticationEntity);

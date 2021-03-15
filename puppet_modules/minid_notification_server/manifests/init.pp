@@ -42,7 +42,10 @@ class minid_notification_server (
   String $cache_transport_file_location    = $minid_notification_server::params::cache_transport_file_location,
   Integer $cache_groups_udp_mcast_port     = $minid_notification_server::params::cache_groups_udp_mcast_port,
   String $cache_groups_udp_bind_addr       = $minid_notification_server::params::cache_groups_udp_bind_addr,
-  Boolean $infinispan_enabled              = $minid_notification_server::params::infinispan_enabled
+  Boolean $infinispan_enabled              = $minid_notification_server::params::infinispan_enabled,
+  String $minid_eid_url                    = $minid_notification_server::params::minid_eid_url,
+  Integer $minid_eid_ttl                   = $minid_notification_server::params::minid_eid_ttl
+
 
 
 ) inherits minid_notification_server::params {
