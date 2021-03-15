@@ -2,6 +2,7 @@ package no.digdir.minidnotificationserver.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.digdir.minidnotificationserver.Utils;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.*;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
@@ -46,7 +47,7 @@ public class OnboardingService {
         entity.setExpiry(ZonedDateTime.now().plusSeconds(cfg.getExpiry()));
 
         Map<String, String> data = new HashMap<>();
-        data.put("expiry", entity.getExpiry().toString());
+        data.put("expiry", entity.getExpiry().format(Utils.dtf));
         data.put("login_key", entity.getLogin_key());
         data.put("state", entity.getState());
         data.put("category", cfg.getOnboardingCategory());

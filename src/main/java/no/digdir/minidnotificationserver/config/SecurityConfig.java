@@ -30,9 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //            .and()
-                .exceptionHandling()
+//                .exceptionHandling()
 //                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // translate unauthenticated exception to a http status 401 response
-            .and()
+//            .and()
                 .headers()
                 // check with online CSP evaluator at https://csp-evaluator.withgoogle.com/
 //                .contentSecurityPolicy("base-uri 'self'; object-src 'none'; default-src 'self'; connect-src 'self' localhost; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' ; font-src  'self' ; img-src 'self' data: ;  frame-ancestors 'none'; child-src 'self'; frame-src 'self'; require-trusted-types-for 'script")

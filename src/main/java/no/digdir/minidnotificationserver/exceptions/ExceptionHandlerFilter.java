@@ -1,7 +1,6 @@
 package no.digdir.minidnotificationserver.exceptions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -14,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
-    private final Logger logger = LoggerFactory.getLogger(ExceptionHandlerFilter.class);
 
     private final HandlerExceptionResolver resolver;
 
@@ -31,7 +30,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
         // catches non-AuthenticationExceptions thrown by Spring Security filters
         } catch (RuntimeException e) {
-            logger.error("Exception caught from security filter chain:", e);
+            log.error("Exception caught from security filter chain:", e);
             resolver.resolveException(request, response, null, e);
         }
     }

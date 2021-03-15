@@ -14,8 +14,10 @@ import org.springframework.web.client.RestTemplate;
 public class ApiRestTemplate extends RestTemplate {
 
     public ApiRestTemplate(@Autowired(required = false) DeveloperLoggingRequestInterceptor loggingInterceptor,
-                              CorrelationIdInterceptor correlationIdInterceptor) {
+                              CorrelationIdInterceptor correlationIdInterceptor,
+                              ApiErrorHandler responseErrorHandler) {
         this.setRequestFactory(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
+        this.setErrorHandler(responseErrorHandler);
         this.getInterceptors().add(correlationIdInterceptor);
         if(loggingInterceptor != null) { // only enabled in debug profile
             this.getInterceptors().add(loggingInterceptor);

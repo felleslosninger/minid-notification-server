@@ -99,7 +99,7 @@ public class FirebaseClient {
             String mesgId = firebaseMessaging.send(message);
             log.debug("firebaseMessaging.send() - mesgId: {}", mesgId);
         } catch (FirebaseMessagingException e) {
-            throw new RuntimeException(e);
+            throw new FirebaseProblem(e);
         }
 
     }

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import no.digdir.minidnotificationserver.Utils;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.service.AdminContext;
@@ -53,7 +54,7 @@ public class RequestApprovalEndpoint {
         Map<String, String> data = new HashMap<>();
         data.put("request_id", requestApprovalEntity.key);
         data.put("request_type", "LOGIN");
-        data.put("expiry", requestApprovalEntity.getLogin_attempt_expiry().toString());
+        data.put("expiry", requestApprovalEntity.getLogin_attempt_expiry().format(Utils.dtf));
         data.put("service_name", requestApprovalEntity.getService_provider());
         data.put("requires_local_authentication", "true");
         return NotificationEntity.builder()

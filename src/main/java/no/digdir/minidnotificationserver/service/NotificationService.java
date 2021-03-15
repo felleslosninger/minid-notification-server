@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
+import no.digdir.minidnotificationserver.exceptions.DeviceNotFoundProblem;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseClient;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import no.digdir.minidnotificationserver.repository.RegistrationRepository;
@@ -31,7 +32,7 @@ public class NotificationService {
             auditService.auditNotificationSend(notification, adminContext);
         } else {
             log.debug("No device found.");
-            // TODO: throw 404 if not found?
+            throw new DeviceNotFoundProblem(notification.getApp_identifier());
         }
 
 
