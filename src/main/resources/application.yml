@@ -115,6 +115,14 @@ spring:
 # Application specific properties
 # ===================================================================
 digdir:
+  app-versions:
+    ios:
+      latest: "1.0"
+      required: "1.0"
+    android:
+      latest: "1.0"
+      required: "1.0"
+
   firebase:
     credentials-json: classpath:firebase-credentials.json
     notification-image-url: https://idporten.difi.no/error/images/svg/eid.svg
@@ -135,7 +143,6 @@ digdir:
     onboarding-category: onboardingCategory
     authentication-aps-category: auth_category
     authentication-click-action: minid_auth_intent
-
   audit:
     log-dir: logs/minid-notification-server/audit
     log-file: audit-log.json

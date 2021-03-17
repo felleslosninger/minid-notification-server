@@ -4,20 +4,33 @@ import lombok.Data;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
-
 import javax.validation.constraints.NotBlank;
 
 @Data
 @Validated
 @ConfigurationProperties(prefix = "digdir", ignoreUnknownFields = false)
 public class ConfigProvider implements InitializingBean {
-
+    private AppVersions appVersions = new AppVersions();
     private Firebase firebase = new Firebase();
     private Audit audit = new Audit();
     private Proxy proxy = new Proxy();
     private GoogleApi googleApi = new GoogleApi();
     private Authenticator authenticator = new Authenticator();
     private MinidEid minIDEid = new MinidEid();
+
+    @Data
+    public static class AppVersions {
+        private DeviceVersions ios;
+        private DeviceVersions android;
+    }
+
+    @Data
+    public static class DeviceVersions {
+        @NotBlank
+        private String latest;
+        @NotBlank
+        private String required;
+    }
 
     @Data
     public static class Firebase {
