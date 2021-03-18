@@ -1,7 +1,7 @@
 package no.digdir.minidnotificationserver.service;
 
 import lombok.RequiredArgsConstructor;
-import no.digdir.minidnotificationserver.api.validate.ValidateEntity;
+import no.digdir.minidnotificationserver.api.internal.validate.ValidateEntity;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import no.digdir.minidnotificationserver.repository.RegistrationRepository;
 import org.springframework.stereotype.Service;

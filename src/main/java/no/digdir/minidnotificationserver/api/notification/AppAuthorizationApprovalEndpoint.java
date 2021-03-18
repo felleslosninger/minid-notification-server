@@ -1,12 +1,18 @@
 package no.digdir.minidnotificationserver.api.notification;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import no.digdir.minidnotificationserver.api.ValidateVersionHeaders;
 import no.digdir.minidnotificationserver.api.internal.approval.RequestApprovalEntity;
-import no.digdir.minidnotificationserver.api.validate.ValidateEntity;
+import no.digdir.minidnotificationserver.api.internal.validate.ValidateEntity;
 import no.digdir.minidnotificationserver.service.AuthenticationService;
 import no.digdir.minidnotificationserver.service.RequestApprovalCache;
 import no.digdir.minidnotificationserver.service.ValidationService;
@@ -22,10 +28,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_OS_HEADER;
+import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_VERSION_HEADER;
+
 @RestController
 @RequestMapping("/api/authorization")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "notification_auth")
+@ValidateVersionHeaders
 public class AppAuthorizationApprovalEndpoint {
     private final RequestApprovalCache requestApprovalCache;
     private final AuthenticationService authenticationService;
@@ -35,6 +45,10 @@ public class AppAuthorizationApprovalEndpoint {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful approval, no content returned."),
             @ApiResponse(responseCode = "404", description = "RequestID not found in cache, approval rejected"),
+    })
+    @Parameters( value = {
+            @Parameter(in = ParameterIn.HEADER, description = "Version of MinID App", name = MINID_APP_VERSION_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "1.0.1"))),
+            @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
     })
     @PostMapping("/approve")
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')") //TODO: Inntil videre. Skal byttes ut SNART
@@ -57,6 +71,10 @@ public class AppAuthorizationApprovalEndpoint {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful rejection, no content returned."),
             @ApiResponse(responseCode = "404", description = "RequestID not found in cache, rejection not relayed to minid-authentication-web"),
+    })
+    @Parameters( value = {
+            @Parameter(in = ParameterIn.HEADER, description = "Version of MinID App", name = MINID_APP_VERSION_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "1.0.1"))),
+            @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
     })
     @PostMapping("/reject")
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')") //TODO: Inntil videre. Skal byttes ut SNART

@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api.validate;
+package no.digdir.minidnotificationserver.api.internal.validate;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

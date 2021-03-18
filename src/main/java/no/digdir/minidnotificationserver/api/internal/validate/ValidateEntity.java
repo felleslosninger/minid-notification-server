@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api.validate;
+package no.digdir.minidnotificationserver.api.internal.validate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;

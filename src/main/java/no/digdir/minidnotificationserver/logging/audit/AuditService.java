@@ -5,7 +5,7 @@ package no.digdir.minidnotificationserver.logging.audit;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingStartRequestEntity;
 import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
-import no.digdir.minidnotificationserver.api.validate.ValidateEntity;
+import no.digdir.minidnotificationserver.api.internal.validate.ValidateEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 import no.digdir.minidnotificationserver.service.AdminContext;

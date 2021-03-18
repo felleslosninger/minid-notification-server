@@ -2,11 +2,12 @@ package no.digdir.minidnotificationserver;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 public class Utils {
-    public final static DateTimeFormatter dtf = DateTimeFormatter.ISO_OFFSET_DATE_TIME;  // .withZone(ZoneOffset.UTC)) for 'z' instead of '+01:00'
+    public final static DateTimeFormatter dtf = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
 
     public static String generateCodeChallange(String codeVerifier)  {
         try {
