@@ -1,9 +1,8 @@
 package no.digdir.minidnotificationserver.integration.google;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +11,11 @@ import java.util.HashSet;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class GoogleClient {
     // https://developers.google.com/instance-id/reference/server#create_registration_tokens_for_apns_tokens
     private final ConfigProvider configProvider;
     private final GoogleRestTemplate restTemplate;
-    private final Logger logger = LoggerFactory.getLogger(GoogleClient.class);
 
     private static final String IID_API_URI = "https://iid.googleapis.com/iid/v1:batchImport";
 
@@ -42,8 +41,8 @@ public class GoogleClient {
         }
 
         String errorMessage = "Error occurred during registration of APNs token: " + response.getStatusCode() + " - " + response.getBody();
-        logger.error(errorMessage);
-        throw new RuntimeException(errorMessage);
+        log.error(errorMessage);
+        throw new GoogleProblem(errorMessage);
 
     }
 

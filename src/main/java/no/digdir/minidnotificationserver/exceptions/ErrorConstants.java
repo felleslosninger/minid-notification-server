@@ -12,5 +12,6 @@ public final class ErrorConstants {
     public static final URI GOOGLE_TYPE = URI.create(PROBLEM_BASE_URL + "/google-api");
     public static final URI MINID_TYPE = URI.create(PROBLEM_BASE_URL + "/minid-eid");
     public static final URI NOTFOUND_TYPE = URI.create(PROBLEM_BASE_URL + "/not-found");
+    public static final URI ONBOARDING_TYPE = URI.create(PROBLEM_BASE_URL + "/onboarding");
 
 }

@@ -5,22 +5,20 @@ import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.Utils;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.*;
+import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
+import no.digdir.minidnotificationserver.exceptions.OnboardingProblem;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseClient;
 import no.digdir.minidnotificationserver.integration.google.GoogleClient;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.security.MessageDigest;
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Transactional
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -31,6 +29,7 @@ public class OnboardingService {
     private final OnboardingServiceCache onboardingServiceCache;
     private final ConfigProvider configProvider;
     private final GoogleClient googleClient;
+    private final RegistrationService registrationService;
 
 
     public void startAuth(OnboardingStartRequestEntity entity) {
@@ -69,12 +68,12 @@ public class OnboardingService {
         OnboardingStartRequestEntity startEntity = onboardingServiceCache.getStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken());
 
         if(startEntity == null) {
-            throw new RuntimeException("Token not found.");
+            throw new OnboardingProblem("Invalid 'token'.");
         }
 
         // check that login_key matches
         if(!entity.getLogin_key().equals(startEntity.getLogin_key())) {
-            throw new RuntimeException("Login key does not match");
+            throw new OnboardingProblem("'login_key' does not match.");
         }
 
 
@@ -90,18 +89,18 @@ public class OnboardingService {
         OnboardingStartRequestEntity startEntity = onboardingServiceCache.getStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken());
         if (startEntity == null) {
             // TODO: delete later: onboardingServiceCache.deleteStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken());
-            throw new RuntimeException("Token not found.");
+            throw new OnboardingProblem("Invalid 'token'.");
         }
 
         // check that code_challenge/code_verifier is good
-        String codeChallenge = generateCodeChallange(entity.getCode_verifier());
+        String codeChallenge = Utils.generateCodeChallange(entity.getCode_verifier());
         if(!codeChallenge.equals(startEntity.getCode_challenge())) {
-            throw new RuntimeException("code_verifier does not match code_challenge");
+            throw new OnboardingProblem("'code_verifier' does not match 'code_challenge'.");
         }
 
         // check that pid matches
         if(!entity.getPerson_identifier().equals(startEntity.getPerson_identifier())) {
-            throw new RuntimeException("Person identifier does not match");
+            throw new OnboardingProblem("'person_identifier' does not match.");
         }
 
         // TODO: verify_sms(pid, otp) - delete from cache if fails
@@ -109,6 +108,9 @@ public class OnboardingService {
         // TODO: fetch access_token, refresh_token from /tokenexchange (fcm_token, aud="minid-app", scope="minid:app")
         // reply with (access_token, refresh_token, state)
         // (or reply with 401/429)
+
+        // if everything is hunk-dory, then save device in db.
+        registrationService.upsertDevice(startEntity.getPerson_identifier(), RegistrationEntity.from(startEntity));
 
         return OnboardingFinalizeResponseEntity.builder()
                 .access_token("some_access_token_string")
@@ -118,16 +120,4 @@ public class OnboardingService {
                 .build();
     }
 
-
-    private String generateCodeChallange(String codeVerifier)  {
-        try {
-            byte[] bytes = codeVerifier.getBytes("US-ASCII");
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(bytes, 0, bytes.length);
-            byte[] digest = messageDigest.digest();
-            return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

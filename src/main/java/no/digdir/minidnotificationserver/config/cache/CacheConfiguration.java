@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.config;
+package no.digdir.minidnotificationserver.config.cache;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

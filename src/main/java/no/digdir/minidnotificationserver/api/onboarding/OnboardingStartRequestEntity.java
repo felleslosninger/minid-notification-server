@@ -37,12 +37,26 @@ public class OnboardingStartRequestEntity implements Serializable {
     @JsonIgnore
     String apns_token;
 
+    @NotBlank (message = "app-id e.g 'no.digdir.minid.appname'")
+    @Schema(description = "An application identifier.", example = "no.digdir.minid.authenticator")
+    @Size(max = 64)
+    String app_identifier;
+
+    @NotBlank
+    @Schema(description = "The version of the app.", example = "1.0.5")
+    @Size(max = 8)
+    String app_version;
+
     @NotBlank
     @Size(max = 64)
     @Schema(description = "The operating system of the unit.", example = "Android")
     String os;
 
-    //@NotBlank
+    @NotBlank
+    @Schema(description = "The version of the operating system.", example = "11")
+    @Size(max = 64)
+    String os_version;
+
     @Size(max = 256)
     @Schema(description = "The client application state.", example = "[any-unguessable-random-string]")
     String state; // not needed for xsrf prevention when using code_challenge.
@@ -52,11 +66,9 @@ public class OnboardingStartRequestEntity implements Serializable {
     @Schema(description = "PCKE-style code challenge, with code_challenge_method=S256", example = "qjrzSW9gMiUgpUvqgEPE4_-8swvyCtfOVvg55o5S_es")
     String code_challenge; // code_challenge_method=S256
 
-
     @JsonIgnore
     String login_key;
 
     @JsonIgnore
     ZonedDateTime expiry;
-
 }

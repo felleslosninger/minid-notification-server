@@ -1,6 +1,5 @@
-package no.digdir.minidnotificationserver.config;
+package no.digdir.minidnotificationserver.config.correlation;
 
-import no.difi.resilience.CorrelationId;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;

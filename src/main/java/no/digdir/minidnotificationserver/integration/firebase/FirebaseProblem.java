@@ -7,6 +7,8 @@ import org.slf4j.MDC;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;
 
+import static no.digdir.minidnotificationserver.config.correlation.CorrelationId.CORRELATION_ID_HEADER;
+
 public class FirebaseProblem extends AbstractThrowableProblem {
 
     public FirebaseProblem(FirebaseMessagingException e) {
@@ -16,7 +18,7 @@ public class FirebaseProblem extends AbstractThrowableProblem {
                 e.getMessagingErrorCode() + ": " + e.getMessage(), // detail
                 null, // instance
                 null, // or e.getCause(),
-                ImmutableMap.of("correlation_id", MDC.get("no.difi.correlationId"))
+                ImmutableMap.of("correlation_id", MDC.get(CORRELATION_ID_HEADER))
         );
     }
 

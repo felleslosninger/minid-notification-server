@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.digdir.minidnotificationserver.api.onboarding.OnboardingStartRequestEntity;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 
 import javax.validation.constraints.NotBlank;
@@ -54,6 +55,16 @@ public class RegistrationEntity {
                 .token(device.getFcmToken())
                 .os(device.getOs())
                 .os_version(device.getOsVersion())
+                .build();
+    }
+    public static RegistrationEntity from(OnboardingStartRequestEntity entity) {
+        return RegistrationEntity.builder()
+                .app_identifier(entity.getApp_identifier())
+                .app_version(entity.getApp_version())
+                .token(entity.getToken())
+                .apns_token(entity.getApns_token())
+                .os(entity.getOs())
+                .os_version(entity.getOs_version())
                 .build();
     }
 }

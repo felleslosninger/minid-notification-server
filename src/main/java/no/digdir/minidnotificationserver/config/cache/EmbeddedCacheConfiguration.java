@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.config;
+package no.digdir.minidnotificationserver.config.cache;
 
 import lombok.RequiredArgsConstructor;
 import org.infinispan.configuration.cache.CacheMode;

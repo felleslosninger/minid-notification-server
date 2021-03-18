@@ -2,7 +2,7 @@ package no.digdir.minidnotificationserver.service;
 
 
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingStartRequestEntity;
-import no.digdir.minidnotificationserver.config.CacheConfiguration;
+import no.digdir.minidnotificationserver.config.cache.CacheConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;

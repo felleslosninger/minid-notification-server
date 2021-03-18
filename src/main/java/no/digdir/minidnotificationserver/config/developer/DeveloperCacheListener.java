@@ -1,7 +1,7 @@
 package no.digdir.minidnotificationserver.config.developer;
 
 import lombok.extern.slf4j.Slf4j;
-import no.digdir.minidnotificationserver.config.CacheConfiguration;
+import no.digdir.minidnotificationserver.config.cache.CacheConfiguration;
 import org.infinispan.manager.EmbeddedCacheManager;
 import org.infinispan.notifications.cachelistener.annotation.*;
 import org.infinispan.notifications.cachelistener.event.*;

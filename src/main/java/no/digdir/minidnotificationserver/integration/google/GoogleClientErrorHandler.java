@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
+import static no.digdir.minidnotificationserver.config.correlation.CorrelationId.CORRELATION_ID_HEADER;
 import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
 import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 import static org.zalando.problem.Status.BAD_REQUEST;
@@ -33,7 +34,7 @@ public class GoogleClientErrorHandler implements ResponseErrorHandler {
         ProblemBuilder builder = Problem.builder()
                 .withType(ErrorConstants.GOOGLE_TYPE)
                 .withStatus(BAD_REQUEST)
-                .with("correlation_id", MDC.get("no.difi.correlationId"))
+                .with("correlation_id", MDC.get(CORRELATION_ID_HEADER))
                 .withTitle("Issue with Google Instance ID endpoint.")
                 .withDetail(httpResponse.getStatusCode() + ": " + httpResponse.getStatusText())
 

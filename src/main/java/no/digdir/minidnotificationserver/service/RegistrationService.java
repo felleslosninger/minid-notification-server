@@ -28,7 +28,7 @@ public class RegistrationService {
         RegistrationDevice savedOrUpdatedDevice;
         Optional<RegistrationDevice> optDevice = registrationRepository.findByPersonIdentifierAndAppIdentifier(personIdentifier, entity.getApp_identifier());
 
-        if("ios".equalsIgnoreCase(entity.getOs())) {
+        if("ios".equalsIgnoreCase(entity.getOs()) && entity.getApns_token().isEmpty()) {
             String fcmToken = googleClient.importAPNsToken(entity.getToken());
             auditService.auditRegistrationServiceImportApnsToken(entity, personIdentifier, fcmToken);
             entity.setApns_token(entity.getToken());

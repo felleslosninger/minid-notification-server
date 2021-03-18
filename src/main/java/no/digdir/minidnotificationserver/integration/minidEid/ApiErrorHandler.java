@@ -10,6 +10,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.ProblemBuilder;
 import java.io.IOException;
 
+import static no.digdir.minidnotificationserver.config.correlation.CorrelationId.CORRELATION_ID_HEADER;
 import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
 import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 import static org.zalando.problem.Status.BAD_REQUEST;
@@ -28,7 +29,7 @@ public class ApiErrorHandler implements ResponseErrorHandler {
         ProblemBuilder builder = Problem.builder()
                 .withType(ErrorConstants.MINID_TYPE)
                 .withStatus(BAD_REQUEST)
-                .with("correlation_id", MDC.get("no.difi.correlationId"))
+                .with("correlation_id", MDC.get(CORRELATION_ID_HEADER))
                 .withTitle("Issue with MinID eID endpoint.")
                 .withDetail(httpResponse.getStatusCode() + ": " + httpResponse.getStatusText())
                 ;

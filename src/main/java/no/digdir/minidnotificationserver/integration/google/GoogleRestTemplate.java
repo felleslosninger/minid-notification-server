@@ -1,6 +1,6 @@
 package no.digdir.minidnotificationserver.integration.google;
 
-import no.digdir.minidnotificationserver.config.CorrelationIdInterceptor;
+import no.digdir.minidnotificationserver.config.correlation.CorrelationIdInterceptor;
 import no.digdir.minidnotificationserver.config.developer.DeveloperLoggingRequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
