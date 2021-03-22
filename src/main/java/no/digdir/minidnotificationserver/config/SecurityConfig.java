@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.header.HeaderWriterFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
@@ -26,21 +27,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                .cors(withDefaults())
-                .csrf().disable()
-//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//            .and()
-//                .exceptionHandling()
-//                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // translate unauthenticated exception to a http status 401 response
-//            .and()
+//                .cors(withDefaults()) // TODO: check me
+                .csrf().disable() // TODO: check me
+//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // TODO: check me
                 .headers()
                 // check with online CSP evaluator at https://csp-evaluator.withgoogle.com/
-//                .contentSecurityPolicy("base-uri 'self'; object-src 'none'; default-src 'self'; connect-src 'self' localhost; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' ; font-src  'self' ; img-src 'self' data: ;  frame-ancestors 'none'; child-src 'self'; frame-src 'self'; require-trusted-types-for 'script")
-                //TODO: check csp and swagger
-//            .and()
+                .contentSecurityPolicy("base-uri 'self'; object-src 'none'; default-src 'self'; connect-src 'self'; script-src 'nonce-{{nonce}}' 'strict-dynamic' http: https: 'unsafe-inline'; style-src 'self' 'nonce-{{nonce}}'; font-src 'self'; img-src 'self' data:;  frame-ancestors 'none'; child-src 'self'; frame-src 'self';")
+            .and()
                 .referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.SAME_ORIGIN)
             .and()
                 .and()
+                .addFilterBefore(new CSPNonceFilter(), HeaderWriterFilter.class)
                 .addFilterBefore(exceptionHandlerFilter, LogoutFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(problemSupport)
