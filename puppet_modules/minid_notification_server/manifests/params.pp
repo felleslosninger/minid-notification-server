@@ -5,7 +5,7 @@ class minid_notification_server::params {
   $log_level                        = 'WARN'
   $install_dir                      = '/opt/'
   $config_dir                       = '/etc/opt/'
-  $group_id                         = 'no.idporten'
+  $group_id                         = 'no.digdir'
   $artifact_id                      = 'minid-notification-server'
   $service_name                     = 'minid-notification-server'
   $server_port                      = 8080
