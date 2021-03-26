@@ -40,6 +40,7 @@ digdir:
   firebase:
     credentials-json: classpath:firebase-credentials.json
     notification-image-url: https://idporten.difi.no/error/images/svg/eid.svg
+  minid-backend-service:
+      url: http://eid-systest-otf-app01.dmz.local:10010
   minid-eid:
     url: http://localhost:8080/minid-authentication-web
-    ttl: 180

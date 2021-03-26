@@ -35,8 +35,8 @@ public class SwaggerNonceTranformer extends SwaggerIndexPageTransformer {
                     .replace("<style", "<style nonce='" + nonce + "'")
                     ;
             return new TransformedResource(resource, htmlWithNonce.getBytes());
-        }
-        else
+        } else {
             return resource;
+        }
     }
 }

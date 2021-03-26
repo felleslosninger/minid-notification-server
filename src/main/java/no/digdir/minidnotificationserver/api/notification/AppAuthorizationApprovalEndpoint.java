@@ -14,7 +14,7 @@ import no.digdir.minidnotificationserver.api.ValidateVersionHeaders;
 import no.digdir.minidnotificationserver.api.internal.approval.RequestApprovalEntity;
 import no.digdir.minidnotificationserver.api.internal.validate.ValidateEntity;
 import no.digdir.minidnotificationserver.service.AuthenticationService;
-import no.digdir.minidnotificationserver.service.RequestApprovalCache;
+import no.digdir.minidnotificationserver.service.NotificationServerCache;
 import no.digdir.minidnotificationserver.service.ValidationService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,11 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_OS_HEADER;
 import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_VERSION_HEADER;
@@ -37,7 +33,7 @@ import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect
 @SecurityRequirement(name = "notification_auth")
 @ValidateVersionHeaders
 public class AppAuthorizationApprovalEndpoint {
-    private final RequestApprovalCache requestApprovalCache;
+    private final NotificationServerCache cache;
     private final AuthenticationService authenticationService;
     private final ValidationService validationService;
 
@@ -53,7 +49,7 @@ public class AppAuthorizationApprovalEndpoint {
     @PostMapping("/approve")
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')") //TODO: Inntil videre. Skal byttes ut SNART
     public ResponseEntity<String> approve(@RequestHeader HttpHeaders headers, @RequestBody AppAuthorizationApprovalEntity approvalEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        RequestApprovalEntity notification = requestApprovalCache.getApprovalRequestForLoginAttempt(approvalEntity.getRequestId());
+        RequestApprovalEntity notification = cache.getApprovalRequestForLoginAttempt(approvalEntity.getRequestId());
         if (notification == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found");
         }
@@ -79,7 +75,7 @@ public class AppAuthorizationApprovalEndpoint {
     @PostMapping("/reject")
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')") //TODO: Inntil videre. Skal byttes ut SNART
     public ResponseEntity<String> reject(@RequestHeader HttpHeaders headers, @RequestBody AppAuthorizationApprovalEntity approvalEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        RequestApprovalEntity notification = requestApprovalCache.getApprovalRequestForLoginAttempt(approvalEntity.getRequestId());
+        RequestApprovalEntity notification = cache.getApprovalRequestForLoginAttempt(approvalEntity.getRequestId());
         if (notification == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found");
         }

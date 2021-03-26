@@ -39,7 +39,7 @@ public class OnboardingEndpoint {
             @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
     })
     @PostMapping("/start")
-    public ResponseEntity<String> start_auth(@RequestBody OnboardingStartRequestEntity entity) {
+    public ResponseEntity<String> start_auth(@RequestBody OnboardingEntity.Start.Request entity) {
         onboardingService.startAuth(entity);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -47,34 +47,30 @@ public class OnboardingEndpoint {
     @Operation(summary = "Continue app-based onboarding")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation."),
-            @ApiResponse(responseCode = "400", description = "Invalid input"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "429", description = "Quarantined for 60 minutes")
+            @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @Parameters( value = {
             @Parameter(in = ParameterIn.HEADER, description = "Version of MinID App", name = MINID_APP_VERSION_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "1.0.1"))),
             @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
     })
     @PostMapping("/continue")
-    public ResponseEntity<OnboardingContinueResponseEntity> continue_auth(@RequestBody OnboardingContinueRequestEntity entity) {
-        OnboardingContinueResponseEntity responseEntity = onboardingService.continueAuth(entity);
+    public ResponseEntity<OnboardingEntity.Continue.Response> continue_auth(@RequestBody OnboardingEntity.Continue.Request entity) {
+        OnboardingEntity.Continue.Response responseEntity = onboardingService.continueAuth(entity);
         return ResponseEntity.ok(responseEntity);
     }
 
     @Operation(summary = "Finalize app-based onboarding")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation."),
-            @ApiResponse(responseCode = "400", description = "Invalid input"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "429", description = "Quarantined for 60 minutes")
+            @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @Parameters( value = {
             @Parameter(in = ParameterIn.HEADER, description = "Version of MinID App", name = MINID_APP_VERSION_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "1.0.1"))),
             @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
     })
     @PostMapping("/finalize")
-    public ResponseEntity<OnboardingFinalizeResponseEntity> finalize_auth(@RequestBody OnboardingFinalizeRequestEntity entity) {
-        OnboardingFinalizeResponseEntity responseEntity = onboardingService.finalizeAuth(entity);
+    public ResponseEntity<OnboardingEntity.Finalize.Response> finalize_auth(@RequestBody OnboardingEntity.Finalize.Request entity) {
+        OnboardingEntity.Finalize.Response responseEntity = onboardingService.finalizeAuth(entity);
         return ResponseEntity.ok(responseEntity);
     }
 

@@ -1,14 +1,11 @@
 package no.digdir.minidnotificationserver.api.notification;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import no.digdir.minidnotificationserver.api.internal.approval.RequestApprovalEntity;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseBeans;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
-import no.digdir.minidnotificationserver.service.RequestApprovalCache;
-import org.junit.Before;
+import no.digdir.minidnotificationserver.service.NotificationServerCache;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -48,7 +45,7 @@ public class AppAuthorizationApprovalEndpointTest {
     private AuditService auditService;
 
     @MockBean
-    private RequestApprovalCache requestApprovalCache;
+    private NotificationServerCache cache;
 
     @Captor
     private ArgumentCaptor<Message> messageCaptor;
@@ -71,7 +68,7 @@ public class AppAuthorizationApprovalEndpointTest {
         String input = "{ \"request_id\": \"request-id_1\"}";
         Jwt testJWT = getJwt("person_id", "minid:app.register");
         when(jwtDecoder.decode(token)).thenReturn(testJWT);
-        when(requestApprovalCache.getApprovalRequestForLoginAttempt("request-id_1")).thenReturn(getApprovalRequest());
+        when(cache.getApprovalRequestForLoginAttempt("request-id_1")).thenReturn(getApprovalRequest());
 
         ResultActions resultActions = mockMvc.perform(post("/api/authorization/approve")
                 .header("Authorization", "Bearer " + token)

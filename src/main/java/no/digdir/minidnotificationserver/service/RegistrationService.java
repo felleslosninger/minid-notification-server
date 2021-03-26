@@ -8,6 +8,7 @@ import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 import no.digdir.minidnotificationserver.integration.google.GoogleClient;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import no.digdir.minidnotificationserver.repository.RegistrationRepository;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,7 @@ public class RegistrationService {
         RegistrationDevice savedOrUpdatedDevice;
         Optional<RegistrationDevice> optDevice = registrationRepository.findByPersonIdentifierAndAppIdentifier(personIdentifier, entity.getApp_identifier());
 
-        if("ios".equalsIgnoreCase(entity.getOs()) && entity.getApns_token().isEmpty()) {
+        if("ios".equalsIgnoreCase(entity.getOs()) && Strings.isBlank(entity.getApns_token())) {
             String fcmToken = googleClient.importAPNsToken(entity.getToken());
             auditService.auditRegistrationServiceImportApnsToken(entity, personIdentifier, fcmToken);
             entity.setApns_token(entity.getToken());

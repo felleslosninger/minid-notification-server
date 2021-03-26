@@ -30,7 +30,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
         // catches non-AuthenticationExceptions thrown by Spring Security filters
         } catch (RuntimeException e) {
-            log.error("Exception caught from security filter chain:", e);
+            log.warn("Exception caught from security filter chain:", e);
             resolver.resolveException(request, response, null, e);
         }
     }

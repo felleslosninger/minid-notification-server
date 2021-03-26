@@ -146,9 +146,10 @@ digdir:
   audit:
     log-dir: logs/minid-notification-server/audit
     log-file: audit-log.json
+  minid-backend-service:
+    url: http://eid-systest-otf-app01.dmz.local:10010
   minid-eid:
     url: https://eid-systest-web01.dmz.local/minid-authentication-web
-    ttl: 180
 
 
 #  # Event config

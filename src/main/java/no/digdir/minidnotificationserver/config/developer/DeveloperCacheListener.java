@@ -1,7 +1,7 @@
 package no.digdir.minidnotificationserver.config.developer;
 
 import lombok.extern.slf4j.Slf4j;
-import no.digdir.minidnotificationserver.config.cache.CacheConfiguration;
+import no.digdir.minidnotificationserver.config.EmbeddedCacheConfiguration;
 import org.infinispan.manager.EmbeddedCacheManager;
 import org.infinispan.notifications.cachelistener.annotation.*;
 import org.infinispan.notifications.cachelistener.event.*;
@@ -21,11 +21,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeveloperCacheListener  {
 
-    public DeveloperCacheListener(CacheManager cacheManager, CacheConfiguration cacheConfiguration) {
+    public DeveloperCacheListener(CacheManager cacheManager) {
         EmbeddedCacheManager  manager = ((SpringEmbeddedCacheManager) cacheManager).getNativeCacheManager();
         manager.addListener(new DeveloperCacheListener.Listener());
-        manager.getCache(cacheConfiguration.getCacheNameOnboarding()).addListener(new DeveloperCacheListener.Listener());
-        manager.getCache(cacheConfiguration.getCacheNameLoginAttempts()).addListener(new DeveloperCacheListener.Listener());
+        manager.getCache(EmbeddedCacheConfiguration.ONBOARDING_CACHE).addListener(new DeveloperCacheListener.Listener());
+        manager.getCache(EmbeddedCacheConfiguration.LOGIN_ATTEMPT_CACHE).addListener(new DeveloperCacheListener.Listener());
+        manager.getCache(EmbeddedCacheConfiguration.VERIFICATION_CACHE).addListener(new DeveloperCacheListener.Listener());
     }
 
     @org.infinispan.notifications.Listener(clustered = true)

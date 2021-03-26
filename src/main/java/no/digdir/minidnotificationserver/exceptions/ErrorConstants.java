@@ -11,8 +11,10 @@ public final class ErrorConstants {
     public static final URI FIREBASE_TYPE = URI.create(PROBLEM_BASE_URL + "/firebase");
     public static final URI GOOGLE_TYPE = URI.create(PROBLEM_BASE_URL + "/google-api");
     public static final URI MINID_TYPE = URI.create(PROBLEM_BASE_URL + "/minid-eid");
+    public static final URI MINID_BACKEND_TYPE = URI.create(PROBLEM_BASE_URL + "/minid-backend");
     public static final URI NOTFOUND_TYPE = URI.create(PROBLEM_BASE_URL + "/not-found");
     public static final URI ONBOARDING_TYPE = URI.create(PROBLEM_BASE_URL + "/onboarding");
+    public static final URI OTC_FAILED = URI.create(PROBLEM_BASE_URL + "/otc-failed");
     public static final URI APP_VERSION_TYPE = URI.create(PROBLEM_BASE_URL + "/version");
     public static final URI APP_REQUIRED_VERSION_TYPE = URI.create(PROBLEM_BASE_URL + "/required-version");
 

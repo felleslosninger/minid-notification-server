@@ -6,7 +6,7 @@ import no.digdir.minidnotificationserver.config.ConfigProvider;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 @Component
@@ -21,33 +21,37 @@ public class GoogleClient {
 
     public String importAPNsToken(String apnsToken) {
 
-        GoogleRequestEntity requestEntity = GoogleRequestEntity.builder()
-                .apns_tokens(new HashSet<>(Arrays.asList(apnsToken)))
+        log.debug("Importing APNs token {}", apnsToken);
+
+        GoogleEntity.Request requestEntity = GoogleEntity.Request.builder()
+                .apns_tokens(new HashSet<>(Collections.singletonList(apnsToken)))
                 .application(configProvider.getGoogleApi().getBundleId())
                 .sandbox(configProvider.getGoogleApi().isSandbox())
                 .build();
 
-        ResponseEntity<GoogleResponseEntity> response = restTemplate.postForEntity(IID_API_URI, httpEntity(requestEntity), GoogleResponseEntity.class);
+        ResponseEntity<GoogleEntity.Response> response = restTemplate.postForEntity(IID_API_URI, httpEntity(requestEntity), GoogleEntity.Response.class);
 
         if(HttpStatus.OK.equals(response.getStatusCode()) && response.getBody() != null) {
-            GoogleResponseEntity.ListItem responseItem = response.getBody().getResults().stream()
+            GoogleEntity.Response.ListItem responseItem = response.getBody().getResults().stream()
                     .filter(li -> li.getApns_token().equals(apnsToken))
                     .findFirst()
                     .orElse(null);
 
             if(responseItem != null && "OK".equalsIgnoreCase(responseItem.getStatus())) {
-                return responseItem.getRegistration_token();
+                String fcmToken = responseItem.getRegistration_token();
+                log.debug("Imported APNs token became FCM token {}", fcmToken);
+                return fcmToken;
             }
         }
 
         String errorMessage = "Error occurred during registration of APNs token: " + response.getStatusCode() + " - " + response.getBody();
-        log.error(errorMessage);
+        log.warn(errorMessage);
         throw new GoogleProblem(errorMessage);
 
     }
 
     private <T> HttpEntity<T> httpEntity(T object) {
-        return new HttpEntity(object, headers());
+        return new HttpEntity<T>(object, headers());
     }
 
     private HttpHeaders headers() {

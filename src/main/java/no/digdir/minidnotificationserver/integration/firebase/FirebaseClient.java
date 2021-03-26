@@ -96,6 +96,7 @@ public class FirebaseClient {
 
         Message message = messageBuilder.build();
         try {
+            log.debug("Sending message to {}. Message: {}", token, message);
             String mesgId = firebaseMessaging.send(message);
             log.debug("firebaseMessaging.send() - mesgId: {}", mesgId);
         } catch (FirebaseMessagingException e) {

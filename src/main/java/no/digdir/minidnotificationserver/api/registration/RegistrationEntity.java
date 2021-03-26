@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import no.digdir.minidnotificationserver.api.onboarding.OnboardingStartRequestEntity;
+import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 
 import javax.validation.constraints.NotBlank;
@@ -57,7 +57,7 @@ public class RegistrationEntity {
                 .os_version(device.getOsVersion())
                 .build();
     }
-    public static RegistrationEntity from(OnboardingStartRequestEntity entity) {
+    public static RegistrationEntity from(OnboardingEntity.Start.Request entity) {
         return RegistrationEntity.builder()
                 .app_identifier(entity.getApp_identifier())
                 .app_version(entity.getApp_version())

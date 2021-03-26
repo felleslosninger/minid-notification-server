@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.config.cache;
+package no.digdir.minidnotificationserver.config;
 
 import lombok.RequiredArgsConstructor;
 import org.infinispan.configuration.cache.CacheMode;
@@ -20,6 +20,12 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 @ConditionalOnExpression("'${infinispan.embedded.enabled}'=='true'")
 public class EmbeddedCacheConfiguration {
 
+    @Value("${cache.internal-id:'default'}")
+    public String cachePrefix;
+    public final static String LOGIN_ATTEMPT_CACHE = "loginAttemptCache";
+    public final static String ONBOARDING_CACHE = "onboardingCache";
+    public final static String VERIFICATION_CACHE = "verificationCache";
+
     @Value("${cache.local.ttl-in-s:5}")
     private int localTtl;
 
@@ -29,7 +35,6 @@ public class EmbeddedCacheConfiguration {
     @Value("${cache.cluster.transport.file-location}")
     private String fileLocation;
 
-    private final CacheConfiguration cacheConfiguration;
 
     @Bean
     public InfinispanGlobalConfigurer infinispanGlobalConfigurer() {
@@ -46,15 +51,24 @@ public class EmbeddedCacheConfiguration {
                     .clustering()
                     .cacheMode(CacheMode.REPL_SYNC)
                     .build();
-            manager.createCache(cacheConfiguration.getCachePrefix() + "-sessions", ispnConfig);
-            manager.defineConfiguration(cacheConfiguration.getCacheNameLoginAttempts(),
+
+            manager.createCache(cachePrefix + "-sessions", ispnConfig);
+
+            manager.defineConfiguration(LOGIN_ATTEMPT_CACHE,
                     new ConfigurationBuilder()
                             .simpleCache(true)
                             .expiration()
                             .lifespan(clusterTtl, SECONDS)
                             .build());
 
-            manager.defineConfiguration(cacheConfiguration.getCacheNameOnboarding(),
+            manager.defineConfiguration(ONBOARDING_CACHE,
+                    new ConfigurationBuilder()
+                            .simpleCache(true)
+                            .expiration()
+                            .lifespan(clusterTtl, SECONDS)
+                            .build());
+
+            manager.defineConfiguration(VERIFICATION_CACHE,
                     new ConfigurationBuilder()
                             .simpleCache(true)
                             .expiration()

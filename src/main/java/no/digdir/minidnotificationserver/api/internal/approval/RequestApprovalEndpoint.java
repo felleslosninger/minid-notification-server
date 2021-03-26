@@ -9,18 +9,14 @@ import no.digdir.minidnotificationserver.Utils;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.service.AdminContext;
+import no.digdir.minidnotificationserver.service.NotificationServerCache;
 import no.digdir.minidnotificationserver.service.NotificationService;
-import no.digdir.minidnotificationserver.service.RequestApprovalCache;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +28,7 @@ import java.util.Map;
 public class RequestApprovalEndpoint {
 
     private final NotificationService notificationService;
-    private final RequestApprovalCache requestApprovalCache;
+    private final NotificationServerCache cache;
     private final ConfigProvider configProvider;
 
 
@@ -45,7 +41,7 @@ public class RequestApprovalEndpoint {
     @PostMapping("/request_approval")
     public ResponseEntity<String> requestApproval(@RequestHeader HttpHeaders headers, @RequestBody RequestApprovalEntity authenticationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
         NotificationEntity notificationEntity = createNotificationEntity(authenticationEntity);
-        requestApprovalCache.putLoginAttempt(authenticationEntity.key, authenticationEntity);
+        cache.putLoginAttempt(authenticationEntity.key, authenticationEntity);
         notificationService.send(notificationEntity, AdminContext.of(headers, principal));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

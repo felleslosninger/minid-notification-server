@@ -7,17 +7,18 @@ import org.zalando.problem.Status;
 
 import static no.digdir.minidnotificationserver.config.correlation.CorrelationId.CORRELATION_ID_HEADER;
 
-public class DeviceNotFoundProblem extends AbstractThrowableProblem {
+public class OTCFailedProblem extends AbstractThrowableProblem {
 
-    public DeviceNotFoundProblem(String appId) {
+    public OTCFailedProblem(String mesg) {
         super(
-                ErrorConstants.NOTFOUND_TYPE,
-                "Device not found",
+                ErrorConstants.OTC_FAILED,
+                "One-time-code not accepted.",
                 Status.BAD_REQUEST,
-                String.format("No device found for given 'person_identifier' where 'app_identifier' is '%s'", appId),
+                String.format(mesg),
                 null, // instance
                 null, // cause
                 ImmutableMap.of("correlation_id", MDC.get(CORRELATION_ID_HEADER))
         );
+
     }
 }

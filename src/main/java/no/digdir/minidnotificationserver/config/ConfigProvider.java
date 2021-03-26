@@ -17,6 +17,7 @@ public class ConfigProvider implements InitializingBean {
     private GoogleApi googleApi = new GoogleApi();
     private Authenticator authenticator = new Authenticator();
     private MinidEid minIDEid = new MinidEid();
+    private MinidBackendService minidBackendService = new MinidBackendService();
 
     @Data
     public static class AppVersions {
@@ -84,9 +85,12 @@ public class ConfigProvider implements InitializingBean {
 
     @Data
     public static class MinidEid {
-        private String url; // expiry of onboarding auth process in seconds.
-        private long ttl;
+        private String url;
+    }
 
+    @Data
+    public static class MinidBackendService {
+        private String url;
     }
 
     @Override

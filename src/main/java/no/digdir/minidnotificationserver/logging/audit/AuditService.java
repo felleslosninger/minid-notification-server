@@ -1,15 +1,13 @@
 package no.digdir.minidnotificationserver.logging.audit;
 
 
-
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
-import no.digdir.minidnotificationserver.api.onboarding.OnboardingStartRequestEntity;
-import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
 import no.digdir.minidnotificationserver.api.internal.validate.ValidateEntity;
+import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
+import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.domain.RegistrationDevice;
 import no.digdir.minidnotificationserver.service.AdminContext;
-
 import no.idporten.logging.audit.AuditConfig;
 import no.idporten.logging.audit.AuditEntry;
 import no.idporten.logging.audit.AuditLogger;
@@ -64,7 +62,7 @@ public class AuditService {
                 .build());
     }
 
-    public void auditRegistrationServiceImportApnsToken(OnboardingStartRequestEntity entity, String personIdentifier, String fcmToken) {
+    public void auditRegistrationServiceImportApnsToken(OnboardingEntity.Start.Request entity, String personIdentifier, String fcmToken) {
         auditLogger.log(AuditEntry.builder()
                 .auditId(AuditID.APNS_TOKEN_IMPORT)
                 .personIdentifier(personIdentifier)
@@ -72,7 +70,7 @@ public class AuditService {
                 .attribute("fcm_token", fcmToken)
                 .build());
     }
-    public void auditOnboardingServiceImportApnsToken(OnboardingStartRequestEntity entity, String personIdentifier, String fcmToken) {
+    public void auditOnboardingServiceImportApnsToken(OnboardingEntity.Start.Request entity, String personIdentifier, String fcmToken) {
         auditLogger.log(AuditEntry.builder()
                 .auditId(AuditID.APNS_TOKEN_IMPORT)
                 .attribute("claimed_person_identifier", personIdentifier)
