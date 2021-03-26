@@ -100,7 +100,7 @@ public class AuditService {
     }
     public void auditNotificationOnboardingSend(NotificationEntity notification, String personIdentifier) {
         auditLogger.log(AuditEntry.builder()
-                .auditId(AuditID.NOTIFICATION_SEND)
+                .auditId(AuditID.NOTIFICATION_ONBOARDING_SEND)
                 .attribute("claimed_person_identifier", personIdentifier)
                 .attribute("notification", notification)
                 .build());

@@ -40,10 +40,6 @@ public class OnboardingEndpoint {
     })
     @PostMapping("/start")
     public ResponseEntity<String> start_auth(@RequestBody OnboardingStartRequestEntity entity) {
-        // TODO: remove me - testing only
-        if(true) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
         onboardingService.startAuth(entity);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

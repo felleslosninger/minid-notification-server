@@ -12,7 +12,11 @@ public enum AuditID implements AuditIdentifier {
 
     VALIDATE_PID_TOKEN(8, "VALIDATE-PID-TOKEN"),
 
-    NOTIFICATION_SEND(10, "NOTIFICATION-SEND");
+    NOTIFICATION_SEND(10, "NOTIFICATION-SEND"),
+
+    NOTIFICATION_ONBOARDING_SEND(11, "NOTIFICATION-ONBOARDING-SEND")
+
+            ;
 
     static final String AUDIT_ID_FORMAT = "MINID-NOTIFICATION-%d-%s";
     final String auditId;
