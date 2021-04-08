@@ -28,6 +28,9 @@ spring:
   flyway:
     enabled: false
   security:
+    user:
+      name: user
+      password: password
     oauth2:
       resourceserver:
         jwt:
@@ -44,3 +47,7 @@ digdir:
       url: http://eid-systest-otf-app01.dmz.local:10010
   minid-eid:
     url: http://localhost:8080/minid-authentication-web
+
+mock:
+  notification:
+    enabled: false

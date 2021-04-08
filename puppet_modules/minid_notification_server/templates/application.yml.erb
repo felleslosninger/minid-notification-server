@@ -70,6 +70,9 @@ spring:
 
 # Spring Security - OAuth 2 provider
   security:
+    user:
+      name: user
+      password: password
     oauth2:
       resourceserver:
         jwt:
@@ -121,3 +124,7 @@ digdir:
     url: <%= @minid_backend_url %>
   minid-eid:
     url: <%= @minid_eid_url %>
+
+mock:
+  notification:
+    enabled: <%= @mock_notification_enabled %>

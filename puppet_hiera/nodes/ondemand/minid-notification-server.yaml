@@ -21,6 +21,7 @@ minid_notification_server::database_url:             'jdbc:mysql://minid-notific
 minid_notification_server::database_username:        'minid_notif'
 minid_notification_server::database_password:        'password'
 minid_notification_server::idporten_oidc_issuer_uri: 'https://eid-atest-web01.dmz.local/idporten-oidc-provider/'
+minid_notification_server::minid_eid_url:            'https://eid-atest-web01.dmz.local/minid-authentication/'
 minid_notification_server::swagger_client_id:        ''
 minid_notification_server::swagger_client_secret:    ''
 minid_notification_server::tokeninfo_client_id:      ''
@@ -31,3 +32,4 @@ minid_notification_server::proxy_port:               8081
 minid_notification_server::apns_sandbox:             true
 minid_notification_server::google_api_key:           ''
 minid_notification_server::db_pool_manager:          'com.zaxxer.hikari.HikariDataSource'  # org.apache.tomcat.jdbc.pool.DataSource for Tomcat pool manager
+minid_notification_server::mock_notification_enabled: true

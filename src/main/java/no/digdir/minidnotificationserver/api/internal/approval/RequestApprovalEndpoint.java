@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.Utils;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
@@ -25,6 +26,7 @@ import java.util.Map;
 @RequestMapping("/api/internal")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "notification_auth")
+@Slf4j
 public class RequestApprovalEndpoint {
 
     private final NotificationService notificationService;
@@ -40,6 +42,7 @@ public class RequestApprovalEndpoint {
     })
     @PostMapping("/request_approval")
     public ResponseEntity<String> requestApproval(@RequestHeader HttpHeaders headers, @RequestBody RequestApprovalEntity authenticationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+        log.debug("request_approval");
         NotificationEntity notificationEntity = createNotificationEntity(authenticationEntity);
         cache.putLoginAttempt(authenticationEntity.key, authenticationEntity);
         notificationService.send(notificationEntity, AdminContext.of(headers, principal));

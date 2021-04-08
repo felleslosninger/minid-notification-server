@@ -23,6 +23,7 @@ public class FirebaseClient {
     private final FirebaseMessaging firebaseMessaging;
 
     public void send(NotificationEntity notificationEntity, String token) {
+        log.debug("firebase client sending " + token);
         this.send(notificationEntity, token, false);
     }
 

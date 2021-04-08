@@ -47,6 +47,21 @@ services:
       placement:
         constraints:
           - node.labels.atest == true
+  minid-authencation:
+    image: eid-jenkins02.dmz.local:8082/minid-authentication:latest
+    extra_hosts:
+      - "eid-elk-app01.dmz.local:10.243.220.21"
+    configs:
+      - log_config
+    ports:
+      - 443
+    networks:
+      atest:
+    dns: 8.8.8.8
+    deploy:
+      placement:
+        constraints:
+          - node.labels.atest == true
   oidc-db:
     image: eid-jenkins02.dmz.local:8082/oidc-db:latest
     configs:

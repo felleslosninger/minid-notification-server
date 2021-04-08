@@ -78,6 +78,9 @@ spring:
 
   # Spring Security - OAuth 2 provider
   security:
+    user:
+      name: user
+      password: password
     oauth2:
       resourceserver:
         jwt:
@@ -151,6 +154,9 @@ digdir:
   minid-eid:
     url: https://eid-systest-web01.dmz.local/minid-authentication-web
 
+mock:
+  notification:
+    enabled: true
 
 #  # Event config
 #  event:

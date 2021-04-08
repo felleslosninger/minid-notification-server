@@ -25,12 +25,14 @@ public class AuthenticationService {
 
     public ResponseEntity sendApproval(String ssn) {
         MinIDEidApprovalRequestEntity requestEntity = MinIDEidApprovalRequestEntity.builder().personal_identity(ssn).build();
+        log.debug("Send approval: " + ssn);
         return restTemplate.postForEntity(configProvider.getMinIDEid().getUrl() + "/approve"
                 , httpEntity(requestEntity), ResponseEntity.class);
     }
 
     public ResponseEntity sendRejection(String ssn) {
         MinIDEidApprovalRequestEntity requestEntity = MinIDEidApprovalRequestEntity.builder().personal_identity(ssn).build();
+        log.debug("Send rejection: " + ssn);
         return restTemplate.postForEntity(configProvider.getMinIDEid().getUrl() + "/reject"
                 , httpEntity(requestEntity), ResponseEntity.class);
     }

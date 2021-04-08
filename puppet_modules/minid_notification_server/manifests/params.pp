@@ -47,5 +47,6 @@ class minid_notification_server::params {
   $infinispan_enabled               = true
   $minid_eid_url                    = ''
   $minid_backend_url                = ''
+  $mock_notification_enabled        = false
 
 }
