@@ -12,7 +12,7 @@ import java.util.HashSet;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GoogleClient {
+public class GoogleClient  {
     // https://developers.google.com/instance-id/reference/server#create_registration_tokens_for_apns_tokens
     private final ConfigProvider configProvider;
     private final GoogleRestTemplate restTemplate;
@@ -60,5 +60,6 @@ public class GoogleClient {
         headers.add(HttpHeaders.AUTHORIZATION, "key=" + configProvider.getGoogleApi().getAuthKey());
         return headers;
     }
+
 
 }

@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api.registration;
+package no.digdir.minidnotificationserver.api.device;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
-import no.digdir.minidnotificationserver.domain.RegistrationDevice;
+import no.digdir.minidnotificationserver.domain.Device;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RegistrationEntity {
+public class DeviceEntity {
 
     @NotBlank (message = "app-id e.g 'no.digdir.minid.appname'")
     @Schema(description = "An application identifier.", example = "no.digdir.minid.authenticator")
@@ -48,8 +48,8 @@ public class RegistrationEntity {
     @Size(max = 64)
     String os_version;
 
-    public static RegistrationEntity from(RegistrationDevice device) {
-        return RegistrationEntity.builder()
+    public static DeviceEntity from(Device device) {
+        return DeviceEntity.builder()
                 .app_identifier(device.getAppIdentifier())
                 .app_version(device.getAppVersion())
                 .token(device.getFcmToken())
@@ -57,8 +57,8 @@ public class RegistrationEntity {
                 .os_version(device.getOsVersion())
                 .build();
     }
-    public static RegistrationEntity from(OnboardingEntity.Start.Request entity) {
-        return RegistrationEntity.builder()
+    public static DeviceEntity from(OnboardingEntity.Start.Request entity) {
+        return DeviceEntity.builder()
                 .app_identifier(entity.getApp_identifier())
                 .app_version(entity.getApp_version())
                 .token(entity.getToken())

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.Utils;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.*;
-import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
+import no.digdir.minidnotificationserver.api.device.DeviceEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.exceptions.OTCFailedProblem;
 import no.digdir.minidnotificationserver.exceptions.OnboardingProblem;
@@ -34,7 +34,7 @@ public class OnboardingService {
     private final NotificationServerCache cache;
     private final ConfigProvider configProvider;
     private final GoogleClient googleClient;
-    private final RegistrationService registrationService;
+    private final DeviceService deviceService;
     private final MinIdBackendClient minIdBackendClient;
 
 
@@ -43,7 +43,7 @@ public class OnboardingService {
 
         log.debug("Starting onboarding of {}", entity.getPerson_identifier());
 
-        if("ios".equalsIgnoreCase(entity.getOs())) {
+        if("ios".equalsIgnoreCase(entity.getOs())) { // import iOS token
             String fcmToken = googleClient.importAPNsToken(entity.getToken());
             auditService.auditOnboardingServiceImportApnsToken(entity, entity.getPerson_identifier(), fcmToken);
             entity.setApns_token(entity.getToken());
@@ -71,6 +71,7 @@ public class OnboardingService {
         cache.putStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken(), entity);
         firebaseClient.send(notification, entity.getToken(), true);
         auditService.auditNotificationOnboardingSend(notification, entity.getPerson_identifier());
+        auditService.auditOnboardingStart(entity);
     }
 
     public OnboardingEntity.Continue.Response continueAuth(OnboardingEntity.Continue.Request entity) {
@@ -96,8 +97,12 @@ public class OnboardingService {
 
             OnboardingEntity.Verification.VerificationBuilder verificationBuilder = OnboardingEntity.Verification.builder();
 
+            if(pwResponse.getPreferred2FaMethod() == null || pwResponse.getPreferred2FaMethod().isEmpty()) {
+                throw new OnboardingProblem("No two-factor-method set on user.");
+            }
+
             if("app".equals(pwResponse.getPreferred2FaMethod())) {
-                throw new OnboardingProblem("Preferred 2-factor-method is 'app'.");
+                throw new OnboardingProblem("Current preferred two-factor-method is 'app'.");
             }
 
             if("pin".equals(pwResponse.getPreferred2FaMethod())) {
@@ -109,6 +114,8 @@ public class OnboardingService {
                     .requestUrn(pwResponse.getRequestUrn())
                     .twoFactorMethod(pwResponse.getPreferred2FaMethod());
             cache.putVerificationEntity(person_identifier, verificationBuilder.build());
+
+            auditService.auditOnboardingContinue(entity, startEntity.getPerson_identifier());
 
             return builder
                     .two_factor_method(pwResponse.getPreferred2FaMethod())
@@ -133,43 +140,49 @@ public class OnboardingService {
 
         // check that code_challenge/code_verifier is good
         String codeChallenge = Utils.generateCodeChallange(entity.getCode_verifier());
-        String person_identifier = startEntity.getPerson_identifier();
+        String personIdentifier = startEntity.getPerson_identifier();
         if(!codeChallenge.equals(startEntity.getCode_challenge())) {
             cache.deleteStartEntity(fcmOrApnsToken);
-            cache.deleteVerificationEntity(person_identifier);
+            cache.deleteVerificationEntity(personIdentifier);
             throw new OnboardingProblem("'code_verifier' does not match 'code_challenge'.");
         }
 
         // check that pid matches
-        String claimed_person_identifier = entity.getPerson_identifier();
-        if(!claimed_person_identifier.equals(person_identifier)) {
+        String claimedPersonIdentifier = entity.getPerson_identifier();
+        if(!claimedPersonIdentifier.equals(personIdentifier)) {
             cache.deleteStartEntity(fcmOrApnsToken);
-            cache.deleteVerificationEntity(person_identifier);
-            throw new OnboardingProblem("'person_identifier' does not match.");
+            cache.deleteVerificationEntity(personIdentifier);
+            throw new OnboardingProblem("'personIdentifier' does not match.");
         }
 
-        OnboardingEntity.Verification verificationEntity = cache.getVerificationEntity(person_identifier);
+        OnboardingEntity.Verification verificationEntity = cache.getVerificationEntity(personIdentifier);
 
         boolean codeVerified;
-        if("otc".equals(verificationEntity.getTwoFactorMethod())) { // otc
-            VerifyOtcEntity.Response otcResponse = minIdBackendClient.verify_otc(person_identifier, entity.getOtc(), verificationEntity.getRequestUrn());
+        String twoFactorMethod = verificationEntity.getTwoFactorMethod();
+        if("otc".equals(twoFactorMethod)) { // otc
+            VerifyOtcEntity.Response otcResponse = minIdBackendClient.verify_otc(personIdentifier, entity.getOtc(), verificationEntity.getRequestUrn());
             codeVerified = otcResponse.isOtcVerified();
-        } else { // pin code
-            VerifyPinEntity.Response pinResponse = minIdBackendClient.verify_pin(person_identifier, entity.getOtc(), verificationEntity.getPinCodeIndex(), verificationEntity.getRequestUrn());
+        } else if("pin".equals(twoFactorMethod)) { // pin code
+            VerifyPinEntity.Response pinResponse = minIdBackendClient.verify_pin(personIdentifier, entity.getOtc(), verificationEntity.getPinCodeIndex(), verificationEntity.getRequestUrn());
             codeVerified = pinResponse.isPinCodeVerified();
+        } else {
+            throw new OnboardingProblem("Unknown two-factor method: '" + twoFactorMethod + "'.");
         }
 
         cache.deleteStartEntity(fcmOrApnsToken);
-        cache.deleteVerificationEntity(person_identifier);
+        cache.deleteVerificationEntity(personIdentifier);
 
         if(!codeVerified) {
             throw new OTCFailedProblem("The one-time-code from SMS or pin code letter was not accepted.");
         }
 
         // if everything is hunk-dory, then save device in db.
-        registrationService.upsertDevice(person_identifier, RegistrationEntity.from(startEntity));
+        deviceService.deleteByAppId(personIdentifier, startEntity.getApp_identifier());
+        deviceService.save(personIdentifier, DeviceEntity.from(startEntity));
 
         // TODO: fetch access_token, refresh_token from /tokenexchange (fcm_token, aud="minid-app", scope="minid:app")
+
+        auditService.auditOnboardingFinalize(entity);
 
         return OnboardingEntity.Finalize.Response.builder()
                 .access_token("some_access_token_string")

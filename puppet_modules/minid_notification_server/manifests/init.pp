@@ -43,7 +43,7 @@ class minid_notification_server (
   Integer $cache_groups_udp_mcast_port     = $minid_notification_server::params::cache_groups_udp_mcast_port,
   String $cache_groups_udp_bind_addr       = $minid_notification_server::params::cache_groups_udp_bind_addr,
   Boolean $infinispan_enabled              = $minid_notification_server::params::infinispan_enabled,
-  String $minid_eid_url                    = $minid_notification_server::params::minid_eid_url,
+  String $minid_authentication_url         = $minid_notification_server::params::minid_authentication_url,
   String $minid_backend_url                = $minid_notification_server::params::minid_backend_url,
   Boolean $mock_notification_enabled       = $minid_notification_server::params::mock_notification_enabled
 

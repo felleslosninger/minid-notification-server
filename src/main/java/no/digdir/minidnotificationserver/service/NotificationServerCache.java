@@ -1,6 +1,6 @@
 package no.digdir.minidnotificationserver.service;
 
-import no.digdir.minidnotificationserver.api.internal.approval.RequestApprovalEntity;
+import no.digdir.minidnotificationserver.api.internal.authorization.RequestAuthorizationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
 import no.digdir.minidnotificationserver.config.EmbeddedCacheConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +15,11 @@ public class NotificationServerCache {
     final private Cache loginAttemptCache;
     final private Cache verificationCache;
 
-
     @Autowired
     public NotificationServerCache(CacheManager cacheManager, EmbeddedCacheConfiguration cacheConfiguration) {
         this.onboardingCache = cacheManager.getCache(EmbeddedCacheConfiguration.ONBOARDING_CACHE);
         this.loginAttemptCache = cacheManager.getCache(EmbeddedCacheConfiguration.LOGIN_ATTEMPT_CACHE);
         this.verificationCache = cacheManager.getCache(EmbeddedCacheConfiguration.VERIFICATION_CACHE);
-
-
     }
 
     /*
@@ -45,16 +42,16 @@ public class NotificationServerCache {
     /*
         Login attempts
     */
-    public void putLoginAttempt(String key, RequestApprovalEntity notificationEntity) {
-        loginAttemptCache.put(key, notificationEntity);
+    public void putLoginAttempt(String key, RequestAuthorizationEntity entity) {
+        loginAttemptCache.put(key, entity);
     }
 
-    public RequestApprovalEntity getApprovalRequestForLoginAttempt(String key) {
+    public RequestAuthorizationEntity getLoginAttempt(String key) {
         Cache.ValueWrapper valueWrapper = loginAttemptCache.get(key);
-        return valueWrapper != null ? (RequestApprovalEntity) valueWrapper.get() : null;
+        return valueWrapper != null ? (RequestAuthorizationEntity) valueWrapper.get() : null;
     }
 
-    public void removeLoginAttemptId(String loginAttemptId) {
+    public void deleteLoginAttemptId(String loginAttemptId) {
         loginAttemptCache.evictIfPresent(loginAttemptId);
     }
 

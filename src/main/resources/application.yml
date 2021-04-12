@@ -70,7 +70,7 @@ springdoc:
 spring:
   web:
     resources:
-      add-mappings: false
+      add-mappings: true
   mvc:
     throw-exception-if-no-handler-found: true
   jpa:
@@ -151,8 +151,8 @@ digdir:
     log-file: audit-log.json
   minid-backend-service:
     url: http://eid-systest-otf-app01.dmz.local:10010
-  minid-eid:
-    url: https://eid-systest-web01.dmz.local/minid-authentication-web
+  minid-authentication-service:
+    url: https://eid-systest-web01.dmz.local/minid-authentication
 
 mock:
   notification:

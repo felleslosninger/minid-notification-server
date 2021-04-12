@@ -2,9 +2,9 @@ package no.digdir.minidnotificationserver.service;
 
 import com.google.firebase.messaging.*;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
-import no.digdir.minidnotificationserver.domain.RegistrationDevice;
+import no.digdir.minidnotificationserver.domain.Device;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
-import no.digdir.minidnotificationserver.repository.RegistrationRepository;
+import no.digdir.minidnotificationserver.repository.DeviceRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class NotificationServiceTest {
     private NotificationService notificationService;
 
     @MockBean
-    private RegistrationRepository registrationRepository;
+    private DeviceRepository deviceRepository;
 
     @MockBean
     private FirebaseMessaging firebaseMessaging;
@@ -59,12 +59,12 @@ public class NotificationServiceTest {
 
     @Before
     public void setUp() throws FirebaseMessagingException {
-        RegistrationDevice registrationDevice = RegistrationDevice.builder()
+        Device device = Device.builder()
                 .fcmToken("snazzytoken1234")
                 .personIdentifier("01030099326")
                 .appIdentifier("no.digdir.minid.authenticator")
                 .build();
-        Mockito.when(registrationRepository.findByPersonIdentifierAndAppIdentifier(anyString(), anyString())).thenReturn(java.util.Optional.ofNullable(registrationDevice));
+        Mockito.when(deviceRepository.findByPersonIdentifierAndAppIdentifier(anyString(), anyString())).thenReturn(java.util.Optional.ofNullable(device));
 
         Mockito.when(firebaseMessaging.send(any())).thenReturn("msgId-1234");
         Mockito.doNothing().when(auditService).auditNotificationSend(any(), any(AdminContext.class));

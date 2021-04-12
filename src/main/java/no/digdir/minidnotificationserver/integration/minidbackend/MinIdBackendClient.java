@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 @Slf4j
 public class MinIdBackendClient {
     private final ConfigProvider configProvider;
-    private final MinidBackendRestTemplate restTemplate;
+    private final MinIdBackendRestTemplate restTemplate;
     private String apiBaseUrl;
     private static final String ADMIN_USER_ID_HEADER = "admin-user-id";
 

@@ -4,14 +4,20 @@ import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.exceptions.ExceptionHandlerFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 import org.springframework.security.web.header.HeaderWriterFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
+
+import javax.servlet.Filter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -23,6 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final SecurityProblemSupport problemSupport;
     private final ExceptionHandlerFilter exceptionHandlerFilter;
+    private final AppTokenAuthenticationProvider appTokenAuthenticationProvider;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -32,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // TODO: check me
                 .headers()
                 // check with online CSP evaluator at https://csp-evaluator.withgoogle.com/
-                .contentSecurityPolicy("base-uri 'self'; object-src 'none'; default-src 'self'; connect-src 'self'; script-src 'nonce-{{nonce}}' 'strict-dynamic' http: https: 'unsafe-inline'; style-src 'self' 'nonce-{{nonce}}'; font-src 'self'; img-src 'self' data:;  frame-ancestors 'none'; child-src 'self'; frame-src 'self';")
+                .contentSecurityPolicy("base-uri 'self'; object-src 'none'; default-src 'self'; connect-src 'self' https: ; script-src 'nonce-{{nonce}}' 'strict-dynamic' http: https: 'unsafe-inline'; style-src 'self' 'nonce-{{nonce}}'; font-src 'self'; img-src 'self' data:;  frame-ancestors 'none'; child-src 'self'; frame-src 'self';")
             .and()
                 .referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.SAME_ORIGIN)
             .and()
@@ -44,21 +52,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(problemSupport)
             .and()
                 .authorizeRequests()
-                .antMatchers("/info", "/version", "/health", "/prometheus", "/v3/api-docs", "/v3/api-docs/swagger-config", "/swagger-ui/**", "/swagger-ui/index.html", "/swagger-ui.html", "/api/onboarding/**","/api/app/versions",
-                        "/api/internal/request_approval")
+                .antMatchers("/info", "/version", "/health", "/prometheus", "/favicon.ico", "/v3/api-docs", "/v3/api-docs/swagger-config", "/swagger-ui/**", "/swagger-ui/index.html", "/swagger-ui.html", "/api/onboarding/**","/api/app/versions")
                 .permitAll()
-//            TODO: /api/internal/request_approval skal inn her og få basic auth
-//            .and()
-//                .authorizeRequests()
-//                .antMatchers("/api/internal/request_approval")
-//                .permitAll()
-//                .and()
-//                .httpBasic()
             .and()
                 .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
+                .addFilterAfter(AppTokenFilter(), RequestHeaderAuthenticationFilter.class)
                 .oauth2ResourceServer().opaqueToken()
         ;
 
+    }
+
+    private Filter AppTokenFilter() throws Exception {
+        AppTokenAuthenticationFilter filter = new AppTokenAuthenticationFilter(authenticationManager());
+        filter.setRequiresAuthenticationRequestMatcher(
+                new OrRequestMatcher(
+                        new AntPathRequestMatcher("/api/authorization/**"),
+                        new AntPathRequestMatcher("/api/device/**")
+                ));
+        filter.setCheckForPrincipalChanges(true);
+        return filter;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) {
+        authenticationManagerBuilder.authenticationProvider(appTokenAuthenticationProvider);
     }
 
 }

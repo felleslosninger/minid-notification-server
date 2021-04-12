@@ -45,7 +45,7 @@ class minid_notification_server::params {
   $cache_groups_udp_mcast_port      = 45590
   $cache_groups_udp_bind_addr       = 'match-interface:eth0' # only works if all nodes on same machine. See http://www.jgroups.org/manual/index.html#Transport.
   $infinispan_enabled               = true
-  $minid_eid_url                    = ''
+  $minid_authentication_url         = ''
   $minid_backend_url                = ''
   $mock_notification_enabled        = false
 

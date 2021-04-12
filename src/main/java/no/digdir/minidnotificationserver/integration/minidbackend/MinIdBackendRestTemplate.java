@@ -1,6 +1,5 @@
-package no.digdir.minidnotificationserver.integration.minidEid;
+package no.digdir.minidnotificationserver.integration.minidbackend;
 
-import lombok.AllArgsConstructor;
 import no.digdir.minidnotificationserver.config.correlation.CorrelationIdInterceptor;
 import no.digdir.minidnotificationserver.config.developer.DeveloperLoggingRequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +8,15 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-@AllArgsConstructor
 @Component
-public class ApiRestTemplate extends RestTemplate {
+public class MinIdBackendRestTemplate extends RestTemplate {
 
-    public ApiRestTemplate(@Autowired(required = false) DeveloperLoggingRequestInterceptor loggingInterceptor,
-                              CorrelationIdInterceptor correlationIdInterceptor,
-                              ApiErrorHandler responseErrorHandler) {
+    public MinIdBackendRestTemplate(@Autowired(required = false) DeveloperLoggingRequestInterceptor loggingInterceptor,
+                                    CorrelationIdInterceptor correlationIdInterceptor,
+                                    MinidBackendErrorHandler errorHandler) {
         this.setRequestFactory(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
-        this.setErrorHandler(responseErrorHandler);
         this.getInterceptors().add(correlationIdInterceptor);
+        this.setErrorHandler(errorHandler);
         if(loggingInterceptor != null) { // only enabled in debug profile
             this.getInterceptors().add(loggingInterceptor);
         }

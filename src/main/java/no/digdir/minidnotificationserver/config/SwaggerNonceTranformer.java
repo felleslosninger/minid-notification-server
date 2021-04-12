@@ -25,15 +25,16 @@ public class SwaggerNonceTranformer extends SwaggerIndexPageTransformer {
     @Override
     public Resource transform(HttpServletRequest request, Resource resource, ResourceTransformerChain transformerChain) throws IOException {
         final AntPathMatcher antPathMatcher = new AntPathMatcher();
-        boolean isIndexFound = antPathMatcher.match("**/swagger-ui/**/index.html", resource.getURL().toString());
+        boolean htmlFileFound = antPathMatcher.match("**/swagger-ui/**/*.html", resource.getURL().toString());
 
-        if (isIndexFound && hasDefaultTransformations()) {
+        if (htmlFileFound && hasDefaultTransformations()) {
             String html = defaultTransformations(resource.getInputStream());
             String nonce = request.getAttribute(CSP_NONCE_ATTRIBUTE).toString();
             String htmlWithNonce = html
                     .replace("<script", "<script nonce='" + nonce + "'")
                     .replace("<style", "<style nonce='" + nonce + "'")
                     ;
+
             return new TransformedResource(resource, htmlWithNonce.getBytes());
         } else {
             return resource;

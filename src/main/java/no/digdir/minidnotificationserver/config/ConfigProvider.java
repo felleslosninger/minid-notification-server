@@ -16,7 +16,7 @@ public class ConfigProvider implements InitializingBean {
     private Proxy proxy = new Proxy();
     private GoogleApi googleApi = new GoogleApi();
     private Authenticator authenticator = new Authenticator();
-    private MinidEid minIDEid = new MinidEid();
+    private MinidAuthenticationService minidAuthenticationService = new MinidAuthenticationService();
     private MinidBackendService minidBackendService = new MinidBackendService();
 
     @Data
@@ -84,7 +84,7 @@ public class ConfigProvider implements InitializingBean {
     }
 
     @Data
-    public static class MinidEid {
+    public static class MinidAuthenticationService {
         private String url;
     }
 

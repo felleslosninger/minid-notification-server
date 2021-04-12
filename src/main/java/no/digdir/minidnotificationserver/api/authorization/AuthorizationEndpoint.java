@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api.registration;
+package no.digdir.minidnotificationserver.api.authorization;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,58 +11,57 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.api.ValidateVersionHeaders;
-import no.digdir.minidnotificationserver.api.device.DeviceEntity;
-import no.digdir.minidnotificationserver.service.DeviceService;
+import no.digdir.minidnotificationserver.service.AuthorizationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_OS_HEADER;
 import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_VERSION_HEADER;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/authorization")
 @RequiredArgsConstructor
-@SecurityRequirement(name = "registration_auth")
+@SecurityRequirement(name = "Authorization")
 @ValidateVersionHeaders
-public class RegistrationEndpoint {
+public class AuthorizationEndpoint {
+    private final AuthorizationService authorizationService;
 
-    private final DeviceService deviceService;
-
-    @Operation(summary = "Register or update a device", deprecated = true)
+    @Operation(summary = "Approve request for authorization to app")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Device registered."),
-            @ApiResponse(responseCode = "401", description = "Access denied due to incorrect scope or missing access token."),
-            @ApiResponse(responseCode = "400", description = "Invalid input.")
+            @ApiResponse(responseCode = "204", description = "Successful approval, no content returned."),
+            @ApiResponse(responseCode = "400", description = "Client error."),
     })
     @Parameters( value = {
             @Parameter(in = ParameterIn.HEADER, description = "Version of MinID App", name = MINID_APP_VERSION_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "1.0.1"))),
             @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
     })
-    @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
-    @PostMapping("/register/device")
-    public ResponseEntity<DeviceEntity> registerDevice(@RequestBody DeviceEntity deviceEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        DeviceEntity device = deviceService.upsertDevice(principal.getAttribute("pid"), deviceEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(device);
-    }
-
-    @Operation(summary = "Delete existing device", deprecated = true)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Device deleted."),
-            @ApiResponse(responseCode = "401", description = "Access denied due to incorrect scope or missing access token."),
-            @ApiResponse(responseCode = "400", description = "Invalid input.")
-    })
-    @Parameters( value = {
-            @Parameter(in = ParameterIn.HEADER, description = "Version of MinID App", name = MINID_APP_VERSION_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "1.0.1"))),
-            @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
-    })
-    @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
-    @DeleteMapping("/register/device")
-    public ResponseEntity<DeviceEntity> deleteDevice(@RequestBody DeviceEntity deviceEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        deviceService.deleteByAppId(principal.getAttribute("pid"), deviceEntity);
+    @PostMapping("/approve")
+    @PreAuthorize("hasAuthority('APP_AUTHORIZE')")
+    public ResponseEntity<String> approve(@RequestBody AuthorizationEntity authorizationEntity, @AuthenticationPrincipal String personIdentifier) { // TODO: use ssn validator
+        authorizationService.approve(personIdentifier, authorizationEntity);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @Operation(summary = "Reject request for authorization to app")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful rejection, no content returned."),
+            @ApiResponse(responseCode = "400", description = "Client error."),
+    })
+    @Parameters( value = {
+            @Parameter(in = ParameterIn.HEADER, description = "Version of MinID App", name = MINID_APP_VERSION_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "1.0.1"))),
+            @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
+    })
+    @PostMapping("/reject")
+    @PreAuthorize("hasAuthority('APP_AUTHORIZE')")
+    public ResponseEntity<String> reject(@RequestBody AuthorizationEntity authorizationEntity, @AuthenticationPrincipal String personIdentifier) { // TODO: use ssn validator
+        authorizationService.reject(personIdentifier, authorizationEntity);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }

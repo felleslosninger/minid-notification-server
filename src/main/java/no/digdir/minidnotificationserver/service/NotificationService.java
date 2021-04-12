@@ -3,11 +3,11 @@ package no.digdir.minidnotificationserver.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
-import no.digdir.minidnotificationserver.domain.RegistrationDevice;
+import no.digdir.minidnotificationserver.domain.Device;
 import no.digdir.minidnotificationserver.exceptions.DeviceNotFoundProblem;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseClient;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
-import no.digdir.minidnotificationserver.repository.RegistrationRepository;
+import no.digdir.minidnotificationserver.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,17 +21,17 @@ import java.util.Optional;
 public class NotificationService {
 
     private final FirebaseClient firebaseClient;
-    private final RegistrationRepository registrationRepository;
+    private final DeviceRepository deviceRepository;
     private final AuditService auditService;
 
     @Value("${mock.notification.enabled}")
     private Boolean mockEnabled;
 
     public void send(NotificationEntity notification, AdminContext adminContext) {
-        Optional<RegistrationDevice> optDev = registrationRepository.findByPersonIdentifierAndAppIdentifier(notification.getPerson_identifier(), notification.getApp_identifier());
-        log.debug("request_approval - notificationservice");
+        Optional<Device> optDev = deviceRepository.findByPersonIdentifierAndAppIdentifier(notification.getPerson_identifier(), notification.getApp_identifier());
+
         if(optDev.isPresent()) {
-            RegistrationDevice device = optDev.get();
+            Device device = optDev.get();
             firebaseClient.send(notification, device.getFcmToken());
             auditService.auditNotificationSend(notification, adminContext);
         } else if (mockEnabled) {

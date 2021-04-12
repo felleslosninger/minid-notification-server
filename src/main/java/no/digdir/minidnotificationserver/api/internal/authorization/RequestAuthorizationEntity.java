@@ -1,7 +1,6 @@
-package no.digdir.minidnotificationserver.api.internal.approval;
+package no.digdir.minidnotificationserver.api.internal.authorization;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -18,8 +17,7 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RequestApprovalEntity {
-    // max payload is 4KB
+public class RequestAuthorizationEntity {
 
     @NotBlank
     @Size(min = 11, max = 11)
@@ -32,7 +30,7 @@ public class RequestApprovalEntity {
     @Schema(description = "The login attempt counter", example = "1")
     Integer login_attempt_counter;
 
-    @Schema(description = "The expiry time of the login attempt in ISO-8601 format.", example = "2021-02-18T10:15:30+01:00")
+    @Schema(description = "The expiry time of the login attempt in ISO-8601 format.", example = "2021-02-18T10:15:30Z")
     ZonedDateTime login_attempt_expiry;
 
     @NotBlank
@@ -44,11 +42,8 @@ public class RequestApprovalEntity {
     String body;
 
     @NotBlank
-    @Schema(description = "The service provider for the login", example = "NAV, Vigo")
+    @Schema(description = "The service provider for the login", example = "NAV")
     String service_provider;
-
-    @JsonIgnore
-    String key = login_attempt_id + "_" + login_attempt_counter;
 
 }
 

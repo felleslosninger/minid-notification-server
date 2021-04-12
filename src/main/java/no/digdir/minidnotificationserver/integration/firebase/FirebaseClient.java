@@ -101,7 +101,8 @@ public class FirebaseClient {
             String mesgId = firebaseMessaging.send(message);
             log.debug("firebaseMessaging.send() - mesgId: {}", mesgId);
         } catch (FirebaseMessagingException e) {
-            throw new FirebaseProblem(e);
+            throw new FirebaseProblem(e); // https://firebase.google.cn/docs/reference/fcm/rest/v1/ErrorCode?hl=en
+            // TODO: purge invalid?
         }
 
     }

@@ -1,8 +1,8 @@
-package no.digdir.minidnotificationserver.api.notification;
+package no.digdir.minidnotificationserver.api.authorization;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
-import no.digdir.minidnotificationserver.api.internal.approval.RequestApprovalEntity;
+import no.digdir.minidnotificationserver.api.internal.authorization.RequestAuthorizationEntity;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseBeans;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import no.digdir.minidnotificationserver.service.NotificationServerCache;
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @SpringBootTest
-public class AppAuthorizationApprovalEndpointTest {
+public class AuthorizationEndpointTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -68,7 +68,7 @@ public class AppAuthorizationApprovalEndpointTest {
         String input = "{ \"request_id\": \"request-id_1\"}";
         Jwt testJWT = getJwt("person_id", "minid:app.register");
         when(jwtDecoder.decode(token)).thenReturn(testJWT);
-        when(cache.getApprovalRequestForLoginAttempt("request-id_1")).thenReturn(getApprovalRequest());
+        when(cache.getLoginAttempt("request-id_1")).thenReturn(getApprovalRequest());
 
         ResultActions resultActions = mockMvc.perform(post("/api/authorization/approve")
                 .header("Authorization", "Bearer " + token)
@@ -82,8 +82,8 @@ public class AppAuthorizationApprovalEndpointTest {
 
     }
 
-    private RequestApprovalEntity getApprovalRequest() {
-        return RequestApprovalEntity.builder()
+    private RequestAuthorizationEntity getApprovalRequest() {
+        return RequestAuthorizationEntity.builder()
                 .person_identifier("person_identifier")
                 .login_attempt_id("request-id")
                 .login_attempt_counter(1)

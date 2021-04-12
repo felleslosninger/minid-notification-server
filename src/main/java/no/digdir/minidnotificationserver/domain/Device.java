@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import no.digdir.minidnotificationserver.api.registration.RegistrationEntity;
+import no.digdir.minidnotificationserver.api.device.DeviceEntity;
 import org.apache.logging.log4j.util.Strings;
 
 import javax.persistence.*;
@@ -16,7 +16,7 @@ import java.time.Clock;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class RegistrationDevice {
+public class Device {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -66,7 +66,7 @@ public class RegistrationDevice {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RegistrationDevice that = (RegistrationDevice) o;
+        Device that = (Device) o;
 
         return fcmToken.equals(that.fcmToken);
     }
@@ -76,8 +76,8 @@ public class RegistrationDevice {
         return fcmToken.hashCode();
     }
 
-    public RegistrationDevice from(RegistrationEntity entity) {
-        RegistrationDeviceBuilder builder = this.toBuilder();
+    public Device from(DeviceEntity entity) {
+        Device.DeviceBuilder builder = this.toBuilder();
 
         if(Strings.isNotBlank(entity.getApp_identifier())) {
             builder.appIdentifier(entity.getApp_identifier());
@@ -106,8 +106,8 @@ public class RegistrationDevice {
         return builder.build();
     }
 
-    public static RegistrationDevice from(String personIdentifier, RegistrationEntity entity) {
-        return RegistrationDevice.builder()
+    public static Device from(String personIdentifier, DeviceEntity entity) {
+        return Device.builder()
                 .personIdentifier(personIdentifier)
                 .appIdentifier(entity.getApp_identifier())
                 .appVersion(entity.getApp_version())
