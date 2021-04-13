@@ -7,7 +7,6 @@
 <artifactId>minid-notification-server</artifactId>
 <version>DEV-SNAPSHOT</version>
 
-<!--    <packaging>war</packaging>-->
 <name>minid-notification-server</name>
 <scm>
     <connection>scm:git:git@github.com:difi/minid-notification-server.git</connection>
