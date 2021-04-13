@@ -126,7 +126,7 @@ public class OnboardingEntity {
             String person_identifier;
 
             @Size(min = 5, max = 5)
-            @Schema(description = "One-time-code from SMS or pincode letter", example = "wer12")
+            @Schema(description = "One-time-code from SMS or pincode letter", example = "12345")
             String otc;
 
             @NotBlank

@@ -90,7 +90,7 @@ public class OnboardingService {
         }
 
         String person_identifier = startEntity.getPerson_identifier();
-        VerifyPwEntity.Response pwResponse = minIdBackendClient.verify_password(person_identifier, startEntity.getPassword(), "default");
+        VerifyPwEntity.Response pwResponse = minIdBackendClient.verifyPassword(person_identifier, startEntity.getPassword(), "default");
 
         if("NORMAL".equals(pwResponse.getMinIdUserState())) { // pid & password matches, and user is not in quarantine
             OnboardingEntity.Continue.Response.ResponseBuilder builder = OnboardingEntity.Continue.Response.builder();
@@ -160,10 +160,10 @@ public class OnboardingService {
         boolean codeVerified;
         String twoFactorMethod = verificationEntity.getTwoFactorMethod();
         if("otc".equals(twoFactorMethod)) { // otc
-            VerifyOtcEntity.Response otcResponse = minIdBackendClient.verify_otc(personIdentifier, entity.getOtc(), verificationEntity.getRequestUrn());
+            VerifyOtcEntity.Response otcResponse = minIdBackendClient.verifyOtc(personIdentifier, entity.getOtc(), verificationEntity.getRequestUrn());
             codeVerified = otcResponse.isOtcVerified();
         } else if("pin".equals(twoFactorMethod)) { // pin code
-            VerifyPinEntity.Response pinResponse = minIdBackendClient.verify_pin(personIdentifier, entity.getOtc(), verificationEntity.getPinCodeIndex(), verificationEntity.getRequestUrn());
+            VerifyPinEntity.Response pinResponse = minIdBackendClient.verifyPin(personIdentifier, entity.getOtc(), verificationEntity.getPinCodeIndex(), verificationEntity.getRequestUrn());
             codeVerified = pinResponse.isPinCodeVerified();
         } else {
             throw new OnboardingProblem("Unknown two-factor method: '" + twoFactorMethod + "'.");
@@ -175,6 +175,8 @@ public class OnboardingService {
         if(!codeVerified) {
             throw new OTCFailedProblem("The one-time-code from SMS or pin code letter was not accepted.");
         }
+
+        minIdBackendClient.setPreferredTwoFactorMethod(claimedPersonIdentifier, "app");
 
         // if everything is hunk-dory, then save device in db.
         deviceService.deleteByAppId(personIdentifier, startEntity.getApp_identifier());

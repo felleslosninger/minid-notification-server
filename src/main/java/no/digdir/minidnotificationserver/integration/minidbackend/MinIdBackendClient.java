@@ -23,39 +23,44 @@ public class MinIdBackendClient {
 
     @PostConstruct
     public void init() {
-        this.apiBaseUrl = configProvider.getMinidBackendService().getUrl() + "/api/auth";
+        this.apiBaseUrl = configProvider.getMinidBackendService().getUrl() + "/api";
     }
 
-    public VerifyPwEntity.Response verify_password(String pid, String password, String serviceProvider) {
+    public VerifyPwEntity.Response verifyPassword(String pid, String password, String serviceProvider) {
         VerifyPwEntity.Request requestEntity = VerifyPwEntity.Request.builder()
                 .pid(pid)
                 .password(password)
                 .serviceProvider(VerifyPwEntity.Request.ServiceProvider.builder().name(serviceProvider).build())
                 .build();
-        ResponseEntity<VerifyPwEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/verify_pw", httpEntity(requestEntity), VerifyPwEntity.Response.class);
+        ResponseEntity<VerifyPwEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/auth/verify_pw", httpEntity(requestEntity), VerifyPwEntity.Response.class);
         return response.getBody();
     }
 
-    public VerifyOtcEntity.Response verify_otc(String pid, String otc, String requestUrn) {
+    public VerifyOtcEntity.Response verifyOtc(String pid, String otc, String requestUrn) {
         VerifyOtcEntity.Request requestEntity = VerifyOtcEntity.Request.builder()
                 .pid(pid)
                 .otc(otc)
                 .requestUrn(requestUrn)
                 .build();
-        ResponseEntity<VerifyOtcEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/verify_otc", httpEntity(requestEntity), VerifyOtcEntity.Response.class);
+        ResponseEntity<VerifyOtcEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/auth/verify_otc", httpEntity(requestEntity), VerifyOtcEntity.Response.class);
         return response.getBody();
     }
 
 
-    public VerifyPinEntity.Response verify_pin(String pid, String pincode, Integer pincodeIndex, String requestUrn) {
+    public VerifyPinEntity.Response verifyPin(String pid, String pincode, Integer pincodeIndex, String requestUrn) {
         VerifyPinEntity.Request requestEntity = VerifyPinEntity.Request.builder()
                 .pid(pid)
                 .pincode(pincode)
                 .pincodeindex(pincodeIndex.toString())
                 .requestUrn(requestUrn)
                 .build();
-        ResponseEntity<VerifyPinEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/verify_pin", httpEntity(requestEntity), VerifyPinEntity.Response.class);
+        ResponseEntity<VerifyPinEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/auth/verify_pin", httpEntity(requestEntity), VerifyPinEntity.Response.class);
         return response.getBody();
+    }
+
+    public void setPreferredTwoFactorMethod(String personIdentifier, String twoFactorMethod) {
+        Preferred2FaMethodEntity.Request requestEntity = Preferred2FaMethodEntity.Request.builder().preferred2FaMethod(twoFactorMethod).build();
+        restTemplate.patchForObject(apiBaseUrl + "/users/" + personIdentifier, httpEntity(requestEntity), String.class);
     }
 
     private <T> HttpEntity<T> httpEntity(T object) {

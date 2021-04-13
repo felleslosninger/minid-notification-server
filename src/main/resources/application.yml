@@ -156,7 +156,7 @@ digdir:
 
 mock:
   notification:
-    enabled: true
+    enabled: false
 
 #  # Event config
 #  event:
