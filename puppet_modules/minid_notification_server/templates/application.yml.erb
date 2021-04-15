@@ -128,3 +128,8 @@ digdir:
 mock:
   notification:
     enabled: <%= @mock_notification_enabled %>
+
+log:
+    event:
+      jmsUrl: <%= @eventlog_jms_url %>
+      jmsQueue: <%= @eventlog_jms_queuename %>

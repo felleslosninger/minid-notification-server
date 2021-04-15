@@ -158,7 +158,12 @@ mock:
   notification:
     enabled: false
 
+log:
+  event:
+    jmsUrl: tcp://eid-systest-admin01.dmz.local:61616
+    jmsQueue: logqueue
+
 #  # Event config
 #  event:
-#    jms-url: tcp://localhost:40002
-#    jms-queue: logqueue
+#    jmsUrl: tcp://localhost:61616
+#    jmsQueue: logqueue

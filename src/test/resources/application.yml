@@ -51,3 +51,8 @@ digdir:
 mock:
   notification:
     enabled: false
+
+log:
+  event:
+    jmsUrl: jms
+    jmsQueue: jms-queue

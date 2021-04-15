@@ -7,6 +7,7 @@ import no.digdir.minidnotificationserver.api.device.DeviceEntity;
 import no.digdir.minidnotificationserver.domain.Device;
 import no.digdir.minidnotificationserver.integration.google.GoogleClient;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
+import no.digdir.minidnotificationserver.logging.event.EventService;
 import no.digdir.minidnotificationserver.repository.DeviceRepository;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class DeviceService {
 
     private final DeviceRepository deviceRepository;
     private final AuditService auditService;
+    private final EventService eventService;
     private final GoogleClient googleClient;
 
     @Deprecated
@@ -76,7 +78,10 @@ public class DeviceService {
         if(optDevice.isPresent()) { // update existing
             Device existingDevice = deepCopy(optDevice.get());
             updatedDevice = deviceRepository.save(existingDevice.from(entity));
+
             auditService.auditRegistrationServiceUpdateDevice(existingDevice, updatedDevice);
+            eventService.logUserHasUpdatedDevice(personIdentifier);
+
             return DeviceEntity.from(updatedDevice);
         }
         return null;
@@ -97,10 +102,12 @@ public class DeviceService {
     }
 
     public void delete(String personIdentifier, String token) {
-        List<Device> deletedDevices = deviceRepository.deleteByFcmTokenOrApnsToken(token);
+
+        List<Device> deletedDevices = deviceRepository.deleteByFcmTokenOrApnsToken(token, token);
         if(deletedDevices.size() > 0) {
             Device deletedDevice = deletedDevices.get(0);
             auditService.auditRegistrationServiceDeleteDevice(personIdentifier, deletedDevice);
+            eventService.logUserHasDeletedDevice(personIdentifier);
         }
     }
 

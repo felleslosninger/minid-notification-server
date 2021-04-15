@@ -3,7 +3,6 @@ package no.digdir.minidnotificationserver.repository;
 import no.digdir.minidnotificationserver.domain.Device;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -23,8 +22,6 @@ public interface DeviceRepository extends JpaRepository<Device, Long>, JpaSpecif
     @Query("SELECT d FROM Device d WHERE d.fcmToken = ?1 OR d.apnsToken = ?1")
     Optional<Device>  findByFcmTokenOrApnsToken(String token);
 
-    @Modifying
-    @Query("DELETE FROM Device d WHERE d.fcmToken = ?1 OR d.apnsToken = ?1")
-    List<Device> deleteByFcmTokenOrApnsToken(String token);
+    List<Device> deleteByFcmTokenOrApnsToken(String fcmToken, String apnsToken);
 
 }

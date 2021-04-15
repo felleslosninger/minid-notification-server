@@ -16,6 +16,7 @@ import no.digdir.minidnotificationserver.integration.minidbackend.VerifyOtcEntit
 import no.digdir.minidnotificationserver.integration.minidbackend.VerifyPinEntity;
 import no.digdir.minidnotificationserver.integration.minidbackend.VerifyPwEntity;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
+import no.digdir.minidnotificationserver.logging.event.EventService;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -31,6 +32,7 @@ public class OnboardingService {
 
     private final FirebaseClient firebaseClient;
     private final AuditService auditService;
+    private final EventService eventService;
     private final NotificationServerCache cache;
     private final ConfigProvider configProvider;
     private final GoogleClient googleClient;
@@ -185,6 +187,7 @@ public class OnboardingService {
         // TODO: fetch access_token, refresh_token from /tokenexchange (fcm_token, aud="minid-app", scope="minid:app")
 
         auditService.auditOnboardingFinalize(entity);
+        eventService.logUserHasRegisteredDevice(personIdentifier);
 
         return OnboardingEntity.Finalize.Response.builder()
                 .access_token("some_access_token_string")
