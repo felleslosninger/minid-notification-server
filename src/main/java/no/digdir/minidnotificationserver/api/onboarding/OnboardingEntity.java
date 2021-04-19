@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+import no.digdir.minidnotificationserver.logging.audit.AuditMasked;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -33,9 +34,11 @@ public class OnboardingEntity {
             @NotBlank
             @Size(max = 4096)
             @Schema(description = "The FCM or APNs registration token (APNs format is assumed if 'os=ios').", example = "asdf1234")
+            @AuditMasked
             String token;
 
             @JsonIgnore
+            @AuditMasked
             String apns_token;
 
             @NotBlank (message = "app-id e.g 'no.digdir.minid.appname'")
@@ -84,9 +87,11 @@ public class OnboardingEntity {
             @NotBlank
             @Size(max = 4096)
             @Schema(description = "The FCM or APNs registration token (APNs format is assumed if 'os=ios').", example = "asdf1234")
+            @AuditMasked
             String token;
 
             @JsonIgnore
+            @AuditMasked
             String apns_token;
 
             @NotBlank
@@ -132,9 +137,11 @@ public class OnboardingEntity {
             @NotBlank
             @Size(max = 4096)
             @Schema(description = "The FCM or APNs registration token (APNs format is assumed if 'os=ios').", example = "asdf1234")
+            @AuditMasked
             String token;
 
             @JsonIgnore
+            @AuditMasked
             String apns_token;
 
             @NotBlank

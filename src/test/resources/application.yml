@@ -40,6 +40,9 @@ spring:
           client-id: test_rp_systest
           client-secret: password
 digdir:
+  audit:
+    log-dir: logs/minid-notification-server/audit
+    log-file: audit-log.json
   firebase:
     credentials-json: classpath:firebase-credentials.json
     notification-image-url: https://idporten.difi.no/error/images/svg/eid.svg

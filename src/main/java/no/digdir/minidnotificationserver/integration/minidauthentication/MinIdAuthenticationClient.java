@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.exceptions.ErrorConstants;
+import no.digdir.minidnotificationserver.service.AuthorizationService;
 import org.slf4j.MDC;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -13,8 +14,8 @@ import org.zalando.problem.ProblemBuilder;
 
 import javax.annotation.PostConstruct;
 
+import static no.digdir.minidnotificationserver.config.AdminContextFilter.ADMIN_USER_ID_HEADER;
 import static no.digdir.minidnotificationserver.config.correlation.CorrelationId.CORRELATION_ID_HEADER;
-import static no.digdir.minidnotificationserver.service.AdminContext.ADMIN_USER_ID_HEADER;
 import static org.zalando.problem.Status.BAD_REQUEST;
 
 @Component
@@ -30,15 +31,7 @@ public class MinIdAuthenticationClient {
         this.apiBaseUrl = configProvider.getMinidAuthenticationService().getUrl();
     }
 
-    public boolean reject(String personIdentifier, String loginAttemptId) {
-        return exchange(personIdentifier, loginAttemptId, "reject");
-    }
-
-    public boolean approve(String personIdentifier, String loginAttemptId) {
-        return exchange(personIdentifier, loginAttemptId, "approve");
-    }
-
-    private boolean exchange(String personIdentifier, String loginAttemptId, String action) {
+    public boolean exchange(String personIdentifier, String loginAttemptId, AuthorizationService.AuthAction action) {
         String url = UriComponentsBuilder
                 .fromHttpUrl(apiBaseUrl + "/" + action)
                 .queryParam("login_attempt_id", loginAttemptId)
@@ -61,7 +54,6 @@ public class MinIdAuthenticationClient {
                     ;
             throw builder.build();
         }
-
         return true;
     }
 

@@ -6,8 +6,11 @@ import no.digdir.minidnotificationserver.api.authorization.AuthorizationEntity;
 import no.digdir.minidnotificationserver.api.internal.authorization.RequestAuthorizationEntity;
 import no.digdir.minidnotificationserver.exceptions.LoginAttemptNotFoundProblem;
 import no.digdir.minidnotificationserver.integration.minidauthentication.MinIdAuthenticationClient;
+import no.digdir.minidnotificationserver.logging.audit.Audit;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import org.springframework.stereotype.Service;
+
+import static no.digdir.minidnotificationserver.logging.audit.AuditID.APP_AUTHORIZE;
 
 @Service
 @RequiredArgsConstructor
@@ -16,20 +19,11 @@ public class AuthorizationService {
 
     private final NotificationServerCache cache;
     private final MinIdAuthenticationClient minIdAuthenticationClient;
-    private final AuditService auditService;
 
-
-    public boolean approve(String personIdentifier, AuthorizationEntity entity) {
+    @Audit(auditId = APP_AUTHORIZE)
+    public boolean authorize(String personIdentifier, AuthorizationEntity entity, AuthAction action) {
         String loginAttemptId = getLoginAttemptId(entity);
-        auditService.auditAppAuthorize(personIdentifier, entity, "approve");
-        return minIdAuthenticationClient.approve(personIdentifier, loginAttemptId);
-    }
-
-    public boolean reject(String personIdentifier, AuthorizationEntity entity) {
-        String loginAttemptId = getLoginAttemptId(entity);
-        auditService.auditAppAuthorize(personIdentifier, entity, "reject");
-        minIdAuthenticationClient.reject(personIdentifier, loginAttemptId);
-        return true;
+        return minIdAuthenticationClient.exchange(personIdentifier, loginAttemptId, action);
     }
 
     private String getLoginAttemptId(AuthorizationEntity entity) {
@@ -41,6 +35,22 @@ public class AuthorizationService {
             return loginAttemptId;
         }
         throw new LoginAttemptNotFoundProblem(loginAttemptId);
+    }
+
+    public enum AuthAction {
+        APPROVE("approve"),
+        REJECT("reject");
+
+        String action;
+
+        AuthAction(String action) {
+            this.action = action;
+        }
+
+        @Override
+        public String toString() {
+            return action;
+        }
     }
 
 }

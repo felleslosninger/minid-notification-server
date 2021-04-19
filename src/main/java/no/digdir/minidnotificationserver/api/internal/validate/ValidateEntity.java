@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.digdir.minidnotificationserver.logging.audit.AuditMasked;
 
 import javax.validation.constraints.NotBlank;
 
@@ -22,6 +23,7 @@ public class ValidateEntity {
 
     @NotBlank
     @Schema(description = "The FCM or APNs registration token.", example = "asdf1234")
+    @AuditMasked
     String token;
 
     @NotBlank

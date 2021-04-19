@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver;
+package no.digdir.minidnotificationserver.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

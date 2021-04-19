@@ -3,6 +3,8 @@ package no.digdir.minidnotificationserver.integration.google;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
+import no.digdir.minidnotificationserver.logging.audit.Audit;
+import no.digdir.minidnotificationserver.logging.audit.AuditID;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,7 @@ public class GoogleClient  {
 
     private static final String IID_API_URI = "https://iid.googleapis.com/iid/v1:batchImport";
 
+    @Audit(auditId = AuditID.APNS_TOKEN_IMPORT)
     public String importAPNsToken(String apnsToken) {
 
         log.debug("Importing APNs token {}", apnsToken);

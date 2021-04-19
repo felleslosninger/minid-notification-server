@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import no.digdir.minidnotificationserver.service.AdminContext;
 import no.digdir.minidnotificationserver.service.NotificationService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,7 @@ public class NotificationEndpoint {
     @PostMapping("/notification/send")
     @PreAuthorize("hasAuthority('SCOPE_minid:notification.send')")
     public ResponseEntity<String> send(@RequestHeader HttpHeaders headers, @RequestBody NotificationEntity notificationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        notificationService.send(notificationEntity, AdminContext.of(headers, principal));
+        notificationService.send(notificationEntity);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

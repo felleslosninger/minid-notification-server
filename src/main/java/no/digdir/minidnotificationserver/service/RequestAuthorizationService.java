@@ -2,11 +2,12 @@ package no.digdir.minidnotificationserver.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.digdir.minidnotificationserver.Utils;
 import no.digdir.minidnotificationserver.api.internal.authorization.RequestAuthorizationEntity;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
-import no.digdir.minidnotificationserver.logging.audit.AuditService;
+import no.digdir.minidnotificationserver.logging.audit.Audit;
+import no.digdir.minidnotificationserver.logging.audit.AuditID;
+import no.digdir.minidnotificationserver.utils.Utils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -20,13 +21,12 @@ public class RequestAuthorizationService {
     private final NotificationService notificationService;
     private final NotificationServerCache cache;
     private final ConfigProvider configProvider;
-    private final AuditService auditService;
 
-    public void request(RequestAuthorizationEntity entity, AdminContext adminContext) {
+    @Audit(auditId = AuditID.REQUEST_AUTHORIZATION)
+    public void request(RequestAuthorizationEntity entity) {
         NotificationEntity notificationEntity = createNotificationEntity(entity);
         cache.putLoginAttempt(entity.getLogin_attempt_id(), entity);
-        auditService.auditAuthorizationRequest(entity, adminContext);
-        notificationService.send(notificationEntity, adminContext);
+        notificationService.send(notificationEntity);
     }
     private NotificationEntity createNotificationEntity(RequestAuthorizationEntity requestAuthorizationEntity) {
         Map<String, String> data = new HashMap<>();

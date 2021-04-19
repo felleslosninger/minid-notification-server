@@ -4,7 +4,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import no.digdir.minidnotificationserver.api.internal.authorization.RequestAuthorizationEntity;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseBeans;
-import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import no.digdir.minidnotificationserver.service.NotificationServerCache;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,9 +39,6 @@ public class AuthorizationEndpointTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private AuditService auditService;
 
     @MockBean
     private NotificationServerCache cache;

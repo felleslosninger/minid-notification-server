@@ -44,7 +44,7 @@ public class AuthorizationEndpoint {
     @PostMapping("/approve")
     @PreAuthorize("hasAuthority('APP_AUTHORIZE')")
     public ResponseEntity<String> approve(@RequestBody AuthorizationEntity authorizationEntity, @AuthenticationPrincipal String personIdentifier) { // TODO: use ssn validator
-        authorizationService.approve(personIdentifier, authorizationEntity);
+        authorizationService.authorize(personIdentifier, authorizationEntity, AuthorizationService.AuthAction.APPROVE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -60,7 +60,7 @@ public class AuthorizationEndpoint {
     @PostMapping("/reject")
     @PreAuthorize("hasAuthority('APP_AUTHORIZE')")
     public ResponseEntity<String> reject(@RequestBody AuthorizationEntity authorizationEntity, @AuthenticationPrincipal String personIdentifier) { // TODO: use ssn validator
-        authorizationService.reject(personIdentifier, authorizationEntity);
+        authorizationService.authorize(personIdentifier, authorizationEntity, AuthorizationService.AuthAction.REJECT);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

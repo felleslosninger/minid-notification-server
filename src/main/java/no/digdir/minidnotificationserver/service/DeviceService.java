@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.api.device.DeviceEntity;
 import no.digdir.minidnotificationserver.domain.Device;
 import no.digdir.minidnotificationserver.integration.google.GoogleClient;
+import no.digdir.minidnotificationserver.integration.minidbackend.MinIdBackendClient;
+import no.digdir.minidnotificationserver.logging.audit.Audit;
+import no.digdir.minidnotificationserver.logging.audit.AuditID;
 import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import no.digdir.minidnotificationserver.logging.event.EventService;
 import no.digdir.minidnotificationserver.repository.DeviceRepository;
@@ -25,6 +28,7 @@ public class DeviceService {
     private final AuditService auditService;
     private final EventService eventService;
     private final GoogleClient googleClient;
+    private final MinIdBackendClient minIdBackendClient;
 
     @Deprecated
     public DeviceEntity upsertDevice(String personIdentifier, DeviceEntity entity) {
@@ -34,7 +38,6 @@ public class DeviceService {
 
         if("ios".equalsIgnoreCase(entity.getOs()) && Strings.isBlank(entity.getApns_token())) {
             String fcmToken = googleClient.importAPNsToken(entity.getToken());
-            auditService.auditRegistrationServiceImportApnsToken(entity, personIdentifier, fcmToken);
             entity.setApns_token(entity.getToken());
             entity.setToken(fcmToken);
         }
@@ -54,34 +57,27 @@ public class DeviceService {
 
 
 
+    @Audit(auditId = AuditID.DEVICE_CREATE)
     public DeviceEntity save(String personIdentifier, DeviceEntity entity) {
-
         if("ios".equalsIgnoreCase(entity.getOs()) && Strings.isBlank(entity.getApns_token())) {
             String fcmToken = googleClient.importAPNsToken(entity.getToken());
-            auditService.auditRegistrationServiceImportApnsToken(entity, personIdentifier, fcmToken);
             entity.setApns_token(entity.getToken());
             entity.setToken(fcmToken);
         }
-
         Device device = Device.from(personIdentifier, entity);
         Device savedDevice = deviceRepository.save(device);
-        auditService.auditRegistrationServiceRegisterDevice(savedDevice);
-
         return DeviceEntity.from(savedDevice);
     }
 
+    @Audit(auditId = AuditID.DEVICE_UPDATE)
     public DeviceEntity update(String personIdentifier, DeviceEntity entity) {
-
         Device updatedDevice;
         Optional<Device> optDevice = deviceRepository.findByPersonIdentifierAndAppIdentifier(personIdentifier, entity.getApp_identifier());
 
         if(optDevice.isPresent()) { // update existing
             Device existingDevice = deepCopy(optDevice.get());
             updatedDevice = deviceRepository.save(existingDevice.from(entity));
-
-            auditService.auditRegistrationServiceUpdateDevice(existingDevice, updatedDevice);
             eventService.logUserHasUpdatedDevice(personIdentifier);
-
             return DeviceEntity.from(updatedDevice);
         }
         return null;
@@ -89,26 +85,27 @@ public class DeviceService {
 
 
     @Deprecated
-    public void deleteByAppId(String personIdentifier, DeviceEntity entity) {
-        deleteByAppId(personIdentifier, entity.getApp_identifier());
+    public int deleteByAppId(String personIdentifier, DeviceEntity entity) {
+        return deleteByAppId(personIdentifier, entity.getApp_identifier());
     }
 
-    public void deleteByAppId(String personIdentifier, String appId) {
+    @Audit(auditId = AuditID.DEVICE_DELETE)
+    public int deleteByAppId(String personIdentifier, String appId) {
         List<Device> deletedDevices = deviceRepository.deleteByPersonIdentifierAndAppIdentifier(personIdentifier, appId);
         if(deletedDevices.size() > 0) {
-            Device deletedDevice = deletedDevices.get(0);
-            auditService.auditRegistrationServiceDeleteDevice(personIdentifier, deletedDevice);
+            minIdBackendClient.setPreferredTwoFactorMethod(personIdentifier, "pin"); // TODO: temporary reset to 'pin'
         }
+        return deletedDevices.size();
     }
 
-    public void delete(String personIdentifier, String token) {
-
+    @Audit(auditId = AuditID.DEVICE_DELETE)
+    public int delete(String personIdentifier, String token) {
         List<Device> deletedDevices = deviceRepository.deleteByFcmTokenOrApnsToken(token, token);
         if(deletedDevices.size() > 0) {
-            Device deletedDevice = deletedDevices.get(0);
-            auditService.auditRegistrationServiceDeleteDevice(personIdentifier, deletedDevice);
             eventService.logUserHasDeletedDevice(personIdentifier);
+            minIdBackendClient.setPreferredTwoFactorMethod(personIdentifier, "pin"); // TODO: temporary reset to 'pin'
         }
+        return deletedDevices.size();
     }
 
     private Device deepCopy(Device device) {

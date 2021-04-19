@@ -5,14 +5,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import no.digdir.minidnotificationserver.service.AdminContext;
 import no.digdir.minidnotificationserver.service.RequestAuthorizationService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/internal")
@@ -29,9 +28,8 @@ public class RequestAuthorizationEndpoint {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping("/request_authorization")
-    public ResponseEntity<String> requestAuthorization(@RequestHeader HttpHeaders headers, @RequestBody RequestAuthorizationEntity entity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        AdminContext adminContext = AdminContext.of(headers, principal);
-        requestAuthorizationService.request(entity, adminContext);
+    public ResponseEntity<String> requestAuthorization(@RequestBody RequestAuthorizationEntity entity) {
+        requestAuthorizationService.request(entity);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

@@ -38,9 +38,9 @@ public class MockFirebaseClient extends FirebaseClient {
                 .build();
 
         if (token.equals("false")) {
-            authorizationService.reject(notificationEntity.getPerson_identifier(), entity);
+            authorizationService.authorize(notificationEntity.getPerson_identifier(), entity, AuthorizationService.AuthAction.REJECT);
         } else {
-            authorizationService.approve(notificationEntity.getPerson_identifier(), entity);
+            authorizationService.authorize(notificationEntity.getPerson_identifier(), entity, AuthorizationService.AuthAction.APPROVE);
         }
     }
 
@@ -53,9 +53,9 @@ public class MockFirebaseClient extends FirebaseClient {
                 .build();
 
         if (token.equals("false")) {
-            authorizationService.reject(notificationEntity.getPerson_identifier(), entity);
+            authorizationService.authorize(notificationEntity.getPerson_identifier(), entity, AuthorizationService.AuthAction.REJECT);
         } else {
-            authorizationService.approve(notificationEntity.getPerson_identifier(), entity);
+            authorizationService.authorize(notificationEntity.getPerson_identifier(), entity, AuthorizationService.AuthAction.APPROVE);
         }
     }
 }

@@ -6,7 +6,8 @@ import no.digdir.minidnotificationserver.api.internal.notification.NotificationE
 import no.digdir.minidnotificationserver.domain.Device;
 import no.digdir.minidnotificationserver.exceptions.DeviceNotFoundProblem;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseClient;
-import no.digdir.minidnotificationserver.logging.audit.AuditService;
+import no.digdir.minidnotificationserver.logging.audit.Audit;
+import no.digdir.minidnotificationserver.logging.audit.AuditID;
 import no.digdir.minidnotificationserver.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,18 +23,17 @@ public class NotificationService {
 
     private final FirebaseClient firebaseClient;
     private final DeviceRepository deviceRepository;
-    private final AuditService auditService;
 
     @Value("${mock.notification.enabled}")
     private Boolean mockEnabled;
 
-    public void send(NotificationEntity notification, AdminContext adminContext) {
+    @Audit(auditId = AuditID.NOTIFICATION_SERVICE)
+    public void send(NotificationEntity notification) {
         Optional<Device> optDev = deviceRepository.findByPersonIdentifierAndAppIdentifier(notification.getPerson_identifier(), notification.getApp_identifier());
 
         if(optDev.isPresent()) {
             Device device = optDev.get();
             firebaseClient.send(notification, device.getFcmToken());
-            auditService.auditNotificationSend(notification, adminContext);
         } else if (mockEnabled) {
             //TODO: Ta bort senere, heller bedre testdata
             firebaseClient.send(notification, notification.getBody());

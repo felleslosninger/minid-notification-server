@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
 import no.digdir.minidnotificationserver.domain.Device;
+import no.digdir.minidnotificationserver.logging.audit.AuditMasked;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -33,9 +34,11 @@ public class DeviceEntity {
     @NotBlank
     @Schema(description = "The FCM or APNs registration token (APNs format is assumed if 'os=ios').", example = "asdf1234")
     @Size(max = 4096)
+    @AuditMasked
     String token;
 
     @JsonIgnore
+    @AuditMasked
     String apns_token;
 
     @NotBlank

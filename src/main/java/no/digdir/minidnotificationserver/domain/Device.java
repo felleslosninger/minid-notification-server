@@ -32,6 +32,7 @@ public class Device {
     @Column(name = "app_version")
     private String appVersion;
 
+
     @Column(name = "fcm_token")
     private String fcmToken;
 

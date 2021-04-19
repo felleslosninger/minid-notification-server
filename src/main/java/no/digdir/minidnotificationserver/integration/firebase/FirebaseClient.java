@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
+import no.digdir.minidnotificationserver.logging.audit.Audit;
+import no.digdir.minidnotificationserver.logging.audit.AuditID;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +25,13 @@ public class FirebaseClient {
     private final FirebaseMessaging firebaseMessaging;
 
     public void send(NotificationEntity notificationEntity, String token) {
-        log.debug("firebase client sending " + token);
         this.send(notificationEntity, token, false);
     }
 
+    @Audit(auditId = AuditID.NOTIFICATION_SEND)
     public void send(NotificationEntity notificationEntity, String token, boolean background) {
+
+        log.debug("firebase client sending notification to token: " + token);
 
         boolean highPriority = "HIGH".equalsIgnoreCase(notificationEntity.getPriority());
         long ttl = (notificationEntity.getTtl() != null) ? notificationEntity.getTtl() : 2419200L;

@@ -2,10 +2,9 @@ package no.digdir.minidnotificationserver.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.digdir.minidnotificationserver.Utils;
-import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
-import no.digdir.minidnotificationserver.api.onboarding.*;
 import no.digdir.minidnotificationserver.api.device.DeviceEntity;
+import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
+import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.exceptions.OTCFailedProblem;
 import no.digdir.minidnotificationserver.exceptions.OnboardingProblem;
@@ -15,8 +14,10 @@ import no.digdir.minidnotificationserver.integration.minidbackend.MinIdBackendCl
 import no.digdir.minidnotificationserver.integration.minidbackend.VerifyOtcEntity;
 import no.digdir.minidnotificationserver.integration.minidbackend.VerifyPinEntity;
 import no.digdir.minidnotificationserver.integration.minidbackend.VerifyPwEntity;
-import no.digdir.minidnotificationserver.logging.audit.AuditService;
+import no.digdir.minidnotificationserver.logging.audit.Audit;
+import no.digdir.minidnotificationserver.logging.audit.AuditID;
 import no.digdir.minidnotificationserver.logging.event.EventService;
+import no.digdir.minidnotificationserver.utils.Utils;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -31,7 +32,6 @@ import java.util.UUID;
 public class OnboardingService {
 
     private final FirebaseClient firebaseClient;
-    private final AuditService auditService;
     private final EventService eventService;
     private final NotificationServerCache cache;
     private final ConfigProvider configProvider;
@@ -40,6 +40,7 @@ public class OnboardingService {
     private final MinIdBackendClient minIdBackendClient;
 
 
+    @Audit(auditId = AuditID.ONBOARDING_START)
     public void startAuth(OnboardingEntity.Start.Request entity) {
         ConfigProvider.Authenticator cfg = configProvider.getAuthenticator();
 
@@ -47,7 +48,6 @@ public class OnboardingService {
 
         if("ios".equalsIgnoreCase(entity.getOs())) { // import iOS token
             String fcmToken = googleClient.importAPNsToken(entity.getToken());
-            auditService.auditOnboardingServiceImportApnsToken(entity, entity.getPerson_identifier(), fcmToken);
             entity.setApns_token(entity.getToken());
             entity.setToken(fcmToken);
         }
@@ -72,10 +72,9 @@ public class OnboardingService {
 
         cache.putStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken(), entity);
         firebaseClient.send(notification, entity.getToken(), true);
-        auditService.auditNotificationOnboardingSend(notification, entity.getPerson_identifier());
-        auditService.auditOnboardingStart(entity);
     }
 
+    @Audit(auditId = AuditID.ONBOARDING_CONTINUE)
     public OnboardingEntity.Continue.Response continueAuth(OnboardingEntity.Continue.Request entity) {
 
         String fcmOrApnsToken = entity.getApns_token() != null ? entity.getApns_token() : entity.getToken();
@@ -117,8 +116,6 @@ public class OnboardingService {
                     .twoFactorMethod(pwResponse.getPreferred2FaMethod());
             cache.putVerificationEntity(person_identifier, verificationBuilder.build());
 
-            auditService.auditOnboardingContinue(entity, startEntity.getPerson_identifier());
-
             return builder
                     .two_factor_method(pwResponse.getPreferred2FaMethod())
                     .state(startEntity.getState())
@@ -132,6 +129,7 @@ public class OnboardingService {
 
     }
 
+    @Audit(auditId = AuditID.ONBOARDING_FINALIZE)
     public OnboardingEntity.Finalize.Response finalizeAuth(OnboardingEntity.Finalize.Request entity) {
         String fcmOrApnsToken = entity.getApns_token() != null ? entity.getApns_token() : entity.getToken();
         OnboardingEntity.Start.Request startEntity = cache.getStartEntity(fcmOrApnsToken);
@@ -186,7 +184,6 @@ public class OnboardingService {
 
         // TODO: fetch access_token, refresh_token from /tokenexchange (fcm_token, aud="minid-app", scope="minid:app")
 
-        auditService.auditOnboardingFinalize(entity);
         eventService.logUserHasRegisteredDevice(personIdentifier);
 
         return OnboardingEntity.Finalize.Response.builder()
