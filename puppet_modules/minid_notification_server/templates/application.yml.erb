@@ -124,7 +124,20 @@ digdir:
     url: <%= @minid_backend_url %>
   minid-authentication-service:
     url: <%= @minid_authentication_url %>
-
+  idporten-oidc-provider:
+    url: <%= @minid_oidc_provider_direct_hostname %>
+    redirect-uri: app:test
+    oidc-client-id: <%= @minid_oidc_client_id %>
+    oidc-client-secret:  <%= @minid_oidc_client_secret %>
+    client-id: <%= @minid_authenticator_client_id %>
+    client-secret: <%= @minid_authenticator_client_secret %>
+    scopes:
+      - user/spraak.read
+      - minid:app.register
+      - openid
+      - profile
+      - idporten:user.log.all.read
+      - user/kontaktinformasjon.read
 mock:
   notification:
     enabled: <%= @mock_notification_enabled %>

@@ -44,6 +44,8 @@ public class DeviceService {
 
         if(optDevice.isPresent()) { // update existing
             Device existingDevice = deepCopy(optDevice.get());
+            entity.setApns_token(""); // don't allow changing the apns_token
+            entity.setToken(""); // don't allow changing the fcm_token
             savedOrUpdatedDevice = deviceRepository.save(existingDevice.from(entity));
             auditService.auditRegistrationServiceUpdateDevice(existingDevice, savedOrUpdatedDevice);
         } else { // create new
@@ -75,6 +77,8 @@ public class DeviceService {
         Optional<Device> optDevice = deviceRepository.findByPersonIdentifierAndAppIdentifier(personIdentifier, entity.getApp_identifier());
 
         if(optDevice.isPresent()) { // update existing
+            entity.setApns_token(""); // don't allow changing the apns_token
+            entity.setToken(""); // don't allow changing the fcm_token
             Device existingDevice = deepCopy(optDevice.get());
             updatedDevice = deviceRepository.save(existingDevice.from(entity));
             eventService.logUserHasUpdatedDevice(personIdentifier);

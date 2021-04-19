@@ -16,11 +16,5 @@ public class VerifyOtcEntity {
         String requestUrn; // nonce
     }
 
-    @Data
-    public static class Response {
-        boolean otcVerified;
-        boolean lastTry;
-    }
-
 }
 

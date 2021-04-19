@@ -1,7 +1,6 @@
 package no.digdir.minidnotificationserver.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -35,7 +34,6 @@ public class ExceptionHandler implements ProblemHandling, SecurityAdviceTrait {
                     .withStatus(Status.BAD_REQUEST)
                     .withType(UNKNOWN_TYPE)
                     .with("correlation_id", MDC.get(CORRELATION_ID_HEADER))
-                    .with("stacktrace", ExceptionUtils.getStackTrace(throwable))
                     .withCause(cause) // wrap unknown errors in cause
                     ;
         } else {
@@ -45,7 +43,7 @@ public class ExceptionHandler implements ProblemHandling, SecurityAdviceTrait {
 
     @Override
     public void log(Throwable throwable, Problem problem, NativeWebRequest request, HttpStatus status) {
-        log.debug("Exception occurred: {}", throwable.toString());
+        log.debug("Exception occurred", throwable);
     }
 
 

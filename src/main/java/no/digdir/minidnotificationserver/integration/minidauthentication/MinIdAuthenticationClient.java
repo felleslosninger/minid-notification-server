@@ -14,7 +14,7 @@ import org.zalando.problem.ProblemBuilder;
 
 import javax.annotation.PostConstruct;
 
-import static no.digdir.minidnotificationserver.config.AdminContextFilter.ADMIN_USER_ID_HEADER;
+import static no.digdir.minidnotificationserver.config.filters.AdminContextFilter.ADMIN_USER_ID_HEADER;
 import static no.digdir.minidnotificationserver.config.correlation.CorrelationId.CORRELATION_ID_HEADER;
 import static org.zalando.problem.Status.BAD_REQUEST;
 

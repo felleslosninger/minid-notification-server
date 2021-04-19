@@ -50,7 +50,20 @@ digdir:
     url: http://eid-systest-otf-app01.dmz.local:10010
   minid-authentication-service:
     url: https://eid-systest-web01.dmz.local/minid-authentication
-
+  idporten-oidc-provider:
+    url: http://eid-systest-oidc-app01.dmz.local:10001/idporten-oidc-provider
+    redirect-uri: app:test
+    oidc-client-id: oidc_minid_authenticator
+    oidc-client-secret: dummy
+    client-id: oidc_minid_authenticator
+    client-secret: dummy
+    scopes:
+      - user/spraak.read
+      - minid:app.register
+      - openid
+      - profile
+      - idporten:user.log.all.read
+      - user/kontaktinformasjon.read
 mock:
   notification:
     enabled: false

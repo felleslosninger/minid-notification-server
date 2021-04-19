@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,8 +43,9 @@ public class AuthorizationEndpoint {
             @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
     })
     @PostMapping("/approve")
-    @PreAuthorize("hasAuthority('APP_AUTHORIZE')")
-    public ResponseEntity<String> approve(@RequestBody AuthorizationEntity authorizationEntity, @AuthenticationPrincipal String personIdentifier) { // TODO: use ssn validator
+    @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
+    public ResponseEntity<String> approve(@RequestBody AuthorizationEntity authorizationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+        String personIdentifier = principal.getAttribute("pid");
         authorizationService.authorize(personIdentifier, authorizationEntity, AuthorizationService.AuthAction.APPROVE);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -58,8 +60,9 @@ public class AuthorizationEndpoint {
             @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
     })
     @PostMapping("/reject")
-    @PreAuthorize("hasAuthority('APP_AUTHORIZE')")
-    public ResponseEntity<String> reject(@RequestBody AuthorizationEntity authorizationEntity, @AuthenticationPrincipal String personIdentifier) { // TODO: use ssn validator
+    @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
+    public ResponseEntity<String> reject(@RequestBody AuthorizationEntity authorizationEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+        String personIdentifier = principal.getAttribute("pid");
         authorizationService.authorize(personIdentifier, authorizationEntity, AuthorizationService.AuthAction.REJECT);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

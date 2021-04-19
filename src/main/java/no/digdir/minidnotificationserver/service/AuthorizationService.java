@@ -7,7 +7,6 @@ import no.digdir.minidnotificationserver.api.internal.authorization.RequestAutho
 import no.digdir.minidnotificationserver.exceptions.LoginAttemptNotFoundProblem;
 import no.digdir.minidnotificationserver.integration.minidauthentication.MinIdAuthenticationClient;
 import no.digdir.minidnotificationserver.logging.audit.Audit;
-import no.digdir.minidnotificationserver.logging.audit.AuditService;
 import org.springframework.stereotype.Service;
 
 import static no.digdir.minidnotificationserver.logging.audit.AuditID.APP_AUTHORIZE;

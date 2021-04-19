@@ -1,18 +1,18 @@
 package no.digdir.minidnotificationserver.service;
 
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.api.device.DeviceEntity;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
-import no.digdir.minidnotificationserver.exceptions.OTCFailedProblem;
 import no.digdir.minidnotificationserver.exceptions.OnboardingProblem;
 import no.digdir.minidnotificationserver.integration.firebase.FirebaseClient;
 import no.digdir.minidnotificationserver.integration.google.GoogleClient;
+import no.digdir.minidnotificationserver.integration.idporten.IdportenEntity;
 import no.digdir.minidnotificationserver.integration.minidbackend.MinIdBackendClient;
-import no.digdir.minidnotificationserver.integration.minidbackend.VerifyOtcEntity;
-import no.digdir.minidnotificationserver.integration.minidbackend.VerifyPinEntity;
 import no.digdir.minidnotificationserver.integration.minidbackend.VerifyPwEntity;
 import no.digdir.minidnotificationserver.logging.audit.Audit;
 import no.digdir.minidnotificationserver.logging.audit.AuditID;
@@ -20,7 +20,9 @@ import no.digdir.minidnotificationserver.logging.event.EventService;
 import no.digdir.minidnotificationserver.utils.Utils;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class OnboardingService {
     private final GoogleClient googleClient;
     private final DeviceService deviceService;
     private final MinIdBackendClient minIdBackendClient;
-
+    private final IdportenService idportenService;
 
     @Audit(auditId = AuditID.ONBOARDING_START)
     public void startAuth(OnboardingEntity.Start.Request entity) {
@@ -157,14 +159,11 @@ public class OnboardingService {
 
         OnboardingEntity.Verification verificationEntity = cache.getVerificationEntity(personIdentifier);
 
-        boolean codeVerified;
         String twoFactorMethod = verificationEntity.getTwoFactorMethod();
         if("otc".equals(twoFactorMethod)) { // otc
-            VerifyOtcEntity.Response otcResponse = minIdBackendClient.verifyOtc(personIdentifier, entity.getOtc(), verificationEntity.getRequestUrn());
-            codeVerified = otcResponse.isOtcVerified();
+            minIdBackendClient.verifyOtc(personIdentifier, entity.getOtc(), verificationEntity.getRequestUrn());
         } else if("pin".equals(twoFactorMethod)) { // pin code
-            VerifyPinEntity.Response pinResponse = minIdBackendClient.verifyPin(personIdentifier, entity.getOtc(), verificationEntity.getPinCodeIndex(), verificationEntity.getRequestUrn());
-            codeVerified = pinResponse.isPinCodeVerified();
+            minIdBackendClient.verifyPin(personIdentifier, entity.getOtc(), verificationEntity.getPinCodeIndex(), verificationEntity.getRequestUrn());
         } else {
             throw new OnboardingProblem("Unknown two-factor method: '" + twoFactorMethod + "'.");
         }
@@ -172,9 +171,6 @@ public class OnboardingService {
         cache.deleteStartEntity(fcmOrApnsToken);
         cache.deleteVerificationEntity(personIdentifier);
 
-        if(!codeVerified) {
-            throw new OTCFailedProblem("The one-time-code from SMS or pin code letter was not accepted.");
-        }
 
         minIdBackendClient.setPreferredTwoFactorMethod(claimedPersonIdentifier, "app");
 
@@ -182,14 +178,24 @@ public class OnboardingService {
         deviceService.deleteByAppId(personIdentifier, startEntity.getApp_identifier());
         deviceService.save(personIdentifier, DeviceEntity.from(startEntity));
 
-        // TODO: fetch access_token, refresh_token from /tokenexchange (fcm_token, aud="minid-app", scope="minid:app")
+        IdportenEntity.TokenResponse tokenResponse = idportenService.backchannelAuthorize(personIdentifier);
+
+        JWT jwt;
+        String expiry = "";
+        try {
+            jwt = JWTParser.parse(tokenResponse.getAccess_token());
+            Instant expInstant = jwt.getJWTClaimsSet().getExpirationTime().toInstant();
+            expiry = ZonedDateTime.ofInstant(expInstant, ZoneOffset.UTC).format(Utils.dtf);
+        } catch (ParseException e) {
+            throw new OnboardingProblem("Error parsing access_token: " + e.getMessage());
+        }
 
         eventService.logUserHasRegisteredDevice(personIdentifier);
 
         return OnboardingEntity.Finalize.Response.builder()
-                .access_token("some_access_token_string")
-                .refresh_token("some_refresh_token_string")
-                .expiry(ZonedDateTime.now().plus(Duration.ofHours(1L)).format(Utils.dtf))
+                .access_token(tokenResponse.getAccess_token())
+                .refresh_token(tokenResponse.getRefresh_token())
+                .expiry(expiry)
                 .state(entity.getState())
                 .build();
     }

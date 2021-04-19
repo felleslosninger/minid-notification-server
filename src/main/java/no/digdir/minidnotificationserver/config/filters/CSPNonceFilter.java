@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.config;
+package no.digdir.minidnotificationserver.config.filters;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;

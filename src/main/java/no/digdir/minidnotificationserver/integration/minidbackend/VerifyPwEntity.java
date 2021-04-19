@@ -14,6 +14,7 @@ public class VerifyPwEntity {
         String pid;
         String password;
         ServiceProvider serviceProvider;
+        String locale;
 
         @Data
         @Builder
@@ -29,6 +30,7 @@ public class VerifyPwEntity {
         String preferred2FaMethod; // app, otc, pin
         Integer pinCodeIndex;
         String requestUrn; // nonce
+        Integer pinCodeNumber;
     }
 
 }

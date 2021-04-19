@@ -45,7 +45,12 @@ class minid_notification_server (
   Boolean $infinispan_enabled              = $minid_notification_server::params::infinispan_enabled,
   String $minid_authentication_url         = $minid_notification_server::params::minid_authentication_url,
   String $minid_backend_url                = $minid_notification_server::params::minid_backend_url,
-  Boolean $mock_notification_enabled       = $minid_notification_server::params::mock_notification_enabled
+  Boolean $mock_notification_enabled       = $minid_notification_server::params::mock_notification_enabled,
+  String $minid_oidc_provider_direct_hostname = $minid_notification_server::params::minid_oidc_provider_direct_hostname,
+  String $minid_oidc_client_id             = $minid_notification_server::params::minid_oidc_client_id,
+  String $minid_oidc_client_secret         = $minid_notification_server::params::minid_oidc_client_secret,
+  String $minid_authenticator_client_id    = $minid_notification_server::params::minid_authenticator_client_id,
+  String $minid_authenticator_client_secret= $minid_notification_server::params::minid_authenticator_client_secret
 
 
 

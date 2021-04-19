@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
@@ -39,6 +40,7 @@ public class DeveloperLoggingRequestInterceptor implements ClientHttpRequestInte
 
     private void traceResponse(ClientHttpResponse response) throws IOException {
         StringBuilder inputStringBuilder = new StringBuilder();
+        HttpStatus statusCode = response.getStatusCode(); // needed here to prevent POSTs from throwing IOException in case of 4XX. Go figure...
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getBody(), StandardCharsets.UTF_8));
             String line = bufferedReader.readLine();
@@ -51,10 +53,11 @@ public class DeveloperLoggingRequestInterceptor implements ClientHttpRequestInte
             // do nothing
         }
         log.warn("============================response BEGIN==========================================");
-        log.warn("Status code  : {}", response.getStatusCode());
+
+        log.warn("Status code  : {}", statusCode);
         log.warn("Status text  : {}", response.getStatusText());
         log.warn("Headers      : {}", response.getHeaders());
-        log.warn("Response body: {}", inputStringBuilder.toString());
+        log.warn("Response body: {}", inputStringBuilder);
         log.warn("============================response END============================================");
     }
 

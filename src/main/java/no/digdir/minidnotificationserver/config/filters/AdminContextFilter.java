@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.config;
+package no.digdir.minidnotificationserver.config.filters;
 
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;

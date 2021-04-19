@@ -15,12 +15,9 @@ import no.digdir.minidnotificationserver.service.DeviceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_OS_HEADER;
 import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_VERSION_HEADER;
@@ -44,9 +41,10 @@ public class DeviceEndpoint {
             @Parameter(in = ParameterIn.HEADER, description = "Version of MinID App", name = MINID_APP_VERSION_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "1.0.1"))),
             @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
     })
-    @PreAuthorize("hasAuthority('APP_DEVICE')")
+    @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
     @PostMapping("/device")
-    public ResponseEntity<DeviceEntity> updateDevice(@RequestBody DeviceEntity deviceEntity, @AuthenticationPrincipal String personIdentifier) { // TODO: use ssn validator
+    public ResponseEntity<DeviceEntity> updateDevice(@RequestBody DeviceEntity deviceEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+        String personIdentifier = principal.getAttribute("pid");
         DeviceEntity device = deviceService.update(personIdentifier, deviceEntity);
         return ResponseEntity.status(HttpStatus.OK).body(device);
     }
@@ -61,13 +59,11 @@ public class DeviceEndpoint {
             @Parameter(in = ParameterIn.HEADER, description = "Version of MinID App", name = MINID_APP_VERSION_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "1.0.1"))),
             @Parameter(in = ParameterIn.HEADER, description = "Operating system of MinID App", name = MINID_APP_OS_HEADER, content = @Content(schema = @Schema(type = "string", required = true, defaultValue = "Android", allowableValues = {"Android", "iOS"})))
     })
-    @PreAuthorize("hasAuthority('APP_DEVICE')")
-    @DeleteMapping("/device")
-    public ResponseEntity<String> deleteDevice(@AuthenticationPrincipal String personIdentifier, Authentication authentication) { // TODO: use ssn validator
-        if(authentication instanceof PreAuthenticatedAuthenticationToken) {
-            String token = ((Map<String, String>) authentication.getDetails()).get("token");
-            deviceService.delete(personIdentifier, token);
-        }
+    @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
+    @DeleteMapping("/device/{appId}")
+    public ResponseEntity<String> deleteDevice(@PathVariable String appId, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
+        String personIdentifier = principal.getAttribute("pid");
+        deviceService.delete(personIdentifier, appId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

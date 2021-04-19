@@ -11,15 +11,9 @@ public class VerifyPinEntity {
     @Builder
     static class Request {
         String pid;
-        String pincodeindex;
+        String pincodeIndex;
         String pincode;
         String requestUrn; // nonce
-    }
-
-    @Data
-    public static class Response {
-        boolean pinCodeVerified;
-        boolean lastTry;
     }
 
 }

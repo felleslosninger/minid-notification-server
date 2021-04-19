@@ -31,31 +31,31 @@ public class MinIdBackendClient {
                 .pid(pid)
                 .password(password)
                 .serviceProvider(VerifyPwEntity.Request.ServiceProvider.builder().name(serviceProvider).build())
+                .locale("nb")
                 .build();
-        ResponseEntity<VerifyPwEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/auth/verify_pw", httpEntity(requestEntity), VerifyPwEntity.Response.class);
+        ResponseEntity<VerifyPwEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/auth/verify_pw_2fa", httpEntity(requestEntity), VerifyPwEntity.Response.class);
         return response.getBody();
     }
 
-    public VerifyOtcEntity.Response verifyOtc(String pid, String otc, String requestUrn) {
+    public void verifyOtc(String pid, String otc, String requestUrn) {
         VerifyOtcEntity.Request requestEntity = VerifyOtcEntity.Request.builder()
                 .pid(pid)
                 .otc(otc)
                 .requestUrn(requestUrn)
                 .build();
-        ResponseEntity<VerifyOtcEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/auth/verify_otc", httpEntity(requestEntity), VerifyOtcEntity.Response.class);
-        return response.getBody();
+        restTemplate.postForEntity(apiBaseUrl + "/auth/verify_otc_2fa", httpEntity(requestEntity), String.class);
     }
 
 
-    public VerifyPinEntity.Response verifyPin(String pid, String pincode, Integer pincodeIndex, String requestUrn) {
+    public void verifyPin(String pid, String pincode, Integer pincodeIndex, String requestUrn) {
         VerifyPinEntity.Request requestEntity = VerifyPinEntity.Request.builder()
                 .pid(pid)
                 .pincode(pincode)
-                .pincodeindex(pincodeIndex.toString())
+                .pincodeIndex(pincodeIndex.toString())
                 .requestUrn(requestUrn)
                 .build();
-        ResponseEntity<VerifyPinEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/auth/verify_pin", httpEntity(requestEntity), VerifyPinEntity.Response.class);
-        return response.getBody();
+        restTemplate.postForEntity(apiBaseUrl + "/auth/verify_pin_2fa", httpEntity(requestEntity), String.class);
+        return;
     }
 
     public void setPreferredTwoFactorMethod(String personIdentifier, String twoFactorMethod) {

@@ -42,9 +42,10 @@ import org.springframework.context.annotation.Configuration;
 
 @SecurityScheme(
         name = "Authorization",
-        type = SecuritySchemeType.APIKEY,
+        type = SecuritySchemeType.HTTP,
         in = SecuritySchemeIn.HEADER,
-        description = "Authorize with FCM or APNs token. Format: 'AppToken [fcmToken or apnsToken]'"
+        scheme = "Bearer",
+        bearerFormat = "JWT"
 )
 
 
