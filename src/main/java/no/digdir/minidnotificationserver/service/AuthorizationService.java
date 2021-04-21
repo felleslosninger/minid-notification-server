@@ -17,7 +17,7 @@ import static no.digdir.minidnotificationserver.logging.audit.AuditID.APP_AUTHOR
 public class AuthorizationService {
 
     private final NotificationServerCache cache;
-    private final MinIdAuthenticationClient minIdAuthenticationClient;
+    private final MinIdAuthenticationClient minIdAuthenticationClient; 
 
     @Audit(auditId = APP_AUTHORIZE)
     public boolean authorize(String personIdentifier, AuthorizationEntity entity, AuthAction action) {
