@@ -102,7 +102,6 @@ public class ConfigProvider implements InitializingBean {
         private String oidcClientId;    // basic auth username for authorize/token endpoint
         private String oidcClientSecret; // basic auth password for authorize/token endpoint
         private String clientId;      // service client-id
-        private String clientSecret;  // service client-secret
         private Set<String> scopes;
         private String redirectUri;
     }

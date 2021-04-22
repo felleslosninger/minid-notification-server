@@ -48,10 +48,8 @@ class minid_notification_server::params {
   $minid_authentication_url         = ''
   $minid_backend_url                = ''
   $mock_notification_enabled        = false
-  $minid_oidc_provider_direct_hostname = 'http://eid-systest-oidc-app01.dmz.local:10001/idporten-oidc-provider'
-  $minid_oidc_client_id             = 'oidc_minid_authenticator'
-  $minid_oidc_client_secret         = ''
+  $minid_oidc_bc_client_id          = 'oidc_minid_bc_authorize'
+  $minid_oidc_bc_client_secret      = ''
   $minid_authenticator_client_id    = 'oidc_minid_authenticator'
-  $minid_authenticator_client_secret= ''
 
 }
