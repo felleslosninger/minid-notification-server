@@ -33,6 +33,7 @@ class minid_notification_server (
   String $tokeninfo_client_id              = $minid_notification_server::params::tokeninfo_client_id,
   String $tokeninfo_client_secret          = $minid_notification_server::params::tokeninfo_client_secret,
   Boolean $apns_sandbox                    = $minid_notification_server::params::apns_sandbox,
+  Boolean $apns_sandbox_client_override    = $minid_notification_server::params::apns_sandbox_client_override,
   String $google_api_key                   = $minid_notification_server::params::google_api_key,
   String $bundle_id                        = $minid_notification_server::params::bundle_id,
   String $context_path                     = $minid_notification_server::params::context_path,
@@ -48,7 +49,8 @@ class minid_notification_server (
   Boolean $mock_notification_enabled       = $minid_notification_server::params::mock_notification_enabled,
   String $minid_oidc_bc_client_id          = $minid_notification_server::params::minid_oidc_bc_client_id,
   String $minid_oidc_bc_client_secret      = $minid_notification_server::params::minid_oidc_bc_client_secret,
-  String $minid_authenticator_client_id    = $minid_notification_server::params::minid_authenticator_client_id
+  String $minid_authenticator_client_id    = $minid_notification_server::params::minid_authenticator_client_id,
+  String $idporten_internal_oidc_issuer_uri = $minid_notification_server::params::idporten_internal_oidc_issuer_uri
 
 
 ) inherits minid_notification_server::params {

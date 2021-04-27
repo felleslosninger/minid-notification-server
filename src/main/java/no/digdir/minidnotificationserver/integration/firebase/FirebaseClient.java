@@ -107,6 +107,28 @@ public class FirebaseClient {
         } catch (FirebaseMessagingException e) {
             throw new FirebaseProblem(e); // https://firebase.google.cn/docs/reference/fcm/rest/v1/ErrorCode?hl=en
             // TODO: purge invalid?
+            /* example error:
+
+            {
+  "error": {
+    "code": 400,
+    "message": "Request contains an invalid argument.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "INVALID_ARGUMENT"
+      },
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.ApnsError",
+        "statusCode": 400,
+        "reason": "BadDeviceToken"
+      }
+    ]
+  }
+}
+
+             */
         }
 
     }

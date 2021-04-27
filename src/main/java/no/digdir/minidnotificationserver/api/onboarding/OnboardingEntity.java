@@ -41,6 +41,9 @@ public class OnboardingEntity {
             @AuditMasked
             String apns_token;
 
+            @Schema(description = "APNs sandbox.", example = "false", defaultValue = "false")
+            boolean apns_sandbox = false;
+
             @NotBlank (message = "app-id e.g 'no.digdir.minid.appname'")
             @Schema(description = "An application identifier.", example = "no.digdir.minid.authenticator")
             @Size(max = 64)

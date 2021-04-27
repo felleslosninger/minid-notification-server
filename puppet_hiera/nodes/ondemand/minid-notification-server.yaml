@@ -28,8 +28,10 @@ minid_notification_server::proxy_enabled:            false
 minid_notification_server::proxy_host:               localhost
 minid_notification_server::proxy_port:               8081
 minid_notification_server::apns_sandbox:             true
+minid_notification_server::apns_sandbox_client_override:             true
 minid_notification_server::google_api_key:           ''
 minid_notification_server::db_pool_manager:          'com.zaxxer.hikari.HikariDataSource'  # org.apache.tomcat.jdbc.pool.DataSource for Tomcat pool manager
 minid_notification_server::mock_notification_enabled: true
 minid_notification_server::minid_authentication_service:   'https://eid-atest-web01.dmz.local/minid-authentication/'
 minid_notification_server::minid_backend_service:           'https://eid-atest-web01.dmz.local/minid-backend/'
+minid_notification_server::idporten_internal_oidc_issuer_uri: 'http://eid-systest-oidc-app01.dmz.local:10001/idporten-oidc-provider'

@@ -37,7 +37,7 @@ public class DeviceService {
         Optional<Device> optDevice = deviceRepository.findByPersonIdentifierAndAppIdentifier(personIdentifier, entity.getApp_identifier());
 
         if("ios".equalsIgnoreCase(entity.getOs()) && Strings.isBlank(entity.getApns_token())) {
-            String fcmToken = googleClient.importAPNsToken(entity.getToken());
+            String fcmToken = googleClient.importAPNsToken(entity.getToken(), entity.isApns_sandbox());
             entity.setApns_token(entity.getToken());
             entity.setToken(fcmToken);
         }
@@ -62,7 +62,7 @@ public class DeviceService {
     @Audit(auditId = AuditID.DEVICE_CREATE)
     public DeviceEntity save(String personIdentifier, DeviceEntity entity) {
         if("ios".equalsIgnoreCase(entity.getOs()) && Strings.isBlank(entity.getApns_token())) {
-            String fcmToken = googleClient.importAPNsToken(entity.getToken());
+            String fcmToken = googleClient.importAPNsToken(entity.getToken(), entity.isApns_sandbox());
             entity.setApns_token(entity.getToken());
             entity.setToken(fcmToken);
         }

@@ -70,6 +70,7 @@ public class ConfigProvider implements InitializingBean {
     @Data
     public static class GoogleApi {
         private boolean sandbox = true;
+        private boolean sandboxClientOverride = false;
         private String bundleId;
         private String authKey;
     }

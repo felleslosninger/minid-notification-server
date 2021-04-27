@@ -41,6 +41,9 @@ public class DeviceEntity {
     @AuditMasked
     String apns_token;
 
+    @Schema(description = "APNs sandbox.", example = "false", defaultValue = "false")
+    boolean apns_sandbox = false;
+
     @NotBlank
     @Schema(description = "The operating system of the unit.", example = "Android")
     @Size(max = 64)

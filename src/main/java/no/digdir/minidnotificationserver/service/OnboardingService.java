@@ -49,7 +49,7 @@ public class OnboardingService {
         log.debug("Starting onboarding of {}", entity.getPerson_identifier());
 
         if("ios".equalsIgnoreCase(entity.getOs())) { // import iOS token
-            String fcmToken = googleClient.importAPNsToken(entity.getToken());
+            String fcmToken = googleClient.importAPNsToken(entity.getToken(), entity.isApns_sandbox());
             entity.setApns_token(entity.getToken());
             entity.setToken(fcmToken);
         }

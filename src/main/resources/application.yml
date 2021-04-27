@@ -130,6 +130,7 @@ digdir:
     notification-image-url: https://idporten.difi.no/error/images/svg/eid.svg
   google-api:
     sandbox: true
+    sandbox-client-override: false
     bundle-id: no.digdir.minid.authenticator
     auth-key: YOUR_API_KEY
   proxy:

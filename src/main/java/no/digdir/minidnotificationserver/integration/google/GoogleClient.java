@@ -22,14 +22,16 @@ public class GoogleClient  {
     private static final String IID_API_URI = "https://iid.googleapis.com/iid/v1:batchImport";
 
     @Audit(auditId = AuditID.APNS_TOKEN_IMPORT)
-    public String importAPNsToken(String apnsToken) {
+    public String importAPNsToken(String apnsToken, boolean clientRequestedSandbox) {
 
         log.debug("Importing APNs token {}", apnsToken);
 
+        ConfigProvider.GoogleApi cfg = configProvider.getGoogleApi();
+        boolean sandbox = cfg.isSandbox() || (cfg.isSandboxClientOverride() && clientRequestedSandbox);
         GoogleEntity.Request requestEntity = GoogleEntity.Request.builder()
                 .apns_tokens(new HashSet<>(Collections.singletonList(apnsToken)))
-                .application(configProvider.getGoogleApi().getBundleId())
-                .sandbox(configProvider.getGoogleApi().isSandbox())
+                .application(cfg.getBundleId())
+                .sandbox(sandbox)
                 .build();
 
         ResponseEntity<GoogleEntity.Response> response = restTemplate.postForEntity(IID_API_URI, httpEntity(requestEntity), GoogleEntity.Response.class);

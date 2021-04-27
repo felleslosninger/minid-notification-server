@@ -110,6 +110,7 @@ digdir:
     credentials-json: file:/etc/opt/minid-notification-server/firebase-credentials.json
   google-api:
     sandbox: <%= @apns_sandbox %>
+    sandbox-client-override: <%= @apns_sandbox_client_override %>
     bundle-id: <%= @bundle_id %>
     auth-key: <%= @google_api_key %>
   proxy:
@@ -125,7 +126,7 @@ digdir:
   minid-authentication-service:
     url: <%= @minid_authentication_url %>
   idporten-oidc-provider:
-    url: <%= @idporten_oidc_issuer_uri %><% if (!@idporten_oidc_issuer_uri.empty? && !@idporten_oidc_issuer_uri.end_with?("/")) %>/<% end %>
+    url: <%= @idporten_internal_oidc_issuer_uri %>
     redirect-uri: app:test
     oidc-client-id: <%= @minid_oidc_bc_client_id %>
     oidc-client-secret:  <%= @minid_oidc_bc_client_secret %>

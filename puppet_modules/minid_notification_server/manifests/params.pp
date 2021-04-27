@@ -35,6 +35,7 @@ class minid_notification_server::params {
   $tokeninfo_client_id              = ''
   $tokeninfo_client_secret          = ''
   $apns_sandbox                     = true
+  $apns_sandbox_client_override     = false
   $google_api_key                   = ''
   $bundle_id                        = 'no.digdir.minid.authenticator'
   $context_path                     = '/minid-notification-server'
@@ -51,5 +52,6 @@ class minid_notification_server::params {
   $minid_oidc_bc_client_id          = 'oidc_minid_bc_authorize'
   $minid_oidc_bc_client_secret      = ''
   $minid_authenticator_client_id    = 'oidc_minid_authenticator'
+  $idporten_internal_oidc_issuer_uri = 'http://eid-systest-oidc-app01.dmz.local:10001/idporten-oidc-provider'
 
 }
