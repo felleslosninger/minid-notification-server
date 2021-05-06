@@ -171,12 +171,11 @@ public class OnboardingService {
         cache.deleteStartEntity(fcmOrApnsToken);
         cache.deleteVerificationEntity(personIdentifier);
 
-
-        minIdBackendClient.setPreferredTwoFactorMethod(claimedPersonIdentifier, "app");
-
         // if everything is hunk-dory, then save device in db.
         deviceService.deleteByAppId(personIdentifier, startEntity.getApp_identifier());
         deviceService.save(personIdentifier, DeviceEntity.from(startEntity));
+
+        minIdBackendClient.setPreferredTwoFactorMethod(claimedPersonIdentifier, "app");
 
         IdportenEntity.TokenResponse tokenResponse = idportenService.backchannelAuthorize(personIdentifier);
 

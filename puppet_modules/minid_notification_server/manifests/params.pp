@@ -53,5 +53,8 @@ class minid_notification_server::params {
   $minid_oidc_bc_client_secret      = ''
   $minid_authenticator_client_id    = 'oidc_minid_authenticator'
   $idporten_internal_oidc_issuer_uri = 'http://eid-systest-oidc-app01.dmz.local:10001/idporten-oidc-provider'
-
+  $app_android_version_latest       = '2.0.2'
+  $app_android_version_required     = '1.0.0'
+  $app_ios_version_latest           = '0.2.0'
+  $app_ios_version_required         = '0.1.0'
 }

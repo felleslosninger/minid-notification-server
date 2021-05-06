@@ -50,8 +50,11 @@ class minid_notification_server (
   String $minid_oidc_bc_client_id          = $minid_notification_server::params::minid_oidc_bc_client_id,
   String $minid_oidc_bc_client_secret      = $minid_notification_server::params::minid_oidc_bc_client_secret,
   String $minid_authenticator_client_id    = $minid_notification_server::params::minid_authenticator_client_id,
-  String $idporten_internal_oidc_issuer_uri = $minid_notification_server::params::idporten_internal_oidc_issuer_uri
-
+  String $idporten_internal_oidc_issuer_uri = $minid_notification_server::params::idporten_internal_oidc_issuer_uri,
+  String $app_android_version_latest        = $minid_notification_server::params::app_android_version_latest,
+  String $app_android_version_required      = $minid_notification_server::params::app_android_version_required,
+  String $app_ios_version_latest            = $minid_notification_server::params::app_ios_version_latest,
+  String $app_ios_version_required          = $minid_notification_server::params::app_ios_version_required,
 
 ) inherits minid_notification_server::params {
 

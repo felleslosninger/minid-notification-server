@@ -120,8 +120,8 @@ spring:
 digdir:
   app-versions:
     ios:
-      latest: "1.2.3"
-      required: "1.0"
+      latest: "0.2.0"
+      required: "0.1.0"
     android:
       latest: "2.0.2"
       required: "1"

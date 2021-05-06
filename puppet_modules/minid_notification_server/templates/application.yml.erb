@@ -106,6 +106,13 @@ spring:
     baseline-on-migrate: true
 
 digdir:
+  app-versions:
+    ios:
+      latest: <%= @app_ios_version_latest %>
+      required: <%= @app_ios_version_required %>
+    android:
+      latest: <%= @app_android_version_latest %>
+      required: <%= @app_android_version_required %>
   firebase:
     credentials-json: file:/etc/opt/minid-notification-server/firebase-credentials.json
   google-api:

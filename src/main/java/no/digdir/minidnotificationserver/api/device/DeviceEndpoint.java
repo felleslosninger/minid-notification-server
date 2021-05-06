@@ -61,7 +61,7 @@ public class DeviceEndpoint {
     @DeleteMapping("/device/{appId}")
     public ResponseEntity<String> deleteDevice(@PathVariable String appId, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
         String personIdentifier = principal.getAttribute("pid");
-        deviceService.delete(personIdentifier, appId);
+        deviceService.deleteByAppId(personIdentifier, appId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
