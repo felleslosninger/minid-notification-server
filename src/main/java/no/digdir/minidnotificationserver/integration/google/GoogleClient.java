@@ -27,7 +27,8 @@ public class GoogleClient  {
         log.debug("Importing APNs token {}", apnsToken);
 
         ConfigProvider.GoogleApi cfg = configProvider.getGoogleApi();
-        boolean sandbox = cfg.isSandbox() || (cfg.isSandboxClientOverride() && clientRequestedSandbox);
+        boolean sandbox = cfg.isSandboxClientOverride() ? clientRequestedSandbox : cfg.isSandbox();
+
         GoogleEntity.Request requestEntity = GoogleEntity.Request.builder()
                 .apns_tokens(new HashSet<>(Collections.singletonList(apnsToken)))
                 .application(cfg.getBundleId())
