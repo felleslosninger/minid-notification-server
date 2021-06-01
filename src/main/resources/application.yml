@@ -127,12 +127,17 @@ digdir:
       required: "1"
   firebase:
     credentials-json: classpath:firebase-credentials.json
-    notification-image-url: https://idporten.difi.no/error/images/svg/eid.svg
+    notification-image-url: https://idporten.difi.no/images/Digdir-Emblem-Hvit.png
   google-api:
     sandbox: true
     sandbox-client-override: false
     bundle-id: no.digdir.minid.authenticator
     auth-key: YOUR_API_KEY
+  attestation:
+    nonce-timeout: 600000
+    attestation-timeout: 600000
+    require-cts-profile-match: false
+    require-basic-integrity: false
   proxy:
     enabled: false
     host: localhost
@@ -145,7 +150,7 @@ digdir:
     ttl: 180
     onboarding-category: onboardingCategory
     authentication-aps-category: auth_category
-    authentication-click-action: minid_auth_intent
+    authentication-click-action: MINID_AUTH_REQUEST_EVENT
   audit:
     log-dir: logs/minid-notification-server/audit
     log-file: audit-log.json

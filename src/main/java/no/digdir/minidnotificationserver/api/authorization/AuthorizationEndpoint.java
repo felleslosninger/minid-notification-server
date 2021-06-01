@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import no.digdir.minidnotificationserver.api.ValidateVersionHeaders;
+import no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeaders;
 import no.digdir.minidnotificationserver.service.AuthorizationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_OS_HEADER;
-import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_VERSION_HEADER;
+import static no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeadersAspect.MINID_APP_OS_HEADER;
+import static no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeadersAspect.MINID_APP_VERSION_HEADER;
 
 @RestController
 @RequestMapping("/api/authorization")

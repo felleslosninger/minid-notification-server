@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api;
+package no.digdir.minidnotificationserver.aspect.version;
 
 import com.google.common.base.Strings;
 import com.vdurmont.semver4j.Semver;
@@ -26,7 +26,7 @@ public class ValidateVersionHeadersAspect {
     public static final String MINID_APP_VERSION_HEADER = "X-MinID-App-Version";
 
     //Aspect can be placed on class or method
-    @Before("within(@no.digdir.minidnotificationserver.api.ValidateVersionHeaders *) || @annotation(no.digdir.minidnotificationserver.api.ValidateVersionHeaders)")
+    @Before("within(@no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeaders *) || @annotation(no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeaders)")
     public void validateAspect(JoinPoint joinPoint) throws Throwable {
 
 
@@ -53,7 +53,7 @@ public class ValidateVersionHeadersAspect {
 
         boolean hasRequiredVersionOrBetter = requiredVersion.compareTo(appVersion) <= 0;
         if(!hasRequiredVersionOrBetter) {
-            String mesg = String.format("Minimum required version of application is '%s'.", requiredVersion.toString());
+            String mesg = String.format("Minimum required version of application is '%s'.", requiredVersion);
             throw new AppVersionProblem(mesg, ErrorConstants.APP_REQUIRED_VERSION_TYPE);
         }
 

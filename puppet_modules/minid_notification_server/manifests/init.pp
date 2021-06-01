@@ -55,7 +55,11 @@ class minid_notification_server (
   String $app_android_version_required      = $minid_notification_server::params::app_android_version_required,
   String $app_ios_version_latest            = $minid_notification_server::params::app_ios_version_latest,
   String $app_ios_version_required          = $minid_notification_server::params::app_ios_version_required,
-
+  Integer $attestation_android_timeout_nonce       = $minid_notification_server::params::attestation_android_timeout_nonce,
+  Integer $attestation_android_timeout_attestation       = $minid_notification_server::params::attestation_android_timeout_attestation,
+  Boolean $attestation_android_require_cts_profile_match       = $minid_notification_server::params::attestation_android_require_cts_profile_match,
+  Boolean $attestation_android_require_basic_integrity       = $minid_notification_server::params::attestation_android_require_basic_integrity,
+  
 ) inherits minid_notification_server::params {
 
   include platform

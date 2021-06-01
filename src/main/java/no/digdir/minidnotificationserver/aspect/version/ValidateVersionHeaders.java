@@ -1,4 +1,4 @@
-package no.digdir.minidnotificationserver.api;
+package no.digdir.minidnotificationserver.aspect.version;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

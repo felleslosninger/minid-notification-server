@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
@@ -21,6 +22,7 @@ public class ConfigProvider implements InitializingBean {
     private MinidAuthenticationService minidAuthenticationService = new MinidAuthenticationService();
     private MinidBackendService minidBackendService = new MinidBackendService();
     private IdportenOidcProvider idportenOidcProvider = new IdportenOidcProvider();
+    private Attestation attestation = new Attestation();
 
     @Data
     public static class AppVersions {
@@ -73,6 +75,7 @@ public class ConfigProvider implements InitializingBean {
         private boolean sandboxClientOverride = false;
         private String bundleId;
         private String authKey;
+        private String attestationAndroidKey;
     }
 
     @Data
@@ -105,6 +108,18 @@ public class ConfigProvider implements InitializingBean {
         private String clientId;      // service client-id
         private Set<String> scopes;
         private String redirectUri;
+    }
+
+    @Data
+    public static class Attestation {
+        @NotNull
+        private Integer nonceTimeout;
+        @NotNull
+        private Integer attestationTimeout;
+        @NotNull
+        private Boolean requireCtsProfileMatch;
+        @NotNull
+        private Boolean requireBasicIntegrity;
     }
 
     @Override

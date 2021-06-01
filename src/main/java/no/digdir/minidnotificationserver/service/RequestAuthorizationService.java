@@ -44,7 +44,7 @@ public class RequestAuthorizationService {
                 .priority(configProvider.getAuthenticator().getPriority())
                 .ttl(configProvider.getAuthenticator().getTtl())
                 .aps_category("authCategory")
-                .click_action("minid_auth_intent")
+                .click_action("MINID_AUTH_REQUEST_EVENT")
                 .data(data)
                 .build();
     }

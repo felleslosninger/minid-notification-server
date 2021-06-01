@@ -25,6 +25,8 @@ public class EmbeddedCacheConfiguration {
     public final static String LOGIN_ATTEMPT_CACHE = "loginAttemptCache";
     public final static String ONBOARDING_CACHE = "onboardingCache";
     public final static String VERIFICATION_CACHE = "verificationCache";
+    public final static String ATTESTATION_NONCE_CACHE = "attestationNonceCache";
+    public final static String ATTESTATION_CACHE = "attestationCache";
 
     @Value("${cache.local.ttl-in-s:5}")
     private int localTtl;
@@ -75,7 +77,19 @@ public class EmbeddedCacheConfiguration {
                             .lifespan(clusterTtl, SECONDS)
                             .build());
 
+            manager.defineConfiguration(ATTESTATION_NONCE_CACHE,
+                    new ConfigurationBuilder()
+                            .simpleCache(true)
+                            .expiration()
+                            .lifespan(clusterTtl, SECONDS)
+                            .build());
 
+            manager.defineConfiguration(ATTESTATION_CACHE,
+                    new ConfigurationBuilder()
+                            .simpleCache(true)
+                            .expiration()
+                            .lifespan(clusterTtl, SECONDS)
+                            .build());
         };
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+import no.digdir.minidnotificationserver.api.domain.TokenEntity;
 import no.digdir.minidnotificationserver.logging.audit.AuditMasked;
 
 import javax.validation.constraints.NotBlank;
@@ -20,7 +21,7 @@ public class OnboardingEntity {
     public static class Start {
         @Data
         @Schema(name="StartRequest")
-        public static class Request implements Serializable {
+        public static class Request implements Serializable, TokenEntity {
             @NotBlank
             @Size(min = 11, max = 11)
             @Schema(description = "Person identifier - 11 digits.", example = "26079490775")
@@ -56,7 +57,7 @@ public class OnboardingEntity {
 
             @NotBlank
             @Size(max = 64)
-            @Schema(description = "The operating system of the unit.", example = "Android")
+            @Schema(description = "The operating system of the unit.", example = "Android", allowableValues =  {"Android", "iOS"})
             String os;
 
             @NotBlank
@@ -86,7 +87,7 @@ public class OnboardingEntity {
     public static class Continue {
         @Data
         @Schema(name="ContinueRequest")
-        public static class Request {
+        public static class Request implements TokenEntity {
             @NotBlank
             @Size(max = 4096)
             @Schema(description = "The FCM or APNs registration token (APNs format is assumed if 'os=ios').", example = "asdf1234")
@@ -99,7 +100,7 @@ public class OnboardingEntity {
 
             @NotBlank
             @Size(max = 64)
-            @Schema(description = "The operating system of the unit.", example = "Android")
+            @Schema(description = "The operating system of the unit.", example = "Android", allowableValues =  {"Android", "iOS"})
             String os;
 
             @NotBlank
@@ -127,7 +128,7 @@ public class OnboardingEntity {
     public static class Finalize {
         @Data
         @Schema(name="FinalizeRequest")
-        public static class Request {
+        public static class Request implements TokenEntity {
             @NotBlank
             @Size(min = 11, max = 11)
             @Schema(description = "Person identifier - 11 digits.", example = "26079490775")
@@ -149,7 +150,7 @@ public class OnboardingEntity {
 
             @NotBlank
             @Size(max = 64)
-            @Schema(description = "The operating system of the unit.", example = "Android")
+            @Schema(description = "The operating system of the unit.", example = "Android", allowableValues =  {"Android", "iOS"})
             String os;
 
             //@NotBlank

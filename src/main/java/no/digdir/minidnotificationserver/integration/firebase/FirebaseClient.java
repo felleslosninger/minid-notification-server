@@ -1,5 +1,6 @@
 package no.digdir.minidnotificationserver.integration.firebase;
 
+import com.google.firebase.IncomingHttpResponse;
 import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,9 +9,15 @@ import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.logging.audit.Audit;
 import no.digdir.minidnotificationserver.logging.audit.AuditID;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static com.google.firebase.messaging.AndroidConfig.Priority;
+import static no.digdir.minidnotificationserver.config.correlation.CorrelationId.CORRELATION_ID_HEADER;
 
 @Component
 @RequiredArgsConstructor
@@ -102,10 +109,21 @@ public class FirebaseClient {
         Message message = messageBuilder.build();
         try {
             log.debug("Sending message to {}. Message: {}", token, message);
+
             String mesgId = firebaseMessaging.send(message);
             log.debug("firebaseMessaging.send() - mesgId: {}", mesgId);
         } catch (FirebaseMessagingException e) {
-            throw new FirebaseProblem(e); // https://firebase.google.cn/docs/reference/fcm/rest/v1/ErrorCode?hl=en
+
+            Map<String, Object> parameterMap = new LinkedHashMap<>();
+            parameterMap.put("correlation_id", MDC.get(CORRELATION_ID_HEADER));
+
+            IncomingHttpResponse response = e.getHttpResponse();
+          if (response != null && response.getContent() != null) {
+                JSONObject errorObject = new JSONObject(response.getContent());
+                parameterMap.put("fcm_response", errorObject.toMap());
+            }
+
+            throw new FirebaseProblem(e, parameterMap); // https://firebase.google.cn/docs/reference/fcm/rest/v1/ErrorCode?hl=en
             // TODO: purge invalid?
             /* example error:
 
@@ -132,5 +150,6 @@ public class FirebaseClient {
         }
 
     }
+
 
 }

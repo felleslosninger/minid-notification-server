@@ -40,6 +40,13 @@ spring:
           client-id: test_rp_systest
           client-secret: password
 digdir:
+  google-api:
+    auth-key: YOUR-API-KEY
+  attestation:
+    nonce-timeout: 600000
+    attestation-timeout: 600000
+    require-cts-profile-match: true
+    require-basic-integrity: true
   audit:
     log-dir: logs/minid-notification-server/audit
     log-file: audit-log.json

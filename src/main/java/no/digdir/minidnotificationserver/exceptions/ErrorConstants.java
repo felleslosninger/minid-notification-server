@@ -18,5 +18,6 @@ public final class ErrorConstants {
     public static final URI OTC_FAILED = URI.create(PROBLEM_BASE_URL + "/otc-failed");
     public static final URI APP_VERSION_TYPE = URI.create(PROBLEM_BASE_URL + "/version");
     public static final URI APP_REQUIRED_VERSION_TYPE = URI.create(PROBLEM_BASE_URL + "/required-version");
+    public static final URI ATTESTATION_REQUIRED_TYPE = URI.create(PROBLEM_BASE_URL + "/attestation-required");
 
 }

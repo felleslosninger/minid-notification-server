@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.digdir.minidnotificationserver.api.domain.TokenEntity;
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
 import no.digdir.minidnotificationserver.domain.Device;
 import no.digdir.minidnotificationserver.logging.audit.AuditMasked;
@@ -19,7 +20,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DeviceEntity {
+public class DeviceEntity implements TokenEntity {
 
     @NotBlank (message = "app-id e.g 'no.digdir.minid.appname'")
     @Schema(description = "An application identifier.", example = "no.digdir.minid.authenticator")
@@ -45,7 +46,7 @@ public class DeviceEntity {
     boolean apns_sandbox = false;
 
     @NotBlank
-    @Schema(description = "The operating system of the unit.", example = "Android")
+    @Schema(description = "The operating system of the unit.", example = "Android", allowableValues =  {"Android", "iOS"})
     @Size(max = 64)
     String os;
 

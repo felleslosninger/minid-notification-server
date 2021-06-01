@@ -120,6 +120,11 @@ digdir:
     sandbox-client-override: <%= @apns_sandbox_client_override %>
     bundle-id: <%= @bundle_id %>
     auth-key: <%= @google_api_key %>
+  attestation:
+    nonce-timeout: <%= @attestation_android_timeout_nonce %>
+    attestation-timeout: <%= @attestation_android_timeout_attestation %>
+    require-cts-profile-match: <%= @attestation_android_require_cts_profile_match %>
+    require-basic-integrity: <%= @attestation_android_require_basic_integrity %>
   proxy:
     enabled: <%= @proxy_enabled %>
     host: <%= @proxy_host %>

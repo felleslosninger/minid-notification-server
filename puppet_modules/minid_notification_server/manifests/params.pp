@@ -57,4 +57,8 @@ class minid_notification_server::params {
   $app_android_version_required     = '1.0.0'
   $app_ios_version_latest           = '0.2.0'
   $app_ios_version_required         = '0.1.0'
+  $attestation_android_timeout_nonce = 600000
+  $attestation_android_timeout_attestation = 600000
+  $attestation_android_require_cts_profile_match = false
+  $attestation_android_require_basic_integrity = false
 }

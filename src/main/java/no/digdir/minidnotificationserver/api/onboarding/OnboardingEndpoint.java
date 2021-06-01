@@ -4,21 +4,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import no.digdir.minidnotificationserver.api.ValidateVersionHeaders;
+import no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeaders;
 import no.digdir.minidnotificationserver.service.OnboardingService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_OS_HEADER;
-import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect.MINID_APP_VERSION_HEADER;
+import static no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeadersAspect.MINID_APP_OS_HEADER;
+import static no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeadersAspect.MINID_APP_VERSION_HEADER;
 
 @RestController
 @RequestMapping("/api/onboarding")
@@ -27,7 +25,6 @@ import static no.digdir.minidnotificationserver.api.ValidateVersionHeadersAspect
 public class OnboardingEndpoint {
 
     private final OnboardingService onboardingService;
-
 
     @Operation(summary = "Start app-based onboarding")
     @ApiResponses(value = {

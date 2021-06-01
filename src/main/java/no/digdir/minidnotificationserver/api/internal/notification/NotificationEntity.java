@@ -47,7 +47,7 @@ public class NotificationEntity {
     @Schema(description = "iOS category", example = "authCategory")
     String aps_category;
 
-    @Schema(description = "Android intent", example = "minid_auth_intent")
+    @Schema(description = "Android intent", example = "MINID_AUTH_REQUEST_EVENT")
     String click_action;
 
     @Schema(description = "Arbitrary key/value payload. The key should not be a reserved word ('from', 'message_type', or any word starting with 'google' or 'gcm')", example = "{foo: bar, foz: baz}",

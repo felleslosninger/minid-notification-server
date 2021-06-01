@@ -74,7 +74,7 @@ public class NotificationServiceTest {
                 .person_identifier("01030099326")
                 .app_identifier("no.digdir.minid.authenticator")
                 .aps_category("MINID_AUTH_CATEGORY")
-                .click_action("minid_auth_intent")
+                .click_action("MINID_AUTH_REQUEST_EVENT")
                 .data(dataMap)
                 .build();
         notificationService.send(notificationEntity);
@@ -96,7 +96,7 @@ public class NotificationServiceTest {
                         .build())
                 .setAndroidConfig(AndroidConfig.builder()
                         .setNotification(AndroidNotification.builder()
-                                .setClickAction("minid_auth_intent")
+                                .setClickAction("MINID_AUTH_REQUEST_EVENT")
                                 .build())
                         .setTtl(2419200L * 1000)
                         .setPriority(AndroidConfig.Priority.NORMAL)

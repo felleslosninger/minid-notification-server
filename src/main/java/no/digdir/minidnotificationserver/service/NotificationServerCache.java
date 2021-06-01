@@ -1,5 +1,7 @@
 package no.digdir.minidnotificationserver.service;
 
+import no.digdir.minidnotificationserver.api.attestation.NonceEntity;
+import no.digdir.minidnotificationserver.api.attestation.android.AttestationEntity;
 import no.digdir.minidnotificationserver.api.internal.authorization.RequestAuthorizationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
 import no.digdir.minidnotificationserver.config.EmbeddedCacheConfiguration;
@@ -14,12 +16,16 @@ public class NotificationServerCache {
     final private Cache onboardingCache;
     final private Cache loginAttemptCache;
     final private Cache verificationCache;
+    final private Cache attestationNonceCache;
+    final private Cache attestationCache;
 
     @Autowired
     public NotificationServerCache(CacheManager cacheManager, EmbeddedCacheConfiguration cacheConfiguration) {
         this.onboardingCache = cacheManager.getCache(EmbeddedCacheConfiguration.ONBOARDING_CACHE);
         this.loginAttemptCache = cacheManager.getCache(EmbeddedCacheConfiguration.LOGIN_ATTEMPT_CACHE);
         this.verificationCache = cacheManager.getCache(EmbeddedCacheConfiguration.VERIFICATION_CACHE);
+        this.attestationNonceCache = cacheManager.getCache(EmbeddedCacheConfiguration.ATTESTATION_NONCE_CACHE);
+        this.attestationCache = cacheManager.getCache(EmbeddedCacheConfiguration.ATTESTATION_CACHE);
     }
 
     /*
@@ -69,5 +75,26 @@ public class NotificationServerCache {
 
     public void deleteVerificationEntity(String pid) {
         verificationCache.evictIfPresent(pid);
+    }
+
+    /*
+        Attestation
+     */
+    public void putAttestationNonce(String fcmOrApnsToken, NonceEntity.Storage nonceEntity) {
+        attestationNonceCache.put(fcmOrApnsToken, nonceEntity);
+    }
+
+    public NonceEntity.Storage getAttestationNonce(String fcmOrApnsToken){
+        Cache.ValueWrapper valueWrapper = attestationNonceCache.get(fcmOrApnsToken);
+        return valueWrapper != null ? (NonceEntity.Storage) valueWrapper.get() : null;
+    }
+
+    public void putAttestation(String fcmOrApnsToken, AttestationEntity.Request entity) {
+        attestationCache.put(fcmOrApnsToken, entity);
+    }
+
+    public AttestationEntity.Request getAttestation(String fcmOrApnsToken){
+        Cache.ValueWrapper valueWrapper = attestationCache.get(fcmOrApnsToken);
+        return valueWrapper != null ? (AttestationEntity.Request) valueWrapper.get() : null;
     }
 }

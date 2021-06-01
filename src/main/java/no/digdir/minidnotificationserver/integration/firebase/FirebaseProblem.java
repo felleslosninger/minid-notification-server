@@ -1,24 +1,22 @@
 package no.digdir.minidnotificationserver.integration.firebase;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import no.digdir.minidnotificationserver.exceptions.ErrorConstants;
-import org.slf4j.MDC;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;
 
-import static no.digdir.minidnotificationserver.config.correlation.CorrelationId.CORRELATION_ID_HEADER;
+import java.util.Map;
 
 public class FirebaseProblem extends AbstractThrowableProblem {
 
-    public FirebaseProblem(FirebaseMessagingException e) {
+    public FirebaseProblem(FirebaseMessagingException e, Map<String, Object> parameterMap) {
         super(ErrorConstants.FIREBASE_TYPE,
                 "Issue sending message through Firebase.", // title
                 Status.BAD_REQUEST,  // status code
                 e.getMessagingErrorCode() + ": " + e.getMessage(), // detail
                 null, // instance
                 null, // or e.getCause(),
-                ImmutableMap.of("correlation_id", MDC.get(CORRELATION_ID_HEADER))
+                parameterMap
         );
     }
 
