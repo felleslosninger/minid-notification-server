@@ -2,6 +2,7 @@ package no.digdir.minidnotificationserver.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.digdir.minidnotificationserver.api.domain.MessageType;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.domain.Device;
 import no.digdir.minidnotificationserver.exceptions.DeviceNotFoundProblem;
@@ -33,10 +34,15 @@ public class NotificationService {
 
         if(optDev.isPresent()) {
             Device device = optDev.get();
-            firebaseClient.send(notification, device.getFcmToken());
+
+            MessageType messageType = MessageType.display;
+            if(device.getOs().equalsIgnoreCase("android")) {
+                messageType = MessageType.data; // temporary override for android - sending data-only payloads for now
+            }
+            firebaseClient.send(notification, device.getFcmToken(), messageType);
         } else if (mockEnabled) {
             //TODO: Ta bort senere, heller bedre testdata
-            firebaseClient.send(notification, notification.getBody());
+            firebaseClient.send(notification, notification.getBody(), MessageType.display);
         } else {
             log.debug("No device found.");
             throw new DeviceNotFoundProblem(notification.getApp_identifier());

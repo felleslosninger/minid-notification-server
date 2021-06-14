@@ -4,6 +4,7 @@ import com.google.firebase.IncomingHttpResponse;
 import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.digdir.minidnotificationserver.api.domain.MessageType;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
 import no.digdir.minidnotificationserver.logging.audit.Audit;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,12 +33,8 @@ public class FirebaseClient {
     private final ConfigProvider configProvider;
     private final FirebaseMessaging firebaseMessaging;
 
-    public void send(NotificationEntity notificationEntity, String token) {
-        this.send(notificationEntity, token, false);
-    }
-
     @Audit(auditId = AuditID.NOTIFICATION_SEND)
-    public void send(NotificationEntity notificationEntity, String token, boolean background) {
+    public void send(NotificationEntity notificationEntity, String token, MessageType messageType) {
 
         log.debug("firebase client sending notification to token: " + token);
 
@@ -46,7 +44,7 @@ public class FirebaseClient {
 
         /* Notification */
         Notification.Builder notificationBuilder = Notification.builder();
-        if(!background) {
+        if(messageType.equals(MessageType.display)) {
             if (!StringUtils.isEmpty(notificationEntity.getTitle())) {
                 notificationBuilder.setTitle(notificationEntity.getTitle());
             }
@@ -65,7 +63,7 @@ public class FirebaseClient {
         androidConfigBuilder.setPriority(highPriority ? Priority.HIGH : Priority.NORMAL);
         androidConfigBuilder.setTtl(ttl * 1000);
 
-        if(!background) {
+        if(messageType.equals(MessageType.display)) {
             if (!StringUtils.isEmpty(notificationEntity.getClick_action())) {
                 androidConfigBuilder.setNotification(AndroidNotification.builder().setClickAction(notificationEntity.getClick_action()).build());
             }
@@ -76,12 +74,12 @@ public class FirebaseClient {
         apnsConfigBuilder.putHeader("apns-priority", highPriority ? "10" : "5"); // 10 == high, 5 == normal, must be 5 for silent notification
         apnsConfigBuilder.putHeader("apns-expiration", Long.toString(ttl));
 
-        if(background) {
+        if(messageType.equals(MessageType.data)) {
             apnsConfigBuilder.putHeader("apns-push-type", "background");
         }
 
         Aps.Builder apsBuilder = Aps.builder();
-        if(background) {
+        if(messageType.equals(MessageType.data)) {
             apsBuilder.setContentAvailable(true);
         } else {
             if (!StringUtils.isEmpty(notificationEntity.getAps_category())) {
@@ -93,7 +91,7 @@ public class FirebaseClient {
 
         /* Message */
         Message.Builder messageBuilder = Message.builder();
-        if(!background) {
+        if(messageType.equals(MessageType.display)) {
             messageBuilder.setNotification(notificationBuilder.build());
         }
         messageBuilder
@@ -102,9 +100,21 @@ public class FirebaseClient {
                 .setToken(token);
 
         /* Data payload */
-        if(notificationEntity.getData() != null) {
-            messageBuilder.putAllData(notificationEntity.getData());
+        if(notificationEntity.getData() == null) {
+            notificationEntity.setData(new HashMap<>());
         }
+        // add title, body and image if not existing in payload
+        Map<String, String> dataMap = notificationEntity.getData();
+        if (!StringUtils.isEmpty(notificationEntity.getTitle()) && !dataMap.containsKey("title")) {
+            dataMap.put("title", notificationEntity.getTitle());
+        }
+        if (!StringUtils.isEmpty(notificationEntity.getBody()) && !dataMap.containsKey("body")) {
+            dataMap.put("body", notificationEntity.getBody());
+        }
+        if (!StringUtils.isEmpty(notificationImage)) {
+            dataMap.put("image", notificationImage);
+        }
+        messageBuilder.putAllData(dataMap);
 
         Message message = messageBuilder.build();
         try {

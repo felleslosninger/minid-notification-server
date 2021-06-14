@@ -5,6 +5,7 @@ import com.nimbusds.jwt.JWTParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.digdir.minidnotificationserver.api.device.DeviceEntity;
+import no.digdir.minidnotificationserver.api.domain.MessageType;
 import no.digdir.minidnotificationserver.api.internal.notification.NotificationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
 import no.digdir.minidnotificationserver.config.ConfigProvider;
@@ -73,7 +74,7 @@ public class OnboardingService {
                 .build();
 
         cache.putStartEntity(entity.getApns_token() != null ? entity.getApns_token() : entity.getToken(), entity);
-        firebaseClient.send(notification, entity.getToken(), true);
+        firebaseClient.send(notification, entity.getToken(), MessageType.data);
     }
 
     @Audit(auditId = AuditID.ONBOARDING_CONTINUE)

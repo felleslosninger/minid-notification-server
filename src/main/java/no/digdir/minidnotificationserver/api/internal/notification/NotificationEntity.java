@@ -7,14 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.jackson.Jacksonized;
+import no.digdir.minidnotificationserver.api.domain.MessageType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.ZonedDateTime;
 import java.util.Map;
 
 @Data
-@Builder
+@Jacksonized @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -30,6 +31,10 @@ public class NotificationEntity {
     @Schema(description = "Application identifier", example = "no.digdir.minid.authenticator")
     String app_identifier;
 
+    @Schema(description = "'display' message type contains notification and data payload, 'data' message type contains only data payload.", example = "display", defaultValue = "display",  allowableValues =  {"display", "data"})
+    @Builder.Default
+    MessageType message_type = MessageType.display;
+
     @NotBlank
     @Schema(description = "The title of the notification", example = "Test notification")
     String title;
@@ -39,10 +44,12 @@ public class NotificationEntity {
     String body;
 
     @Schema(description = "Priority of notification. Usage of HIGH should result in user interaction, otherwise messages may be de-prioritized if abuse pattern is detected.", example = "normal", defaultValue = "normal",  allowableValues =  {"high", "normal"})
-    String priority;
+    @Builder.Default
+    String priority = "normal";
 
     @Schema(description = "Time-to-live of notification in seconds. A value of 0 gives a best-effort of 'now or never', and is discarded if immediate delivery fails.", example = "180", defaultValue = "2419200")
-    Long ttl;
+    @Builder.Default
+    Long ttl = 2419200L;
 
     @Schema(description = "iOS category", example = "authCategory")
     String aps_category;

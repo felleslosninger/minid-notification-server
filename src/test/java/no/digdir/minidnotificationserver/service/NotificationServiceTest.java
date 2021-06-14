@@ -56,6 +56,7 @@ public class NotificationServiceTest {
                 .fcmToken("snazzytoken1234")
                 .personIdentifier("01030099326")
                 .appIdentifier("no.digdir.minid.authenticator")
+                .os("ios")
                 .build();
         Mockito.when(deviceRepository.findByPersonIdentifierAndAppIdentifier(anyString(), anyString())).thenReturn(java.util.Optional.ofNullable(device));
 
