@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeaders;
 import no.digdir.minidnotificationserver.service.AuthorizationService;
@@ -28,6 +29,7 @@ import static no.digdir.minidnotificationserver.aspect.version.ValidateVersionHe
 @RequestMapping("/api/authorization")
 @RequiredArgsConstructor
 @ValidateVersionHeaders
+@SecurityRequirement(name = "Authorization")
 public class AuthorizationEndpoint {
     private final AuthorizationService authorizationService;
 

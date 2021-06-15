@@ -27,6 +27,7 @@ public class EmbeddedCacheConfiguration {
     public final static String VERIFICATION_CACHE = "verificationCache";
     public final static String ATTESTATION_NONCE_CACHE = "attestationNonceCache";
     public final static String ATTESTATION_CACHE = "attestationCache";
+    public final static String PASSPORT_ONBOARDING_CACHE = "passportOnboardingCache";
 
     @Value("${cache.local.ttl-in-s:5}")
     private int localTtl;
@@ -64,6 +65,13 @@ public class EmbeddedCacheConfiguration {
                             .build());
 
             manager.defineConfiguration(ONBOARDING_CACHE,
+                    new ConfigurationBuilder()
+                            .simpleCache(true)
+                            .expiration()
+                            .lifespan(clusterTtl, SECONDS)
+                            .build());
+
+            manager.defineConfiguration(PASSPORT_ONBOARDING_CACHE,
                     new ConfigurationBuilder()
                             .simpleCache(true)
                             .expiration()

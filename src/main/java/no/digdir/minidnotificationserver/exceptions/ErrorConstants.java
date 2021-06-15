@@ -13,6 +13,7 @@ public final class ErrorConstants {
     public static final URI GOOGLE_TYPE = URI.create(PROBLEM_BASE_URL + "/google-api");
     public static final URI MINID_AUTH_TYPE = URI.create(PROBLEM_BASE_URL + "/minid-authentication-service");
     public static final URI MINID_BACKEND_TYPE = URI.create(PROBLEM_BASE_URL + "/minid-backend-service");
+    public static final URI NETS_TYPE = URI.create(PROBLEM_BASE_URL + "/nets-ciba-service");
     public static final URI NOTFOUND_TYPE = URI.create(PROBLEM_BASE_URL + "/not-found");
     public static final URI ONBOARDING_TYPE = URI.create(PROBLEM_BASE_URL + "/onboarding");
     public static final URI OTC_FAILED = URI.create(PROBLEM_BASE_URL + "/otc-failed");

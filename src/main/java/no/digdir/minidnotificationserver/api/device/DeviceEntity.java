@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import no.digdir.minidnotificationserver.api.domain.TokenEntity;
-import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
 import no.digdir.minidnotificationserver.domain.Device;
 import no.digdir.minidnotificationserver.logging.audit.AuditMasked;
 
@@ -64,7 +63,7 @@ public class DeviceEntity implements TokenEntity {
                 .os_version(device.getOsVersion())
                 .build();
     }
-    public static DeviceEntity from(OnboardingEntity.Start.Request entity) {
+    public static DeviceEntity from(IDeviceEntity entity) {
         return DeviceEntity.builder()
                 .app_identifier(entity.getApp_identifier())
                 .app_version(entity.getApp_version())
