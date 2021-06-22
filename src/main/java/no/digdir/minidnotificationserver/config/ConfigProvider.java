@@ -23,6 +23,7 @@ public class ConfigProvider implements InitializingBean {
     private MinidBackendService minidBackendService = new MinidBackendService();
     private IdportenOidcProvider idportenOidcProvider = new IdportenOidcProvider();
     private Attestation attestation = new Attestation();
+    private NetsOidcProvider netsOidcProvider = new NetsOidcProvider();
 
     @Data
     public static class AppVersions {
@@ -85,6 +86,7 @@ public class ConfigProvider implements InitializingBean {
         private String priority;
         private long ttl;
         private String onboardingCategory;
+        private String passportOnboardingCategory;
         private String authenticationApsCategory;
         private String authenticationClickAction;
 
@@ -120,6 +122,14 @@ public class ConfigProvider implements InitializingBean {
         private Boolean requireCtsProfileMatch;
         @NotNull
         private Boolean requireBasicIntegrity;
+    }
+
+
+    @Data
+    public static class NetsOidcProvider {
+        String url;
+        String clientId;
+        String clientSecret;
     }
 
     @Override

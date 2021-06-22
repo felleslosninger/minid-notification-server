@@ -4,6 +4,7 @@ import no.digdir.minidnotificationserver.api.attestation.NonceEntity;
 import no.digdir.minidnotificationserver.api.attestation.android.AttestationEntity;
 import no.digdir.minidnotificationserver.api.internal.authorization.RequestAuthorizationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
+import no.digdir.minidnotificationserver.api.registration.passport.PassportEntity;
 import no.digdir.minidnotificationserver.config.EmbeddedCacheConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -19,6 +20,8 @@ public class NotificationServerCache {
     final private Cache attestationNonceCache;
     final private Cache attestationCache;
 
+    final private Cache passportOnboardingCache;
+
     @Autowired
     public NotificationServerCache(CacheManager cacheManager, EmbeddedCacheConfiguration cacheConfiguration) {
         this.onboardingCache = cacheManager.getCache(EmbeddedCacheConfiguration.ONBOARDING_CACHE);
@@ -26,6 +29,7 @@ public class NotificationServerCache {
         this.verificationCache = cacheManager.getCache(EmbeddedCacheConfiguration.VERIFICATION_CACHE);
         this.attestationNonceCache = cacheManager.getCache(EmbeddedCacheConfiguration.ATTESTATION_NONCE_CACHE);
         this.attestationCache = cacheManager.getCache(EmbeddedCacheConfiguration.ATTESTATION_CACHE);
+        this.passportOnboardingCache = cacheManager.getCache(EmbeddedCacheConfiguration.PASSPORT_ONBOARDING_CACHE);
     }
 
     /*
@@ -44,6 +48,22 @@ public class NotificationServerCache {
         onboardingCache.evictIfPresent(fcmOrApnsToken);
     }
 
+
+    /*
+        Passport Onboarding Start
+    */
+    public void putPassportStartEntity(String fcmOrApnsToken, PassportEntity.Start.Request passportStartRequestEntity) {
+        passportOnboardingCache.put(fcmOrApnsToken, passportStartRequestEntity);
+    }
+
+    public PassportEntity.Start.Request getPassportStartEntity(String fcmOrApnsToken) {
+        Cache.ValueWrapper valueWrapper = passportOnboardingCache.get(fcmOrApnsToken);
+        return valueWrapper != null ? (PassportEntity.Start.Request) valueWrapper.get() : null;
+    }
+
+    public void deletePassportStartEntity(String fcmOrApnsToken) {
+        passportOnboardingCache.evictIfPresent(fcmOrApnsToken);
+    }
 
     /*
         Login attempts

@@ -118,6 +118,10 @@ spring:
 # Application specific properties
 # ===================================================================
 digdir:
+  nets-oidc-provider:
+    url: https://www.ident-preprod1.nets.eu/oidc
+    client-id:
+    client-secret:
   app-versions:
     ios:
       latest: "0.2.0"
@@ -151,6 +155,7 @@ digdir:
     onboarding-category: onboardingCategory
     authentication-aps-category: auth_category
     authentication-click-action: MINID_AUTH_REQUEST_EVENT
+    passport-onboarding-category: passportOnboardingCategory
   audit:
     log-dir: logs/minid-notification-server/audit
     log-file: audit-log.json
@@ -178,8 +183,3 @@ log:
   event:
     jmsUrl: tcp://eid-systest-admin01.dmz.local:61616
     jmsQueue: logqueue
-
-#  # Event config
-#  event:
-#    jmsUrl: tcp://localhost:61616
-#    jmsQueue: logqueue

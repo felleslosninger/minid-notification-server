@@ -20,44 +20,47 @@
     <java.version>1.8</java.version>
     <lombok.version>1.18.16</lombok.version>
     <javax.jms-api.version>2.0.1</javax.jms-api.version>
-    <problem.version>0.24.0</problem.version>
-    <problem-spring.version>0.25.2</problem-spring.version>
+    <problem.version>0.25.0</problem.version>
+    <problem-spring.version>0.26.2</problem-spring.version>
     <git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
     <idporten-audit-log.version>0.0.4</idporten-audit-log.version>
+<!--    <idporten-audit-log.version>DEV-SNAPSHOT</idporten-audit-log.version>-->
     <flyway.version>5.2.4</flyway.version>
     <artifactory.url>http://eid-artifactory.dmz.local:8080/artifactory</artifactory.url>
     <h2.version>1.4.200</h2.version>
     <wiremock-standalone.version>2.26.1</wiremock-standalone.version>
-    <firebase-admin.version>7.0.1</firebase-admin.version>
+    <firebase-admin.version>7.1.1</firebase-admin.version>
     <springdoc-openapi-ui.version>1.5.3</springdoc-openapi-ui.version>
     <swagger-ui.version>3.40.0</swagger-ui.version>
-    <junit-jupiter-engine.version>5.7.0</junit-jupiter-engine.version>
+    <junit-jupiter.version>5.7.1</junit-jupiter.version>
     <json.version>20180813</json.version>
-    <infinispan-spring-boot-starter-embedded-version>12.0.1.Final</infinispan-spring-boot-starter-embedded-version>
+    <infinispan.version>12.1.1.Final</infinispan.version>
     <cache-api.version>1.1.1</cache-api.version>
     <ehcache.version>3.9.2</ehcache.version>
     <semver4j.version>3.1.0</semver4j.version>
     <reflections.version>0.9.12</reflections.version>
+    <spring-boot.version>2.4.5</spring-boot.version>
+    <spring-cloud-starter-bootstrap.version>3.0.1</spring-cloud-starter-bootstrap.version>
 </properties>
 
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <!-- Import dependency management from Spring Boot -->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>2.4.4</version>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-bom</artifactId>
+            <version>${infinispan.version}</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-bom</artifactId>
-            <version>${infinispan-spring-boot-starter-embedded-version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>${spring-boot.version}</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
+
     </dependencies>
 </dependencyManagement>
 
@@ -111,7 +114,7 @@
     <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-bootstrap</artifactId>
-        <version>3.0.1</version>
+        <version>${spring-cloud-starter-bootstrap.version}</version>
     </dependency>
 
     <dependency>
@@ -225,11 +228,10 @@
         <artifactId>jackson-datatype-problem</artifactId>
         <version>${problem.version}</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+
     <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>2.11.2</version>
     </dependency>
 
     <dependency>
@@ -285,15 +287,6 @@
 
 
     <dependency>
-        <groupId>org.infinispan</groupId>
-        <artifactId>infinispan-spring-boot-starter-embedded</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.infinispan</groupId>
-        <artifactId>infinispan-component-annotations</artifactId>
-    </dependency>
-
-    <dependency>
         <groupId>com.vdurmont</groupId>
         <artifactId>semver4j</artifactId>
         <version>${semver4j.version}</version>
@@ -305,6 +298,15 @@
         <version>${reflections.version}</version>
     </dependency>
 
+    <dependency>
+        <groupId>org.infinispan</groupId>
+        <artifactId>infinispan-component-annotations</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.infinispan</groupId>
+        <artifactId>infinispan-spring-boot-starter-embedded</artifactId>
+    </dependency>
 
     <!-- *********************** -->
     <!-- * Test dependencies   * -->
@@ -328,15 +330,21 @@
 
     <dependency>
         <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>${junit-jupiter-engine.version}</version>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit-jupiter.version}</version>
         <scope>test</scope>
     </dependency>
 
     <dependency>
         <groupId>org.junit.vintage</groupId>
         <artifactId>junit-vintage-engine</artifactId>
-        <version>${junit-jupiter-engine.version}</version>
+        <version>${junit-jupiter.version}</version>
         <scope>test</scope>
     </dependency>
 
@@ -415,7 +423,7 @@
                     <argument>--logging.path=target/</argument>
                 </arguments>
             </configuration>
-            <version>2.4.4</version>
+            <version>${spring-boot.version}</version>
         </plugin>
 
         <plugin>
