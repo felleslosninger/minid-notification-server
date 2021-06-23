@@ -6,17 +6,14 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VerifyPinEntity {
+public class MinIdPasswordEntity {
+
     @Data
     @Builder
-    static class Request {
+
+    public static class Request {
         String pid;
-        String pincodeIndex;
-        String pincodeIndex2;
-        String pincode;
-        String pincode2;
-        String requestUrn; // nonce
+        String password;
     }
 
 }
-

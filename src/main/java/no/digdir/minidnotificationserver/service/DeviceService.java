@@ -28,7 +28,6 @@ public class DeviceService {
     private final AuditService auditService;
     private final EventService eventService;
     private final GoogleClient googleClient;
-    private final MinIdBackendClient minIdBackendClient;
 
     @Deprecated
     public DeviceEntity upsertDevice(String personIdentifier, DeviceEntity entity) {
@@ -77,8 +76,6 @@ public class DeviceService {
         Optional<Device> optDevice = deviceRepository.findByPersonIdentifierAndAppIdentifier(personIdentifier, entity.getApp_identifier());
 
         if(optDevice.isPresent()) { // update existing
-            entity.setApns_token(""); // don't allow changing the apns_token
-            entity.setToken(""); // don't allow changing the fcm_token
             Device existingDevice = deepCopy(optDevice.get());
             updatedDevice = deviceRepository.save(existingDevice.from(entity));
             eventService.logUserHasUpdatedDevice(personIdentifier);
@@ -97,17 +94,7 @@ public class DeviceService {
     public int deleteByAppId(String personIdentifier, String appId) {
         List<Device> deletedDevices = deviceRepository.deleteByPersonIdentifierAndAppIdentifier(personIdentifier, appId);
         if(deletedDevices.size() > 0) {
-            minIdBackendClient.setPreferredTwoFactorMethod(personIdentifier, "pin"); // TODO: temporary reset to 'pin'
-        }
-        return deletedDevices.size();
-    }
-
-    @Audit(auditId = AuditID.DEVICE_DELETE)
-    public int delete(String personIdentifier, String token) {
-        List<Device> deletedDevices = deviceRepository.deleteByFcmTokenOrApnsToken(token, token);
-        if(deletedDevices.size() > 0) {
             eventService.logUserHasDeletedDevice(personIdentifier);
-            minIdBackendClient.setPreferredTwoFactorMethod(personIdentifier, "pin"); // TODO: temporary reset to 'pin'
         }
         return deletedDevices.size();
     }

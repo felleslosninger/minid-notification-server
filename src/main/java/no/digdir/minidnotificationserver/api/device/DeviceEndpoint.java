@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeaders;
+import no.digdir.minidnotificationserver.integration.minidbackend.MinIdBackendClient;
 import no.digdir.minidnotificationserver.service.DeviceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import static no.digdir.minidnotificationserver.aspect.version.ValidateVersionHe
 public class DeviceEndpoint {
 
     private final DeviceService deviceService;
+    private final MinIdBackendClient minIdBackendClient;
 
     @Operation(summary = "Update existing device")
     @ApiResponses(value = {
@@ -64,6 +66,7 @@ public class DeviceEndpoint {
     public ResponseEntity<String> deleteDevice(@PathVariable String appId, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
         String personIdentifier = principal.getAttribute("pid");
         deviceService.deleteByAppId(personIdentifier, appId);
+        minIdBackendClient.setPreferredTwoFactorMethod(personIdentifier, "pin"); // TODO: temporary reset to 'pin'
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

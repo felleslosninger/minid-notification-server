@@ -87,6 +87,7 @@ public class ConfigProvider implements InitializingBean {
         private long ttl;
         private String onboardingCategory;
         private String passportOnboardingCategory;
+        private String pinOnboardingCategory;
         private String authenticationApsCategory;
         private String authenticationClickAction;
 

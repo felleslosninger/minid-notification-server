@@ -54,10 +54,6 @@ public class PassportEntity {
             @Size(max = 64)
             String os_version;
 
-            @Size(max = 256)
-            @Schema(description = "The client application state.", example = "[any-unguessable-random-string]")
-            String state; // not needed for xsrf prevention when using code_challenge.
-
             @NotBlank
             @Size(min = 43, max = 128)
             @Schema(description = "PCKE-style code challenge, with code_challenge_method=S256", example = "qjrzSW9gMiUgpUvqgEPE4_-8swvyCtfOVvg55o5S_es")
@@ -108,10 +104,6 @@ public class PassportEntity {
             @Size(min = 36, max = 36)
             @Schema(description = "The login key sent through firebase.", example = "[uuid v4]")
             String login_key; // uuid v4
-
-            @Size(max = 256)
-            @Schema(description = "The client application state.", example = "[any-unguessable-random-string]")
-            String state; // not needed for xsrf prevention when using code_challenge.
 
             @NotBlank
             @Size(min = 43, max = 128)

@@ -49,7 +49,7 @@ public class PassportOnboardingService {
 
     @PostConstruct
     public void init() {
-       this.config  = configProvider.getAuthenticator(); // TODO: move to class instance
+       this.config  = configProvider.getAuthenticator();
     }
 
     @Audit(auditId = AuditID.PASSPORT_ONBOARDING_START)
@@ -72,7 +72,6 @@ public class PassportOnboardingService {
         Map<String, String> data = new HashMap<>();
         data.put("expiry", requestEntity.getExpiry().format(Utils.dtf));
         data.put("login_key", requestEntity.getLogin_key());
-        data.put("state", requestEntity.getState());
         data.put("category", config.getPassportOnboardingCategory());
 
         NotificationEntity notification = NotificationEntity.builder()
@@ -141,20 +140,9 @@ public class PassportOnboardingService {
 
         IdportenEntity.TokenResponse tokenResponse = idportenService.backchannelAuthorize(personIdentifier);
 
-        JWT jwt;
-        String expiry = "";
-        try {
-            jwt = JWTParser.parse(tokenResponse.getAccess_token());
-            Instant expInstant = jwt.getJWTClaimsSet().getExpirationTime().toInstant();
-            expiry = ZonedDateTime.ofInstant(expInstant, ZoneOffset.UTC).format(Utils.dtf);
-        } catch (ParseException e) {
-            throw new OnboardingProblem("Error parsing access_token: " + e.getMessage());
-        }
-
         // if everything is hunk-dory, then save device in db.
         deviceService.deleteByAppId(personIdentifier, startEntity.getApp_identifier());
         deviceService.save(personIdentifier, DeviceEntity.from(startEntity));
-
 
         return tokenResponse;
     }

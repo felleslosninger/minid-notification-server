@@ -4,6 +4,7 @@ import no.digdir.minidnotificationserver.api.attestation.NonceEntity;
 import no.digdir.minidnotificationserver.api.attestation.android.AttestationEntity;
 import no.digdir.minidnotificationserver.api.internal.authorization.RequestAuthorizationEntity;
 import no.digdir.minidnotificationserver.api.onboarding.OnboardingEntity;
+import no.digdir.minidnotificationserver.api.onboarding.pin.PinOnboardingEntity;
 import no.digdir.minidnotificationserver.api.registration.passport.PassportEntity;
 import no.digdir.minidnotificationserver.config.EmbeddedCacheConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class NotificationServerCache {
     final private Cache verificationCache;
     final private Cache attestationNonceCache;
     final private Cache attestationCache;
+    final private Cache pinOnboardingCache;
 
     final private Cache passportOnboardingCache;
 
@@ -30,6 +32,7 @@ public class NotificationServerCache {
         this.attestationNonceCache = cacheManager.getCache(EmbeddedCacheConfiguration.ATTESTATION_NONCE_CACHE);
         this.attestationCache = cacheManager.getCache(EmbeddedCacheConfiguration.ATTESTATION_CACHE);
         this.passportOnboardingCache = cacheManager.getCache(EmbeddedCacheConfiguration.PASSPORT_ONBOARDING_CACHE);
+        this.pinOnboardingCache = cacheManager.getCache(EmbeddedCacheConfiguration.PIN_ONBOARDING_CACHE);
     }
 
     /*
@@ -63,6 +66,22 @@ public class NotificationServerCache {
 
     public void deletePassportStartEntity(String fcmOrApnsToken) {
         passportOnboardingCache.evictIfPresent(fcmOrApnsToken);
+    }
+
+    /*
+        Pin Onboarding
+    */
+    public void putPinStartEntity(String fcmOrApnsToken, PinOnboardingEntity.Start.Request entity) {
+        pinOnboardingCache.put(fcmOrApnsToken, entity);
+    }
+
+    public PinOnboardingEntity.Start.Request getPinStartEntity(String fcmOrApnsToken) {
+        Cache.ValueWrapper valueWrapper = pinOnboardingCache.get(fcmOrApnsToken);
+        return valueWrapper != null ? (PinOnboardingEntity.Start.Request) valueWrapper.get() : null;
+    }
+
+    public void deletePinStartEntity(String fcmOrApnsToken) {
+        pinOnboardingCache.evictIfPresent(fcmOrApnsToken);
     }
 
     /*

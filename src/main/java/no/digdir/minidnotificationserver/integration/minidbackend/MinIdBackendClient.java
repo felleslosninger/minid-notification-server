@@ -26,6 +26,11 @@ public class MinIdBackendClient {
         this.apiBaseUrl = configProvider.getMinidBackendService().getUrl() + "/api";
     }
 
+    public MinIDUserEntity.Response getUser(String pid) { // TODO: pid is not sanitized - direct user input!!!
+        ResponseEntity<MinIDUserEntity.Response> response = restTemplate.getForEntity(apiBaseUrl + "/users/{pid}?enrich=true", MinIDUserEntity.Response.class, pid);
+        return response.getBody();
+    }
+
     public VerifyPwEntity.Response verifyPassword(String pid, String password, String serviceProvider) {
         VerifyPwEntity.Request requestEntity = VerifyPwEntity.Request.builder()
                 .pid(pid)
@@ -37,7 +42,7 @@ public class MinIdBackendClient {
         return response.getBody();
     }
 
-    public void verifyOtc(String pid, String otc, String requestUrn) {
+    public void verifyOtc2Fa(String pid, String otc, String requestUrn) {
         VerifyOtcEntity.Request requestEntity = VerifyOtcEntity.Request.builder()
                 .pid(pid)
                 .otc(otc)
@@ -47,7 +52,7 @@ public class MinIdBackendClient {
     }
 
 
-    public void verifyPin(String pid, String pincode, Integer pincodeIndex, String requestUrn) {
+    public void verifyPin2Fa(String pid, String pincode, Integer pincodeIndex, String requestUrn) {
         VerifyPinEntity.Request requestEntity = VerifyPinEntity.Request.builder()
                 .pid(pid)
                 .pincode(pincode)
@@ -55,12 +60,30 @@ public class MinIdBackendClient {
                 .requestUrn(requestUrn)
                 .build();
         restTemplate.postForEntity(apiBaseUrl + "/auth/verify_pin_2fa", httpEntity(requestEntity), String.class);
-        return;
+    }
+
+    public void verifyPin(String pid, String pincode, Integer pincodeIndex, String pincode2, Integer pincodeIndex2) {
+        VerifyPinEntity.Request requestEntity = VerifyPinEntity.Request.builder()
+                .pid(pid)
+                .pincode(pincode)
+                .pincodeIndex(pincodeIndex.toString())
+                .pincode2(pincode2)
+                .pincodeIndex2(pincodeIndex2.toString())
+                .build();
+        restTemplate.postForEntity(apiBaseUrl + "/auth/verify_pin", httpEntity(requestEntity), String.class);
     }
 
     public void setPreferredTwoFactorMethod(String personIdentifier, String twoFactorMethod) {
         Preferred2FaMethodEntity.Request requestEntity = Preferred2FaMethodEntity.Request.builder().preferred2FaMethod(twoFactorMethod).build();
         restTemplate.patchForObject(apiBaseUrl + "/users/" + personIdentifier, httpEntity(requestEntity), String.class);
+    }
+
+    public void setPassword(String personIdentifier, String password) {
+        MinIdPasswordEntity.Request requestEntity = MinIdPasswordEntity.Request.builder()
+                .pid(personIdentifier)
+                .password(password)
+                .build();
+        restTemplate.patchForObject(apiBaseUrl + "/auth/update_pw", httpEntity(requestEntity), String.class);
     }
 
     private <T> HttpEntity<T> httpEntity(T object) {

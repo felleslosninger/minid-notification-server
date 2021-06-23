@@ -63,7 +63,6 @@ public class OnboardingService {
         Map<String, String> data = new HashMap<>();
         data.put("expiry", entity.getExpiry().format(Utils.dtf));
         data.put("login_key", entity.getLogin_key());
-        data.put("state", entity.getState());
         data.put("category", cfg.getOnboardingCategory());
 
         NotificationEntity notification = NotificationEntity.builder()
@@ -121,7 +120,6 @@ public class OnboardingService {
 
             return builder
                     .two_factor_method(pwResponse.getPreferred2FaMethod())
-                    .state(startEntity.getState())
                     .build();
 
         } else { // should not reach here
@@ -162,19 +160,15 @@ public class OnboardingService {
 
         String twoFactorMethod = verificationEntity.getTwoFactorMethod();
         if("otc".equals(twoFactorMethod)) { // otc
-            minIdBackendClient.verifyOtc(personIdentifier, entity.getOtc(), verificationEntity.getRequestUrn());
+            minIdBackendClient.verifyOtc2Fa(personIdentifier, entity.getOtc(), verificationEntity.getRequestUrn());
         } else if("pin".equals(twoFactorMethod)) { // pin code
-            minIdBackendClient.verifyPin(personIdentifier, entity.getOtc(), verificationEntity.getPinCodeIndex(), verificationEntity.getRequestUrn());
+            minIdBackendClient.verifyPin2Fa(personIdentifier, entity.getOtc(), verificationEntity.getPinCodeIndex(), verificationEntity.getRequestUrn());
         } else {
             throw new OnboardingProblem("Unknown two-factor method: '" + twoFactorMethod + "'.");
         }
 
         cache.deleteStartEntity(fcmOrApnsToken);
         cache.deleteVerificationEntity(personIdentifier);
-
-        // if everything is hunk-dory, then save device in db.
-        deviceService.deleteByAppId(personIdentifier, startEntity.getApp_identifier());
-        deviceService.save(personIdentifier, DeviceEntity.from(startEntity));
 
         minIdBackendClient.setPreferredTwoFactorMethod(claimedPersonIdentifier, "app");
 
@@ -190,13 +184,16 @@ public class OnboardingService {
             throw new OnboardingProblem("Error parsing access_token: " + e.getMessage());
         }
 
+        // if everything is hunk-dory, then save device in db.
+        deviceService.deleteByAppId(personIdentifier, startEntity.getApp_identifier());
+        deviceService.save(personIdentifier, DeviceEntity.from(startEntity));
+
         eventService.logUserHasRegisteredDevice(personIdentifier);
 
         return OnboardingEntity.Finalize.Response.builder()
                 .access_token(tokenResponse.getAccess_token())
                 .refresh_token(tokenResponse.getRefresh_token())
                 .expiry(expiry)
-                .state(entity.getState())
                 .build();
     }
 

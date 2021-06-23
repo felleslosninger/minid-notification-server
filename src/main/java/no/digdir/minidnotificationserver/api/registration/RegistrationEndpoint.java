@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import no.digdir.minidnotificationserver.aspect.version.ValidateVersionHeaders;
 import no.digdir.minidnotificationserver.api.device.DeviceEntity;
+import no.digdir.minidnotificationserver.integration.minidbackend.MinIdBackendClient;
 import no.digdir.minidnotificationserver.service.DeviceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,8 @@ import static no.digdir.minidnotificationserver.aspect.version.ValidateVersionHe
 public class RegistrationEndpoint {
 
     private final DeviceService deviceService;
+    private final MinIdBackendClient minIdBackendClient;
+
 
     @Operation(summary = "Register or update a device", deprecated = true)
     @ApiResponses(value = {
@@ -62,7 +65,9 @@ public class RegistrationEndpoint {
     @PreAuthorize("hasAuthority('SCOPE_minid:app.register')")
     @DeleteMapping("/register/device")
     public ResponseEntity<DeviceEntity> deleteDevice(@RequestBody DeviceEntity deviceEntity, @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal) {
-        deviceService.deleteByAppId(principal.getAttribute("pid"), deviceEntity);
+        String personIdentifier = principal.getAttribute("pid");
+        deviceService.deleteByAppId(personIdentifier, deviceEntity);
+        minIdBackendClient.setPreferredTwoFactorMethod(personIdentifier, "pin"); // TODO: temporary reset to 'pin'
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -156,6 +156,7 @@ digdir:
     authentication-aps-category: auth_category
     authentication-click-action: MINID_AUTH_REQUEST_EVENT
     passport-onboarding-category: passportOnboardingCategory
+    pin-onboarding-category: pinOnboardingCategory
   audit:
     log-dir: logs/minid-notification-server/audit
     log-file: audit-log.json

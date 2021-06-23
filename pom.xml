@@ -41,6 +41,7 @@
     <reflections.version>0.9.12</reflections.version>
     <spring-boot.version>2.4.5</spring-boot.version>
     <spring-cloud-starter-bootstrap.version>3.0.1</spring-cloud-starter-bootstrap.version>
+    <eid.common.version>2021-02-24-1154-9f2ab17</eid.common.version>
 </properties>
 
 <dependencyManagement>
@@ -166,6 +167,12 @@
         <artifactId>idporten-log-audit</artifactId>
         <version>${idporten-audit-log.version}</version>
      </dependency>
+
+    <dependency>
+        <groupId>no.difi.common</groupId>
+        <artifactId>idporten-lib-common-pojo</artifactId>
+        <version>${eid.common.version}</version>
+    </dependency>
 
     <dependency>
         <groupId>no.difi.common</groupId>

@@ -1,12 +1,13 @@
-package no.digdir.minidnotificationserver.api.onboarding;
+package no.digdir.minidnotificationserver.api.onboarding.pin;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
-import no.digdir.minidnotificationserver.api.domain.TokenEntity;
 import no.digdir.minidnotificationserver.api.device.IDeviceEntity;
+import no.digdir.minidnotificationserver.api.domain.TokenEntity;
+import no.digdir.minidnotificationserver.integration.minidbackend.MinIDUserEntity;
 import no.digdir.minidnotificationserver.logging.audit.AuditMasked;
 
 import javax.validation.constraints.NotBlank;
@@ -16,22 +17,17 @@ import java.time.ZonedDateTime;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OnboardingEntity {
+public class PinOnboardingEntity {
 
     @Data
     public static class Start {
         @Data
-        @Schema(name="StartRequest")
+        @Schema(name="PinStartRequest")
         public static class Request implements Serializable, TokenEntity, IDeviceEntity {
             @NotBlank
             @Size(min = 11, max = 11)
-            @Schema(description = "Person identifier - 11 digits.", example = "26079490775")
-            String person_identifier;
-
-            @NotBlank
-            @Size(min = 6, max = 64)
-            @Schema(description = "Password.", example = "password01")
-            String password;
+            @Schema(description = "Person identifier - 11 digits.", example = "25079400680")
+            String person_identifier; // TODO: must implement validation !!!
 
             @NotBlank
             @Size(max = 4096)
@@ -58,7 +54,7 @@ public class OnboardingEntity {
 
             @NotBlank
             @Size(max = 64)
-            @Schema(description = "The operating system of the unit.", example = "Android")
+            @Schema(description = "The operating system of the unit.", example = "Android", allowableValues =  {"Android", "iOS"})
             String os;
 
             @NotBlank
@@ -76,14 +72,35 @@ public class OnboardingEntity {
 
             @JsonIgnore
             ZonedDateTime expiry;
+
+            @JsonIgnore
+            MinIDUserEntity.Response minIDUser;
+
+            @JsonIgnore
+            String pin; // maybe this belongs somewhere else - only kept here for verification
+
+            @JsonIgnore
+            String pin2; // maybe this belongs somewhere else - only kept here for verification
+        }
+
+        @Data
+        @Builder
+        @Schema(name="PinStartResponse")
+        public static class Response {
+            @Schema(description = "The first pin index to use.", example = "4")
+            Integer pin_index;
+
+            @Schema(description = "The second pin index to use.", example = "5")
+            Integer pin_index_2;
         }
 
     }
 
+
     @Data
     public static class Continue {
         @Data
-        @Schema(name="ContinueRequest")
+        @Schema(name = "PinContinueRequest")
         public static class Request {
             @NotBlank
             @Size(max = 4096)
@@ -103,34 +120,31 @@ public class OnboardingEntity {
             @NotBlank
             @Size(min=36, max = 36)
             String login_key; // uuid v4
-        }
 
-        @Data
-        @Builder
-        @Schema(name="ContinueResponse")
-        public static class Response {
             @NotBlank
-            @Schema(description = "The two-factor method currently in use.", example = "pin", allowableValues =  {"pin", "sms", "app"})
-            String two_factor_method;
+            @Size(min = 5, max = 5)
+            @Schema(description = "Pin code nr 1.", example = "12345")
+            String pin;
 
-            @Schema(description = "The pin index to use. Only set if two_factor_method=\"pin\".", example = "17")
-            Integer pin_index;
+            @NotBlank
+            @Size(min = 5, max = 5)
+            @Schema(description = "Pin code nr 2.", example = "12345")
+            String pin_2;
         }
+
     }
+
 
     @Data
     public static class Finalize {
         @Data
-        @Schema(name="FinalizeRequest")
+        @Schema(name = "PinFinalizeRequest")
         public static class Request {
-            @NotBlank
-            @Size(min = 11, max = 11)
-            @Schema(description = "Person identifier - 11 digits.", example = "26079490775")
-            String person_identifier;
 
-            @Size(min = 5, max = 5)
-            @Schema(description = "One-time-code from SMS or pincode letter", example = "12345")
-            String otc;
+            @NotBlank
+            @Size(min = 256, max = 256)
+            @Schema(description = "Password.", example = "password01")
+            String password;
 
             @NotBlank
             @Size(max = 4096)
@@ -151,31 +165,30 @@ public class OnboardingEntity {
             @Size(min = 43, max = 128)
             @Schema(description = "PCKE-style code verifier", example = "M25iVXpKU3puUjFaYWg3T1NDTDQtcW1ROUY5YXlwalNoc0hhakxifmZHag")
             String code_verifier; // code_challenge_method=S256
+
         }
 
-        @Data
-        @Builder
-        @Schema(name="FinalizeResponse")
-        public static class Response {
-            @NotBlank
-            @Schema(description = "Oauth2 access_token")
-            String access_token;
-
-            @Schema(description = "Oauth2 refresh_token")
-            String refresh_token;
-
-            @Schema(description = "Authentication expiry date in  ISO-8601 format.", example = "2021-02-18T10:15:30Z")
-            String expiry;
-        }
     }
 
-    @Data
-    @Builder
-    public static class Verification {
-        String requestUrn;
-        Integer pinCodeIndex;
-        String twoFactorMethod;
-    }
+
 
 
 }
+
+
+/**
+ * Request for updating password on a MinIdUser.
+ * The new password must match the regexp. Length between 8 and 256, one or more numbers, one or more lowercase or character,
+ * one or more uppercase character, special characters are allowed but optional.
+ * <p>
+ * Regexp explained:
+ * <ul>
+ * <li><code>(?=.*\p{Digit})</code>: At least one number.</li>
+ * <li><code>(?=.*\p{Alpha})</code>: At least one lowercase or UPPERCASE character: a to Z.</li>
+ * <li><code>(?=.{8,256})</code>: Length must be at least 8 characters and max 256 characters.</li>
+ * <li><code>[\p{Alnum}!"#$%&'()*+,-./:;<=>?@\[\]\\^_`{}|~£€]+</code>: 1 or more numbers/characters/special characters.
+ * Valid special special characters <code>[!"#$%&'()*+,-./:;<=>?@[]\^_`{}|~£€]</code></li>
+ */
+
+
+// public static final String PASSWORD_REGEXP = "^(?=.*\\p{Digit})(?=.*\\p{Alpha})(?=.{8,256})[\\p{Alnum}!\"#$%&'()*+,-./:;<=>?@\\[\\]\\\\^_`{}|~£€]+$";
