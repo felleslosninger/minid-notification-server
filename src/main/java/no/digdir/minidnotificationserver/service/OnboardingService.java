@@ -94,32 +94,32 @@ public class OnboardingService {
 
         String person_identifier = startEntity.getPerson_identifier();
         VerifyPwEntity.Response pwResponse = minIdBackendClient.verifyPassword(person_identifier, startEntity.getPassword(), "default");
+        VerifyPwEntity.ResponseUser userResponse = pwResponse.getUser();
 
-        if("NORMAL".equals(pwResponse.getMinIdUserState())) { // pid & password matches, and user is not in quarantine
+        if("NORMAL".equals(userResponse.getState())) { // pid & password matches, and user is not in quarantine
             OnboardingEntity.Continue.Response.ResponseBuilder builder = OnboardingEntity.Continue.Response.builder();
-
             OnboardingEntity.Verification.VerificationBuilder verificationBuilder = OnboardingEntity.Verification.builder();
 
-            if(pwResponse.getPreferred2FaMethod() == null || pwResponse.getPreferred2FaMethod().isEmpty()) {
+            if(userResponse.getPreferred2FaMethod() == null || userResponse.getPreferred2FaMethod().isEmpty()) {
                 throw new OnboardingProblem("No two-factor-method set on user.");
             }
 
-            if("app".equals(pwResponse.getPreferred2FaMethod())) {
+            if("app".equals(userResponse.getPreferred2FaMethod())) {
                 throw new OnboardingProblem("Current preferred two-factor-method is 'app'.");
             }
 
-            if("pin".equals(pwResponse.getPreferred2FaMethod())) {
-                Integer pinCodeIndex = pwResponse.getPinCodeIndex();
+            if("pin".equals(userResponse.getPreferred2FaMethod())) {
+                Integer pinCodeIndex = userResponse.getPinCodeIndex();
                 builder.pin_index(pinCodeIndex);
                 verificationBuilder.pinCodeIndex(pinCodeIndex);
             }
             verificationBuilder
                     .requestUrn(pwResponse.getRequestUrn())
-                    .twoFactorMethod(pwResponse.getPreferred2FaMethod());
+                    .twoFactorMethod(userResponse.getPreferred2FaMethod());
             cache.putVerificationEntity(person_identifier, verificationBuilder.build());
 
             return builder
-                    .two_factor_method(pwResponse.getPreferred2FaMethod())
+                    .two_factor_method(userResponse.getPreferred2FaMethod())
                     .build();
 
         } else { // should not reach here

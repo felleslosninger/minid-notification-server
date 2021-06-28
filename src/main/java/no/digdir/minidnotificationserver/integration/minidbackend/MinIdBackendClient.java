@@ -39,6 +39,7 @@ public class MinIdBackendClient {
                 .locale("nb")
                 .build();
         ResponseEntity<VerifyPwEntity.Response> response = restTemplate.postForEntity(apiBaseUrl + "/auth/verify_pw_2fa", httpEntity(requestEntity), VerifyPwEntity.Response.class);
+
         return response.getBody();
     }
 

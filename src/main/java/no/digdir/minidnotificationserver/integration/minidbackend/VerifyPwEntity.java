@@ -26,11 +26,19 @@ public class VerifyPwEntity {
 
     @Data
     public static class Response {
-        String minIdUserState; // NORMAL, NEW_USER, LOCKED, TEMP_PWD, QUARANTINED, CLOSED, QUARANTINED_NEW_USER
-        String preferred2FaMethod; // app, otc, pin
-        Integer pinCodeIndex;
-        String requestUrn; // nonce
-        Integer pinCodeNumber;
+        ResponseUser user;
+        String requestUrn;
+    }
+
+    @Data
+    public static class ResponseUser {
+        private String pid;
+        private String state;
+        private String preferredLanguage;
+        private String preferred2FaMethod;
+        private String securityLevel;
+        private Integer pinCodeIndex;
+        private Integer pinCodeIndex2;
     }
 
 }
