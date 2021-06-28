@@ -20,7 +20,6 @@ Formål: Hente ut et eget token for å sende til app'en, så responsen kan auten
 ## TODO:
 - Skal vi tilby tjeneste som generer QR-kode for registrering på app? Eller skal det gjøres noe annet sted?
  
- 
 ## API doc
 http://localhost:8080/swagger-ui.html
 http://localhost:8080/v3/api-docs
