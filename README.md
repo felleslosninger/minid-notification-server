@@ -1,4 +1,4 @@
-# minid-notification-server
+# minid-notification-server 
 Tjeneste til bruk for MinID app PoC.
 
 ## Tjenesten har en egen db 
