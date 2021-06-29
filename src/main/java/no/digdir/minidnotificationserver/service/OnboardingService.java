@@ -96,7 +96,7 @@ public class OnboardingService {
         VerifyPwEntity.Response pwResponse = minIdBackendClient.verifyPassword(person_identifier, startEntity.getPassword(), "default");
         VerifyPwEntity.ResponseUser userResponse = pwResponse.getUser();
 
-        if("NORMAL".equals(userResponse.getState())) { // pid & password matches, and user is not in quarantine
+        if("normal".equalsIgnoreCase(userResponse.getState())) { // pid & password matches, and user is not in quarantine
             OnboardingEntity.Continue.Response.ResponseBuilder builder = OnboardingEntity.Continue.Response.builder();
             OnboardingEntity.Verification.VerificationBuilder verificationBuilder = OnboardingEntity.Verification.builder();
 
@@ -104,11 +104,11 @@ public class OnboardingService {
                 throw new OnboardingProblem("No two-factor-method set on user.");
             }
 
-            if("app".equals(userResponse.getPreferred2FaMethod())) {
+            if("app".equalsIgnoreCase(userResponse.getPreferred2FaMethod())) {
                 throw new OnboardingProblem("Current preferred two-factor-method is 'app'.");
             }
 
-            if("pin".equals(userResponse.getPreferred2FaMethod())) {
+            if("pin".equalsIgnoreCase(userResponse.getPreferred2FaMethod())) {
                 Integer pinCodeIndex = userResponse.getPinCodeIndex();
                 builder.pin_index(pinCodeIndex);
                 verificationBuilder.pinCodeIndex(pinCodeIndex);
@@ -159,9 +159,9 @@ public class OnboardingService {
         OnboardingEntity.Verification verificationEntity = cache.getVerificationEntity(personIdentifier);
 
         String twoFactorMethod = verificationEntity.getTwoFactorMethod();
-        if("otc".equals(twoFactorMethod)) { // otc
+        if("otc".equalsIgnoreCase(twoFactorMethod)) { // otc
             minIdBackendClient.verifyOtc2Fa(personIdentifier, entity.getOtc(), verificationEntity.getRequestUrn());
-        } else if("pin".equals(twoFactorMethod)) { // pin code
+        } else if("pin".equalsIgnoreCase(twoFactorMethod)) { // pin code
             minIdBackendClient.verifyPin2Fa(personIdentifier, entity.getOtc(), verificationEntity.getPinCodeIndex(), verificationEntity.getRequestUrn());
         } else {
             throw new OnboardingProblem("Unknown two-factor method: '" + twoFactorMethod + "'.");
